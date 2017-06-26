@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Loveland Public Library Wiki</title>
+        <title>LPL Wiki</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -87,7 +87,7 @@
                     <a href="#">Trainings</a>
                     <a href="#">Schedule</a>
                     <a href="#">Phone List</a>
-                    <a href="#">On Boarding</a>
+                    <a href="#">New Employees</a>
                 </div>
             </div>
         </div>
