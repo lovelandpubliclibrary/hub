@@ -12,3 +12,4 @@ npm-debug.log
 .env
 docker\ command\ reference.txt
 .DS_Store
+composer.lock
