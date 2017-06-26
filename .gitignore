@@ -1,14 +1,37 @@
-/node_modules
-/public/hot
-/public/storage
-/storage/*.key
-/vendor
-/.idea
-/.vagrant
-/database/.dbdata/*
-Homestead.json
-Homestead.yaml
+## gitignore file from https://github.com/github/gitignore/blob/master/Laravel.gitignore ##
+
+vendor/
+node_modules/
 npm-debug.log
+
+# Laravel 4 specific
+bootstrap/compiled.php
+app/storage/
+
+# Laravel 5 & Lumen specific
+public/storage
+public/hot
+storage/*.key
+.env.*.php
+.env.php
 .env
-docker\ command\ reference.txt
-.DS_Store
+Homestead.yaml
+Homestead.json
+
+# Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
+.rocketeer/
+
+#/node_modules
+#/public/hot
+#/public/storage
+#/storage/*.key
+#/vendor
+#/.idea
+#/.vagrant
+#/database/.dbdata/*
+#Homestead.json
+#Homestead.yaml
+#npm-debug.log
+#.env
+#docker\ command\ reference.txt
+#.DS_Store
