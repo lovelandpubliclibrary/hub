@@ -24,7 +24,7 @@ Homestead.json
 # Project-specific
 .DS_Store
 database/.dbdata/
-database/wiki_dev.sqlite
+database/wiki_dev.sqlite*
 docker\ command\ reference.txt
 
 #/node_modules
