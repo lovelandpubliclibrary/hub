@@ -11,6 +11,22 @@
 |
 */
 
+// Default routes
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
+});
+Route::get('/home', 'HomeController@index')->name('home');
+
+
+// Authentication
+Auth::routes();
+
+
+// Navigation routes
+Route::get('/schedule', function() {
+	return Redirect::to('https://lpl-repository.com/scheduler');
+});
+
+Route::get('/helpdesk', function() {
+	return Redirect::to('http://192.168.1.34');
 });
