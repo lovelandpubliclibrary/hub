@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
+
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,8 +15,9 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @yield('styles')
-
 </head>
+
+
 <body>
     <div id="app">
         @if (Auth::check())
