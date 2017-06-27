@@ -1,36 +1,41 @@
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
-        <div class="navbar-header">
 
-            <!-- Collapsed Hamburger -->
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                <span class="sr-only">Toggle Navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+        @if (Auth::check())
+            <div class="navbar-header">
 
-            <!-- Branding Image -->
-            <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
-            </a>
-        </div>
+                
+                    <!-- Collapsed Hamburger -->
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
+                        <span class="sr-only">Toggle Navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
 
-        <div class="collapse navbar-collapse" id="app-navbar-collapse">
-            <!-- Left Side Of Navbar -->
-            <ul class="nav navbar-nav">
-                <li><a href="">Incidents</a></li>
-                <li><a href="/schedule">Schedule</a></li>
-                <li><a href="/helpdesk">LTI Help Desk</a></li>
-                <li><a href="">Staff Training</a></li>
-                <li><a href="">New Employee Checklist</a></li>
-            </ul>
+                    <!-- Branding Image -->
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                        {{ config('app.name', 'Laravel') }}
+                    </a>
+            </div>
+        @endif
+
+            <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                @if (Auth::check())
+                    <!-- Left Side Of Navbar -->
+                    <ul class="nav navbar-nav">
+                        <li><a href="">Incidents</a></li>
+                        <li><a href="/schedule">Schedule</a></li>
+                        <li><a href="/helpdesk">LTI Help Desk</a></li>
+                        <li><a href="">Staff Training</a></li>
+                        <li><a href="">New Employee Checklist</a></li>
+                    </ul>
+                @endif
 
             <!-- Right Side Of Navbar -->
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
                 @if (Auth::guest())
-                    <li><a href="{{ route('login') }}">Login</a></li>
                     <li><a href="{{ route('register') }}">Register</a></li>
                 @else
                     <li class="dropdown">

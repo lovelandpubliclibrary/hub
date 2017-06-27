@@ -20,9 +20,7 @@
 
 <body>
     <div id="app">
-        @if (Auth::check())
-            @include('layouts.navigation');
-        @endif
+        @include('layouts.navigation');
 
         @yield('content')
     </div>
