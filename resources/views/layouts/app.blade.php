@@ -22,7 +22,9 @@
     <div id="app">
         @include('layouts.navigation');
 
-        @yield('content')
+        <div class='container'>
+            @yield('content')
+        </div>
     </div>
 
     <!-- Scripts -->
