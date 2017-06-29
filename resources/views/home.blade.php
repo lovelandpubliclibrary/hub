@@ -60,21 +60,17 @@
 @endsection
 
 @section('content')
-    <div class="flex-center position-ref full-height">
-        <div class="content">
-                    <div class="row">
-                            @if (Auth::check())
-                                <div class="position-ref full-height">
-                                    Homepage info goes here.
-                                </div>
-                            @else
-                                <div class="title m-b-md">
-                                    Loveland Public Library Wiki
-                                </div>
-                                @include('auth.login');
-                            @endif
-
+    <div class="row">
+        <div class="content" style="margin-top: 4em;">
+                @if (Auth::check())
+                        Homepage info goes here.
+                @else
+                    <div class="title m-b-md">
+                        Loveland Public Library Wiki
                     </div>
+                    @include('auth.login');
+                @endif
+
         </div>
     </div>
 @endsection

@@ -30,3 +30,6 @@ Route::get('/schedule', function() {
 Route::get('/helpdesk', function() {
 	return Redirect::to('http://192.168.1.34');
 });
+
+Route::get('/incidents', 'IncidentController@index');
+Route::get('/incidents/{incident}', 'IncidentController@show');
