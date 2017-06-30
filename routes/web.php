@@ -25,11 +25,11 @@ Auth::routes();
 // Navigation routes
 Route::get('/schedule', function() {
 	return Redirect::to('https://lpl-repository.com/scheduler');
-});
+})->name('schedule');
 
 Route::get('/helpdesk', function() {
-	return Redirect::to('http://192.168.1.34');
-});
+	return Redirect::to('http://192.168.1.34/portal');
+})->name('helpdesk');
 
 Route::get('/incidents', 'IncidentController@index')->name('incidents');
 Route::get('/incidents/{incident}', 'IncidentController@show');
