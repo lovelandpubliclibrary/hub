@@ -61,7 +61,7 @@
 
 @section('content')
     <div class="row">
-        <div class="content" style="margin-top: 4em;">
+        <div class="content">
                 @if (Auth::check())
                         Homepage info goes here.
                 @else
