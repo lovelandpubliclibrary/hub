@@ -20,7 +20,7 @@
     
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="">Incidents</a></li>
+            <li><a href="{{ route('incidents') }}">Incidents</a></li>
             <li><a href="/schedule">Schedule</a></li>
             <li><a href="/helpdesk">LTI Help Desk</a></li>
             <li><a href="">Staff Training</a></li>

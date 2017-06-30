@@ -18,6 +18,7 @@ class CreateIncidentsTable extends Migration
             $table->date('date');
             $table->string('title');
             $table->text('description');
+            $table->string('img_path')->nullable();
             $table->timestamps();
         });
     }
