@@ -20,9 +20,9 @@
     
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="">Incidents</a></li>
-            <li><a href={{ route('schedule') }}>Schedule</a></li>
-            <li><a href={{ route('helpdesk') }}>LTI Help Desk</a></li>
+            <li><a href="{{ route('incidents') }}">Incidents</a></li>
+            <li><a href="{{ route('schedule') }}">Schedule</a></li>
+            <li><a href="{{ route('helpdesk') }}">LTI Help Desk</a></li>
             <li><a href="">Staff Training</a></li>
             <li><a href="">New Employee Checklist</a></li>
             <li><a href="">Media/Print Request</a></li>

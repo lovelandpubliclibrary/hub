@@ -33,3 +33,4 @@ Route::get('/helpdesk', function() {
 
 Route::get('/incidents', 'IncidentController@index')->name('incidents');
 Route::get('/incidents/{incident}', 'IncidentController@show');
+Route::get('/incidents/create', 'IncidentController@create');
