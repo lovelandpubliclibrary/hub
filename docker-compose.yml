@@ -3,7 +3,7 @@ services:
  app:
   depends_on:
    - db
-  image: lpl_wiki
+  image: redisforlosers/lpl_wiki
   volumes:
    - ./:/app
   ports:
