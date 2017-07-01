@@ -21,9 +21,10 @@ class CreateIncidentsTable extends Migration
             $table->string('patron_name')->nullable();
             $table->text('patron_description')->nullable();
             $table->string('img_path')->nullable();
-            $table->boolean('media_requested')->default(false);
-            $table->boolean('media_provided')->default(false);
+            $table->int('user_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

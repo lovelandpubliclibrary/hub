@@ -21,4 +21,16 @@ class IncidentController extends Controller
     public function create() {
     	return view('incidents.create');
     }
+
+
+    public function store(Request $request) {
+        $rules = [
+            'date' => 'required',
+            'title' => 'required',
+            'description' => 'required',
+            'user_id' => 'required'
+        ];
+
+        $this->validate($request, $rules);
+    }
 }
