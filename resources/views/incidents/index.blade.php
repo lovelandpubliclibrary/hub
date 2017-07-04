@@ -1,12 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-	<div style="margin-bottom: 1em">
+	<div class="text-muted kb-margin-bottom-1rem">
+		<a href='/'>
+			<< Back to Home
+		</a>
+	</div>
+
+	<div class="kb-margin-bottom-1rem">
 		<a href="/incidents/create" class="btn btn-primary">
 			Report a New Incident
 		</a>
 	</div>
-	<ul>
+	@if(count($incidents))
+		<ul>
 		@foreach($incidents as $incident)
 			<li>
 				{{ $incident->date }} 
@@ -17,8 +24,6 @@
 					({{ $incident->patron_name }})
 				@endif
 
-				
-
 				<div class="incident-index-description">
 					@if(strlen($incident->description) > 35)
 						{{ substr($incident->description, 0, strpos(wordwrap($incident->description, 25), '\n')) }}
@@ -28,5 +33,8 @@
 				</div>
 			</li>
 		@endforeach
-	</ul>
+		</ul>
+	@else
+		There are no incidents to display.
+	@endif
 @endsection

@@ -1,16 +1,31 @@
 @extends('layouts.app')
 
 @section('content')
+	<div class="text-muted">
+		<a href='/incidents'>
+			<< Back to Incidents
+		</a>
+	</div>
 
   <div class="h1">
     Report an Incident
   </div>
 
+	@if (count($errors) > 0)
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
+
 	{{ Form::open(['action' => 'IncidentController@store', 'files' => true]) }}
 
     <div class="form-group">
-	    {{ Form::label('incidentDate', 'Date of Incident:') }}
-	    {{ Form::date('incidentDate', \Carbon\Carbon::now(), ['class' => 'form-control']) }}
+	    {{ Form::label('date', 'Date of Incident:') }}
+	    {{ Form::date('date', \Carbon\Carbon::now(), ['class' => 'form-control']) }}
 	  </div>
 
 	  <div class="form-group">
@@ -19,21 +34,26 @@
 	  </div>
 
 	  <div class="form-group">
-      {{ Form::label('incidentTitle', 'Title:') }}
-      {{ Form::text('incidentTitle', null, ['class' => 'form-control']) }}
+	    {{ Form::label('patronDescription', 'Patron Description:') }}
+      {{ Form::text('patronDescription', null, ['class' => 'form-control']) }}
 	  </div>
 
 	  <div class="form-group">
-      {{ Form::label('incidentDescription', 'Describe the Incident:') }}
-      {{ Form::textarea('incidentDescription', null, ['class' => 'form-control', 'rows' => '6']) }}
+      {{ Form::label('title', 'Title:') }}
+      {{ Form::text('title', null, ['class' => 'form-control']) }}
+	  </div>
+
+	  <div class="form-group">
+      {{ Form::label('description', 'Describe the Incident:') }}
+      {{ Form::textarea('description', null, ['class' => 'form-control', 'rows' => '6']) }}
 	  </div>
 
 	  <div class="form-group">
       {{ Form::label('patronPicture', 'Patron Picture:') }}
-	    {{ Form::file('patronPicture', ['class' => 'form-control-file', 'aria-describedby' => 'patronPicture']) }}
+	  {{ Form::file('patronPicture', ['class' => 'form-control-file', 'aria-describedby' => 'patronPicture']) }}
 	  </div>
 
-    {{ Form::hidden('user_id', Auth::user()->id) }}
+    {{ Form::hidden('userId', Auth::user()->id) }}
     {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
 
 	{{ Form::close() }}
