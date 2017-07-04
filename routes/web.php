@@ -31,5 +31,7 @@ Route::get('/helpdesk', function() {
 	return Redirect::to('http://192.168.1.34/portal');
 })->name('helpdesk');
 
-Route::get('/incidents', 'IncidentController@index');
+Route::get('/incidents', 'IncidentController@index')->name('incidents');
+Route::get('/incidents/create', 'IncidentController@create');
 Route::get('/incidents/{incident}', 'IncidentController@show');
+Route::post('/incidents', 'IncidentController@store');

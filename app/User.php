@@ -7,6 +7,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+
+    // model relationships
+    public function incident() {
+        return $this->hasMany('App\Incident');
+    }
+    
     use Notifiable;
 
     /**

@@ -14,6 +14,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/wiki.css') }}" rel="stylesheet">
     @yield('styles')
 </head>
 
@@ -22,7 +23,7 @@
     <div id="app">
         @include('layouts.navigation');
 
-        <div class='container'>
+        <div class='container content'>
             @yield('content')
         </div>
     </div>
