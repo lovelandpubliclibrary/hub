@@ -31,6 +31,12 @@ Route::get('/helpdesk', function() {
 	return Redirect::to('http://192.168.1.34/portal');
 })->name('helpdesk');
 
+Route::get('/cityemail', function() {
+	return Redirect::to('https://fw.ci.loveland.co.us/owa');
+})->name('cityemail');
+
+
+// Incidents
 Route::get('/incidents', 'IncidentController@index')->name('incidents');
 Route::get('/incidents/create', 'IncidentController@create');
 Route::get('/incidents/{incident}', 'IncidentController@show');
