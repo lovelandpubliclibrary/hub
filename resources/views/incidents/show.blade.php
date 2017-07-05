@@ -7,13 +7,13 @@
 		</a>
 	</div>
 
-	<div class="h1 text-center">
+	<div class="h1">
 		{{ $incident->title }}
 	</div>
 
 	<div>
 		@isset($incident->patron_photo)
-			<img class="img-responsive rounded center-block incident-patron-picture" src="{{ asset('images/patrons/' . $incident->patron_photo) }}" alt="Patron Picture">
+			<img class="img-responsive rounded incident-patron-picture" src="{{ asset('images/patrons/' . $incident->patron_photo) }}" alt="Patron Picture">
 		@endisset
 	</div>
 
