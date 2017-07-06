@@ -41,7 +41,3 @@ Route::get('/incidents', 'IncidentController@index')->name('incidents');
 Route::get('/incidents/create', 'IncidentController@create');
 Route::get('/incidents/{incident}', 'IncidentController@show');
 Route::post('/incidents', 'IncidentController@store');
-
-
-// 3d Prints
-Route::get('/3dprints', '3dPrintController@create')->name('3dprints');
