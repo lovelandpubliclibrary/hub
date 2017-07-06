@@ -30,7 +30,11 @@
     @endif
       <ul class="nav navbar-nav navbar-right">
         @if (Auth::guest())
-            <li><a class="default" href=" {{ route('register') }} ">Register</a></li>
+            @if (Request::path() != 'register')
+                <li><a class="default" href=" {{ route('register') }} ">Register</a></li>
+            @else
+                <a class="navbar-brand" href=" {{ url('/') }} "> {{ config('app.name', 'Laravel') }} </a>
+            @endif
         @else
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

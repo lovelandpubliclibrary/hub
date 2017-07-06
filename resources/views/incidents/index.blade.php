@@ -26,6 +26,10 @@
 					{{ $incident->title }}
 				</a>
 
+				@if ($incident->patron_photo)
+					<span class="glyphicon glyphicon-paperclip"> </span>
+				@endif
+
 				<div class="incident-index-description">
 					@if(strlen($incident->description) > 40)
 						{{ $incident->truncate_description(40) }}...
