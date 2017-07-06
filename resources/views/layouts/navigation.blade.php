@@ -26,6 +26,7 @@
             <li><a href="">Staff Training</a></li>
             <li><a href="">New Employee Checklist</a></li>
             <li><a href="">Media/Print Request</a></li>
+            <li><a href="{{ route('cityemail') }}">City Email</a></li>
           </ul>
     @endif
       <ul class="nav navbar-nav navbar-right">
