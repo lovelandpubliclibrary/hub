@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Incident;
+use Session;
 
 class IncidentController extends Controller
 {
@@ -58,6 +59,7 @@ class IncidentController extends Controller
 
         // save it to the database
         if($incident->save()) {
+            Session::flash('success_message', "Incident Saved - \"$incident->title\"");
             return redirect("incidents/$incident->id");
         }
     }

@@ -17,16 +17,18 @@
 		@foreach($incidents as $incident)
 			<li>
 				{{ $incident->date }} 
-				<a href="/incidents/{{ $incident->id }}">
-					{{ $incident->title }}
-				</a>
+
 				@if ($incident->patron_name)
 					({{ $incident->patron_name }})
 				@endif
 
+				<a href="/incidents/{{ $incident->id }}">
+					{{ $incident->title }}
+				</a>
+
 				<div class="incident-index-description">
-					@if(strlen($incident->description) > 35)
-						{{ substr($incident->description, 0, strpos(wordwrap($incident->description, 25), '\n')) }}
+					@if(strlen($incident->description) > 40)
+						{{ $incident->truncate_description(40) }}...
 					@else
 						{{ $incident->description }}
 					@endif
