@@ -11,12 +11,12 @@ rm -rf /var/lib/apt/lists/*
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
 docker-php-ext-install pdo_mysql mcrypt
 
-# install node.js and run npm install
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash && apt-get install nodejs && npm install && npm run dev
-
 WORKDIR /wiki
 
 COPY . /wiki
+
+# install node.js and run npm install
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash && apt-get install nodejs && npm install && npm run dev
 
 # run composer
 RUN composer install

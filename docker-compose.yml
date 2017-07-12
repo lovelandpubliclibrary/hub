@@ -8,7 +8,7 @@ services:
    - ./:/app
   ports:
    - 10000:10000
-  container_name: wiki_laravel
+  container_name: wiki
 
  phpmyadmin:
   depends_on:
@@ -16,7 +16,7 @@ services:
   image: phpmyadmin/phpmyadmin
   ports:
    - 8888:80
-  container_name: wiki_phpmyadmin
+  container_name: phpmyadmin-wiki
 
  db:
   image: mysql:5.7
@@ -28,4 +28,4 @@ services:
    MYSQL_DATABASE: dev_wiki
   ports:
    - 3307:3306
-  container_name: wiki_mysql
+  container_name: mysql-wiki
