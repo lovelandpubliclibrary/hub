@@ -20,17 +20,22 @@
     
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="">Incidents</a></li>
-            <li><a href={{ route('schedule') }}>Schedule</a></li>
-            <li><a href={{ route('helpdesk') }}>LTI Help Desk</a></li>
+            <li><a href="{{ route('incidents') }}">Incidents</a></li>
+            <li><a href="{{ route('schedule') }}">Schedule</a></li>
+            <li><a href="{{ route('helpdesk') }}">LTI Help Desk</a></li>
             <li><a href="">Staff Training</a></li>
             <li><a href="">New Employee Checklist</a></li>
             <li><a href="">Media/Print Request</a></li>
+            <li><a href="{{ route('cityemail') }}">City Email</a></li>
           </ul>
     @endif
       <ul class="nav navbar-nav navbar-right">
         @if (Auth::guest())
-            <li><a class="default" href=" {{ route('register') }} ">Register</a></li>
+            @if (Request::path() != 'register')
+                <li><a class="default" href=" {{ route('register') }} ">Register</a></li>
+            @else
+                <a class="navbar-brand" href=" {{ url('/') }} "> {{ config('app.name', 'Laravel') }} </a>
+            @endif
         @else
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

@@ -61,16 +61,13 @@
 
 @section('content')
     <div class="row">
-        <div class="content">
-                @if (Auth::check())
-                        Homepage info goes here.
-                @else
-                    <div class="title m-b-md">
-                        Loveland Public Library Wiki
-                    </div>
-                    @include('auth.login');
-                @endif
-
-        </div>
+        @if (Auth::check())
+                Homepage info goes here.
+        @else
+            <div class="title m-b-md">
+                Loveland Public Library Wiki
+            </div>
+            @include('auth.login');
+        @endif
     </div>
 @endsection

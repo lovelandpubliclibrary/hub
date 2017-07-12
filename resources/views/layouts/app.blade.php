@@ -23,7 +23,7 @@
     <div id="app">
         @include('layouts.navigation');
 
-        <div class='container'>
+        <div class='container content'>
             @yield('content')
         </div>
     </div>
