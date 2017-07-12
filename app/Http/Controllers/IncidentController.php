@@ -31,10 +31,9 @@ class IncidentController extends Controller
             'date' => 'required',
             'title' => 'required',
             'description' => 'required',
-            'userId' => 'required|unique:incidents'
+            'userId' => 'required'
         ];
         $this->validate($request, $rules);
-
 
         // store it in a new instance of Incident
         $incident = new Incident;
@@ -50,7 +49,7 @@ class IncidentController extends Controller
         if ($request->hasFile('patronPicture') && $request->file('patronPicture')->isValid()) {
             // create a unique name for the file
             $filename = uniqid('img_') . '.' . $request->patronPicture->getClientOriginalExtension();
-            // move the file to the assests directory
+            // move the file to the public/images/patrons/ directory
             if ($request->file('patronPicture')->move(public_path('images/patrons/'), $filename)) {
                 // save the path to our instance of incident
                 $incident->patron_photo = $filename;
