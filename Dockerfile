@@ -1,15 +1,15 @@
 FROM php:7
 
-RUN \
-apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash
+
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
 openssl \
-git \
 curl \
+nodejs \
 libmcrypt-dev && \
 rm -rf /var/lib/apt/lists/*
 
-RUN \
-curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
 docker-php-ext-install pdo_mysql mcrypt
 
 WORKDIR /app
