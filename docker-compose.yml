@@ -5,7 +5,7 @@ services:
    - db
   image: redisforlosers/lpl_wiki
   volumes:
-   - ./:/app
+   - ./:/wiki
   ports:
    - 10000:10000
   container_name: wiki

@@ -13,6 +13,31 @@
 		</a>
 	</div>
 	@if(count($incidents))
+
+		<table class="table table-striped table-condensed">
+			<tr>
+				<th>
+					Date
+				</th>
+
+				<th>
+					Patron Name
+				</th>
+
+				<th>
+					Title
+				</th>
+
+				<th>
+					Picture
+				</th>
+
+				<th>
+					Summary
+				</th>
+			</tr>
+		</table>
+
 		<ul>
 		@foreach($incidents as $incident)
 			<li>
