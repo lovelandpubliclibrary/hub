@@ -13,14 +13,13 @@
 		</a>
 	</div>
 	@if(count($incidents))
-
 		<table class="table table-striped table-condensed">
 			<tr>
 				<th>
 					Date
 				</th>
 
-				<th>
+				<th class="hidden-xs">
 					Patron Name
 				</th>
 
@@ -29,42 +28,45 @@
 				</th>
 
 				<th>
-					Picture
-				</th>
-
-				<th>
 					Summary
 				</th>
 			</tr>
+
+			@foreach($incidents as $incident)
+				<tr>
+					<td class="hidden-xs">
+						{{ \Carbon\Carbon::parse($incident->date)->toFormattedDateString() }}
+					</td>
+					<td class="visible-xs-inline">
+						{{ $incident->date }}
+					</td>
+
+					<td class="hidden-xs">
+						@if ($incident->patron_name)
+							{{ $incident->patron_name }}
+						@endif
+					</td>
+
+					<td>
+						<a href="/incidents/{{ $incident->id }}">
+							{{ $incident->title }}
+						</a>
+
+						@if ($incident->patron_photo)
+							&nbsp;<span class="glyphicon glyphicon-paperclip"></span>
+						@endif
+					</td>
+
+					<td>
+						@if(strlen($incident->description) > 40)
+							{{ $incident->truncate_description(40) }}...
+						@else
+							{{ $incident->description }}
+						@endif
+					</td>
+				</tr>
+			@endforeach
 		</table>
-
-		<ul>
-		@foreach($incidents as $incident)
-			<li>
-				{{ $incident->date }} 
-
-				@if ($incident->patron_name)
-					({{ $incident->patron_name }})
-				@endif
-
-				<a href="/incidents/{{ $incident->id }}">
-					{{ $incident->title }}
-				</a>
-
-				@if ($incident->patron_photo)
-					<span class="glyphicon glyphicon-paperclip"> </span>
-				@endif
-
-				<div class="incident-index-description">
-					@if(strlen($incident->description) > 40)
-						{{ $incident->truncate_description(40) }}...
-					@else
-						{{ $incident->description }}
-					@endif
-				</div>
-			</li>
-		@endforeach
-		</ul>
 	@else
 		There are no incidents to display.
 	@endif
