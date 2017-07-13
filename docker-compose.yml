@@ -22,7 +22,6 @@ services:
   image: mysql:5.7
   volumes:
    - ./database/.dbdata:/var/lib/mysql
-  restart: always
   environment:
    MYSQL_ROOT_PASSWORD: lpl_wiki_root
    MYSQL_DATABASE: dev_wiki
