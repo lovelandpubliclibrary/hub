@@ -34,11 +34,8 @@
 
 			@foreach($incidents as $incident)
 				<tr>
-					<td class="hidden-xs">
+					<td>
 						{{ \Carbon\Carbon::parse($incident->date)->toFormattedDateString() }}
-					</td>
-					<td class="visible-xs-inline">
-						{{ $incident->date }}
 					</td>
 
 					<td class="hidden-xs">
