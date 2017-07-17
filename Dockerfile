@@ -1,13 +1,9 @@
 FROM php:7
 
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
-openssl \
-git \
-curl \
-libmcrypt-dev && \
-rm -rf /var/lib/apt/lists/*
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash
 
 # install composer globally, then install the mcrypt and pdo PHP extensions
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
 docker-php-ext-install pdo_mysql mcrypt
 
