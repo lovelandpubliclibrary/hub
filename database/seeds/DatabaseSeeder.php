@@ -42,6 +42,16 @@ class UsersTableSeeder extends Seeder {
 				'role_id' => 2,
 			]
 		);
+
+		User::create (
+			[
+				'id' => 3,
+				'name' => 'Test Director',
+				'email' => 'testdirector@cityofloveland.org',
+				'password' => Hash::make('password'),
+				'role_id' => 3,
+			]
+		);
 	}
 }
 
@@ -85,6 +95,13 @@ class RolesTableSeeder extends Seeder {
 			[
 				'id' => 2,
 				'role' => 'User',
+			]
+		);
+
+		Role::create (
+			[
+				'id' => 3,
+				'role' => 'Director',
 			]
 		);
 	}
