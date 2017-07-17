@@ -12,9 +12,9 @@ rm -rf /var/lib/apt/lists/*
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
 docker-php-ext-install pdo_mysql mcrypt
 
-WORKDIR /app
+WORKDIR /wiki
 
-COPY . /app
+COPY . /wiki
 
 RUN composer install
 
