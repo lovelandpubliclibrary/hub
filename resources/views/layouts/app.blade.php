@@ -21,7 +21,7 @@
 
 <body>
     <div id="app">
-        @include('layouts.navigation');
+        @include('layouts.navigation')
 
         <div class='container content'>
             @yield('content')

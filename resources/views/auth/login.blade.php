@@ -1,6 +1,10 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
         <div class="panel">
+            <div class="panel-heading text-center">
+                <img src="{{ URL::asset('images/lpl_logo.png') }}" alt="Loveland Public Library Logo" class="text-center">
+                <div class="h2 text-info">LPL Staff Repository</div>
+            </div>
             <div class="panel-body">
                 <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                     {{ csrf_field() }}
