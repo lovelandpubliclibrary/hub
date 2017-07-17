@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersTableSeeder::class);
         $this->call(IncidentsTableSeeder::class);
         $this->call(RolesTableSeeder::class);
-        $this->call(StatusesTableSeeder::class);
     }
 }
 
@@ -40,6 +39,16 @@ class UsersTableSeeder extends Seeder {
 				'email' => 'testuser@cityofloveland.org',
 				'password' => Hash::make('password'),
 				'role_id' => 2,
+			]
+		);
+
+		User::create (
+			[
+				'id' => 3,
+				'name' => 'Test Director',
+				'email' => 'testdirector@cityofloveland.org',
+				'password' => Hash::make('password'),
+				'role_id' => 3,
 			]
 		);
 	}
@@ -85,6 +94,13 @@ class RolesTableSeeder extends Seeder {
 			[
 				'id' => 2,
 				'role' => 'User',
+			]
+		);
+
+		Role::create (
+			[
+				'id' => 3,
+				'role' => 'Director',
 			]
 		);
 	}

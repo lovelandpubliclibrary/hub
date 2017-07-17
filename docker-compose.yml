@@ -21,10 +21,15 @@ services:
  db:
   image: mysql:5.7
   volumes:
-   - ./database/.dbdata:/var/lib/mysql
+   - dbdata:/var/lib/mysql
   environment:
    MYSQL_ROOT_PASSWORD: lpl_wiki_root
    MYSQL_DATABASE: dev_wiki
+   MYSQL_USER: lpl_wiki
+   MYSQL_PASSWORD: lpl_wiki
   ports:
    - 3307:3306
   container_name: mysql-wiki
+
+volumes:
+  dbdata:
