@@ -8,12 +8,12 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-r
 openssl \
 curl \
 nodejs \
-libmcrypt-dev && \
-rm -rf /var/lib/apt/lists/*
+libmcrypt-dev \
+&& rm -rf /var/lib/apt/lists/* \
+&& docker-php-ext-install pdo_mysql mcrypt
 
 # install composer, and the PDO and mcrypt PHP extensions
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-docker-php-ext-install pdo_mysql mcrypt
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 
 # copy the source files to the image
