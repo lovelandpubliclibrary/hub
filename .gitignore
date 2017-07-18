@@ -26,6 +26,7 @@ Homestead.json
 database/.dbdata/
 database/wiki_dev.sqlite*
 docker\ command\ reference.txt
+alpine-wiki.Dockerfile
 
 #/node_modules
 #/public/hot
