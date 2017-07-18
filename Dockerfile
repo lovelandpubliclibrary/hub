@@ -3,8 +3,8 @@ FROM php:7
 MAINTAINER "Loveland Public Library, Library Technology & Innovation"
 
 # copy the source files to the image
-WORKDIR /wiki
-COPY . /wiki
+WORKDIR /repository
+COPY . /repository
 
 # get the node package so we can run 'apt-get install nodejs'
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash
