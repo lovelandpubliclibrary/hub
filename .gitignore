@@ -4,10 +4,6 @@ vendor/
 node_modules/
 npm-debug.log
 
-# Laravel 4 specific
-bootstrap/compiled.php
-app/storage/
-
 # Laravel 5 & Lumen specific
 public/storage
 public/hot
@@ -23,21 +19,4 @@ Homestead.json
 
 # Project-specific
 .DS_Store
-database/.dbdata/
-database/wiki_dev.sqlite*
-docker\ command\ reference.txt
-
-#/node_modules
-#/public/hot
-#/public/storage
-#/storage/*.key
-#/vendor
-#/.idea
-#/.vagrant
-#/database/.dbdata/*
-#Homestead.json
-#Homestead.yaml
-#npm-debug.log
-#.env
-#docker\ command\ reference.txt
-#.DS_Store
+alpine-repository.Dockerfile
