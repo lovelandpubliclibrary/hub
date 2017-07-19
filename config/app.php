@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'Loveland Public Library Wiki'),
+    'name' => env('APP_NAME', 'LPL Repository'),
 
     /*
     |--------------------------------------------------------------------------
