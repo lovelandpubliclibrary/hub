@@ -14,14 +14,14 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/wiki.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/repository.css') }}" rel="stylesheet">
     @yield('styles')
 </head>
 
 
 <body>
     <div id="app">
-        @include('layouts.navigation');
+        @include('layouts.navigation')
 
         <div class='container content'>
             @yield('content')

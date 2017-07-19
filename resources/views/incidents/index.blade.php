@@ -12,6 +12,13 @@
 			Report a New Incident
 		</a>
 	</div>
+
+	{{ Form::open(['action' => 'IncidentController@index', 'class' => 'form-inline kb-margin-bottom-1rem']) }}
+		{{ Form::label('search', 'Search:', array('class' => 'sr-only')) }}
+		{{ Form::text('search', $value = null, array('class' => 'form-control ', 'placeholder' => 'Search...')) }}
+		{{ Form::button('<span class="glyphicon glyphicon-search"></span>', array('class' => 'form-control'))}}
+	{{ Form::close() }}
+
 	@if(count($incidents))
 		<table class="table table-striped table-condensed">
 			<tr>
@@ -34,11 +41,8 @@
 
 			@foreach($incidents as $incident)
 				<tr>
-					<td class="hidden-xs">
+					<td>
 						{{ \Carbon\Carbon::parse($incident->date)->toFormattedDateString() }}
-					</td>
-					<td class="visible-xs-inline">
-						{{ $incident->date }}
 					</td>
 
 					<td class="hidden-xs">
