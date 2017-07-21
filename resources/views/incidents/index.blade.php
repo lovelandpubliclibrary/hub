@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends ('layouts.app')
 
-@section('content')
+@section ('content')
 	<div class="text-muted kb-margin-bottom-1rem">
 		<a href='/'>
 			<< Back to Home
@@ -13,11 +13,17 @@
 		</a>
 	</div>
 
-	{{ Form::open(['action' => 'IncidentController@index', 'class' => 'form-inline kb-margin-bottom-1rem']) }}
-		{{ Form::label('search', 'Search:', array('class' => 'sr-only')) }}
-		{{ Form::text('search', $value = null, array('class' => 'form-control ', 'placeholder' => 'Search...')) }}
-		{{ Form::button('<span class="glyphicon glyphicon-search"></span>', array('class' => 'form-control'))}}
-	{{ Form::close() }}
+	<div class="container">
+		{{ Form::open(['action' => 'IncidentController@index', 'class' => 'form row kb-margin-bottom-1rem']) }}
+			<div class="input-group col-xs-12 col-md-6">
+				{{ Form::label('search', 'Search: ', ['class' => 'sr-only']) }}
+				{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search...'])}}
+				<span class="input-group-btn">
+					{{ Form::button('<span class=\'glyphicon glyphicon-search\'></span>', ['class' => 'btn btn-default'] )}}
+				</span>
+			</div>
+		{{ Form::close() }}
+	</div>
 
 	@if(count($incidents))
 		<table class="table table-striped table-condensed">
@@ -39,7 +45,7 @@
 				</th>
 			</tr>
 
-			@foreach($incidents as $incident)
+			@foreach ($incidents as $incident)
 				<tr>
 					<td>
 						{{ \Carbon\Carbon::parse($incident->date)->toFormattedDateString() }}
@@ -57,12 +63,12 @@
 						</a>
 
 						@if ($incident->patron_photo)
-							&nbsp;<span class="glyphicon glyphicon-paperclip"></span>
+							&nbsp;<span class="glyphicon glyphicon-picture"></span>
 						@endif
 					</td>
 
 					<td>
-						@if(strlen($incident->description) > 40)
+						@if (strlen($incident->description) > 40)
 							{{ $incident->truncate_description(40) }}...
 						@else
 							{{ $incident->description }}
