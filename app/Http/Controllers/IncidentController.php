@@ -46,6 +46,7 @@ class IncidentController extends Controller
         $incident->description = $request->description;
         $incident->user_id = $request->userId;
         $incident->patron_name = ($request->patronName ?: null);
+        $incident->card_number = ($request->patronCardNumber ?: null);
         $incident->patron_description = ($request->patronDescription ?: null);
         
 
@@ -77,7 +78,9 @@ class IncidentController extends Controller
                                orWhere('patron_name', 'LIKE', '%' . $request->search . '%')->
                                orWhere('title',       'LIKE', '%' . $request->search . '%')->get();
 
+        $search = $request->search;
+
         // provide the index view with the search results
-        return view('incidents.index', compact('incidents'));
+        return view('incidents.index', compact('incidents', 'search'));
     }
 }
