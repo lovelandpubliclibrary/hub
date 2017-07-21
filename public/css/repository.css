@@ -22,3 +22,7 @@
 .incident-patron-picture {
 	max-height: 15em;
 }
+
+.panel-body blockquote {
+	border-left: 0;
+}
