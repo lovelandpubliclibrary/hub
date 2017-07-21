@@ -15,5 +15,5 @@ All you need to contribute is a LAMP stack (see below) and a basic knowledge of 
 	- Create tables in database:
 		- `docker exec repository php artisan migrate`
 	- Seed tables with data:
-		- `docker exec repository php db:seed`
-- The application is being served on port 10000, and phpMyAdmin is on port 8888. MySQL is also available on port 3307 if you prefer to use a different database management tool.
+		- `docker exec repository php artisan db:seed`
+- The application is being served on port 10000, and phpMyAdmin is on port 8888. MySQL is also available on port 3307 if you prefer to use a different database management tool. If accessing the containers isn't working with localhost, try using the IP output by `docker-machine ip` or `docker inspect repository`.
