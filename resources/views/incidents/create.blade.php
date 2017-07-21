@@ -22,39 +22,43 @@
 	@endif
 
 	{{ Form::open(['action' => 'IncidentController@store', 'files' => true]) }}
+		<div class="form-group">
+		    {{ Form::label('date', 'Date of Incident:') }}
+		    {{ Form::date('date', \Carbon\Carbon::now(), ['class' => 'form-control']) }}
+	  	</div>
 
-    <div class="form-group">
-	    {{ Form::label('date', 'Date of Incident:') }}
-	    {{ Form::date('date', \Carbon\Carbon::now(), ['class' => 'form-control']) }}
-	  </div>
+		<div class="form-group">
+			{{ Form::label('patronName', 'Patron Name:') }}
+			{{ Form::text('patronName', null, ['class' => 'form-control']) }}
+		</div>
 
-	  <div class="form-group">
-	    {{ Form::label('patronName', 'Patron Name:') }}
-      {{ Form::text('patronName', null, ['class' => 'form-control']) }}
-	  </div>
+		<div class="form-group">
+			{{ Form::label('patronCardNumber', 'Patron Library Card Number:') }}
+			{{ Form::text('patronCardNumber', null, ['class' => 'form-control']) }}
+		</div>
 
-	  <div class="form-group">
-	    {{ Form::label('patronDescription', 'Patron Description:') }}
-      {{ Form::text('patronDescription', null, ['class' => 'form-control']) }}
-	  </div>
+		<div class="form-group">
+			{{ Form::label('patronDescription', 'Patron Description:') }}
+			{{ Form::text('patronDescription', null, ['class' => 'form-control']) }}
+		</div>
 
-	  <div class="form-group">
-      {{ Form::label('title', 'Title:') }}
-      {{ Form::text('title', null, ['class' => 'form-control']) }}
-	  </div>
+		<div class="form-group">
+			{{ Form::label('title', 'Title:') }}
+			{{ Form::text('title', null, ['class' => 'form-control']) }}
+		</div>
 
-	  <div class="form-group">
-      {{ Form::label('description', 'Describe the Incident:') }}
-      {{ Form::textarea('description', null, ['class' => 'form-control', 'rows' => '6']) }}
-	  </div>
+		<div class="form-group">
+			{{ Form::label('description', 'Describe the Incident:') }}
+			{{ Form::textarea('description', null, ['class' => 'form-control', 'rows' => '6']) }}
+		</div>
 
-	  <div class="form-group">
-      {{ Form::label('patronPicture', 'Patron Picture:') }}
-	  {{ Form::file('patronPicture', ['class' => 'form-control-file', 'aria-describedby' => 'patronPicture']) }}
-	  </div>
+		<div class="form-group">
+			{{ Form::label('patronPicture', 'Patron Picture:') }}
+			{{ Form::file('patronPicture', ['class' => 'form-control-file', 'aria-describedby' => 'patronPicture']) }}
+		</div>
 
-    {{ Form::hidden('userId', Auth::user()->id) }}
-    {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
+		{{ Form::hidden('userId', Auth::user()->id) }}
+		{{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
 
 	{{ Form::close() }}
   
