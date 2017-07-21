@@ -17,7 +17,7 @@
 		{{ Form::open(['action' => 'IncidentController@search', 'class' => 'form row kb-margin-bottom-1rem']) }}
 			<div class="input-group col-xs-12 col-md-6">
 				{{ Form::label('search', 'Search: ', ['class' => 'sr-only']) }}
-				{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search...'])}}
+				{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search...', 'required' => 'required'])}}
 				<span class="input-group-btn">
 					{{ Form::button('<span class=\'glyphicon glyphicon-search\'></span>', ['class' => 'btn btn-default', 'type' => 'submit'] )}}
 				</span>
@@ -78,6 +78,10 @@
 			@endforeach
 		</table>
 	@else
-				There are no incidents to display.
+		@if (!empty($search))
+			There are no incidents which match your search parameters.
+		@else
+			There are no incidents to display.
+		@endif
 	@endif
 @endsection
