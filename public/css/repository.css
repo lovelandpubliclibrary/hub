@@ -1,5 +1,5 @@
 .content {
-	margin-top: 4em;
+	margin-top: 4.5em;
 }
 
 .repository-margin-bottom-halfrem {
@@ -27,6 +27,14 @@
 	padding-top: .25em;
 	font-family: Raleway, sans-serif;
 }
+
+
+/* NAVIGATION */
+.navbar-brand > img {
+	display: inline;
+	max-height: 100%;
+}
+
 
 /* INCIDENTS */
 .incident-index-description {

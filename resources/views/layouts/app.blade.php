@@ -21,7 +21,9 @@
 
 <body>
     <div id="repository" class="container">
-        {{-- @include('layouts.navigation') --}}
+        @include('layouts.navigation')
+
+        @include('layouts.breadcrumbs')
 
         <div class='content'>
             @yield('content')
