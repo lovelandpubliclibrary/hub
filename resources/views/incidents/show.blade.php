@@ -32,7 +32,7 @@
 		@isset($incident->patron_name)
 			{{ $incident->patron_name }}
 		@else
-			<span class="kb-text-italic">Unknown</span>
+			<span class="repository-text-italic">Unknown</span>
 		@endisset
 	</div>
 
@@ -50,7 +50,7 @@
 		{{ $incident->created_at }}
 	</div>
 
-	<blockquote class="blockquote bg-faded text-muted kb-margin-top-1rem">
+	<blockquote class="blockquote bg-faded text-muted repository-margin-top-1rem">
 		{{ $incident->description }}
 		<footer class="blockquote-footer">
 			{{ $incident->user->name }}

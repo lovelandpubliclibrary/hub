@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="text-muted kb-margin-bottom-1rem">
+	<div class="text-muted repository-margin-bottom-1rem">
 		<a href='/'>
 			<< Back to Home
 		</a>
 	</div>
 
-	<div class="kb-margin-bottom-1rem">
+	<div class="repository-margin-bottom-1rem">
 		<a href="/incidents/create" class="btn btn-primary">
 			Report a New Incident
 		</a>
