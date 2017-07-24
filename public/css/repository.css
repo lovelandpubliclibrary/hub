@@ -2,16 +2,30 @@
 	margin-top: 4em;
 }
 
-.kb-margin-bottom-1rem {
+.repository-margin-bottom-halfrem {
+	margin-bottom: .5rem;
+}
+
+.repository-margin-bottom-1rem {
 	margin-bottom: 1rem;
 }
 
-.kb-margin-top-1rem {
+.repository-margin-top-1rem {
 	margin-top: 1rem;
 }
 
-.kb-text-italic {
+.repository-text-italic {
 	font-style: italic;
+}
+
+.homepage-buttons {
+	font-size: 225%;
+	padding: .5em;
+}
+
+.homepage-buttons > .glyphicon > div {
+	padding-top: .25em;
+	font-family: Raleway, sans-serif;
 }
 
 /* INCIDENTS */

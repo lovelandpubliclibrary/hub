@@ -20,10 +20,10 @@
 
 
 <body>
-    <div id="app">
-        @include('layouts.navigation')
+    <div id="repository" class="container">
+        {{-- @include('layouts.navigation') --}}
 
-        <div class='container content'>
+        <div class='content'>
             @yield('content')
         </div>
     </div>
