@@ -21,9 +21,11 @@
 
 <body>
     <div id="repository" class="container">
-        @include('layouts.navigation')
+        @if (Auth::check())
+            @include('layouts.navigation')
 
-        @include('layouts.breadcrumbs')
+            @include('layouts.breadcrumbs')
+        @endif
 
         <div class='content'>
             @yield('content')
