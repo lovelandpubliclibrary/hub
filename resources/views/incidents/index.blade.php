@@ -1,20 +1,20 @@
 @extends ('layouts.app')
 
 @section ('content')
-	<div class="text-muted kb-margin-bottom-1rem">
+	<div class="text-muted repository-margin-bottom-1rem">
 		<a href='/'>
 			<< Back to Home
 		</a>
 	</div>
 
-	<div class="kb-margin-bottom-1rem">
+	<div class="repository-margin-bottom-1rem">
 		<a href="/incidents/create" class="btn btn-primary">
 			Report a New Incident
 		</a>
 	</div>
 
 	<div class="container">
-		{{ Form::open(['action' => 'IncidentController@search', 'class' => 'form row kb-margin-bottom-1rem']) }}
+		{{ Form::open(['action' => 'IncidentController@search', 'class' => 'form row repository-margin-bottom-1rem']) }}
 			<div class="input-group col-xs-12 col-md-6">
 				{{ Form::label('search', 'Search: ', ['class' => 'sr-only']) }}
 				{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search...', 'required' => 'required'])}}

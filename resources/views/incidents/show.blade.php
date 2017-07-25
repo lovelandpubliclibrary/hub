@@ -6,7 +6,7 @@
 			{{ Session::get('success_message') }}
 		</div>
 	@endif
-	<div class="text-muted kb-margin-bottom-1rem">
+	<div class="text-muted repository-margin-bottom-1rem">
 		<a href='/incidents'>
 			<< Back to Incidents
 		</a>
@@ -36,7 +36,7 @@
 				@isset($incident->patron_name)
 					{{ $incident->patron_name }}
 				@else
-					<span class="kb-text-italic">Unknown</span>
+					<span class="repository-text-italic">Unknown</span>
 				@endisset
 			</div>
 
@@ -54,7 +54,7 @@
 				{{ $incident->created_at }}
 			</div>
 
-			<div class="kb-margin-top-1rem">
+			<div class="repository-margin-top-1rem">
 				<strong>Description of Incident:</strong>
 			</div>
 			<blockquote class="blockquote bg-faded text-muted">
