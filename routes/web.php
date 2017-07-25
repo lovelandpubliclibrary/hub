@@ -40,4 +40,5 @@ Route::get('/cityemail', function() {
 Route::get('/incidents', 'IncidentController@index')->name('incidents');
 Route::get('/incidents/create', 'IncidentController@create');
 Route::get('/incidents/{incident}', 'IncidentController@show');
-Route::post('/incidents', 'IncidentController@store');
+Route::post('/incidents/create', 'IncidentController@store');
+Route::post('/incidents', 'IncidentController@search');

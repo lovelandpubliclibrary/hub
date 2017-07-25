@@ -9,32 +9,35 @@ use Session;
 
 class IncidentController extends Controller
 {
-    public function index() {
+    public function index()
+    {
     	$incidents = Incident::orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
     	return view('incidents.index', compact('incidents'));
     }
 
 
-    public function show(Incident $incident) {
+    public function show(Incident $incident)
+    {
     	return view('incidents.show', compact('incident'));
     }
 
 
-    public function create() {
+    public function create()
+    {
     	return view('incidents.create');
     }
 
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         // validate the request input
         $rules = [
             'date' => 'required',
             'title' => 'required',
             'description' => 'required',
-            'userId' => 'required|unique:incidents'
+            'userId' => 'required'
         ];
         $this->validate($request, $rules);
-
 
         // store it in a new instance of Incident
         $incident = new Incident;
@@ -43,6 +46,7 @@ class IncidentController extends Controller
         $incident->description = $request->description;
         $incident->user_id = $request->userId;
         $incident->patron_name = ($request->patronName ?: null);
+        $incident->card_number = ($request->patronCardNumber ?: null);
         $incident->patron_description = ($request->patronDescription ?: null);
         
 
@@ -50,7 +54,7 @@ class IncidentController extends Controller
         if ($request->hasFile('patronPicture') && $request->file('patronPicture')->isValid()) {
             // create a unique name for the file
             $filename = uniqid('img_') . '.' . $request->patronPicture->getClientOriginalExtension();
-            // move the file to the assests directory
+            // move the file to the public/images/patrons/ directory
             if ($request->file('patronPicture')->move(public_path('images/patrons/'), $filename)) {
                 // save the path to our instance of incident
                 $incident->patron_photo = $filename;
@@ -62,5 +66,21 @@ class IncidentController extends Controller
             Session::flash('success_message', "Incident Saved - \"$incident->title\"");
             return redirect("incidents/$incident->id");
         }
+    }
+
+
+    public function search(Request $request)
+    {
+        // validate the form
+
+        // search the database
+        $incidents = Incident::where('description',   'LIKE', '%' . $request->search . '%')->
+                               orWhere('patron_name', 'LIKE', '%' . $request->search . '%')->
+                               orWhere('title',       'LIKE', '%' . $request->search . '%')->get();
+
+        $search = $request->search;
+
+        // provide the index view with the search results
+        return view('incidents.index', compact('incidents', 'search'));
     }
 }
