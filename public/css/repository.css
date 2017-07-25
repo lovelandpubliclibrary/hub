@@ -1,0 +1,50 @@
+.content {
+	margin-top: 4.5em;
+}
+
+.repository-margin-bottom-halfrem {
+	margin-bottom: .5rem;
+}
+
+.repository-margin-bottom-1rem {
+	margin-bottom: 1rem;
+}
+
+.repository-margin-top-1rem {
+	margin-top: 1rem;
+}
+
+.repository-text-italic {
+	font-style: italic;
+}
+
+.homepage-buttons {
+	font-size: 225%;
+	padding: .5em;
+}
+
+.homepage-buttons > .glyphicon > div {
+	padding-top: .25em;
+	font-family: Raleway, sans-serif;
+}
+
+
+/* NAVIGATION */
+.navbar-brand > img {
+	display: inline;
+	max-height: 100%;
+}
+
+
+/* INCIDENTS */
+.incident-index-description {
+	text-indent: 1em;
+}
+
+.incident-patron-picture {
+	max-height: 15em;
+}
+
+.panel-body blockquote {
+	border-left: 0;
+}

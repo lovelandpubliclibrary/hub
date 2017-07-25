@@ -10,20 +10,24 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'LPL Wiki') }}</title>
+    <title>{{ config('app.name', 'LPL Repository') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/wiki.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/repository.css') }}" rel="stylesheet">
     @yield('styles')
 </head>
 
 
 <body>
-    <div id="app">
-        @include('layouts.navigation');
+    <div id="repository" class="container">
+        @if (Auth::check())
+            @include('layouts.navigation')
 
-        <div class='container content'>
+            @include('layouts.breadcrumbs')
+        @endif
+
+        <div class='content'>
             @yield('content')
         </div>
     </div>

@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersTableSeeder::class);
         $this->call(IncidentsTableSeeder::class);
         $this->call(RolesTableSeeder::class);
-        $this->call(StatusesTableSeeder::class);
     }
 }
 
@@ -42,6 +41,16 @@ class UsersTableSeeder extends Seeder {
 				'role_id' => 2,
 			]
 		);
+
+		User::create (
+			[
+				'id' => 3,
+				'name' => 'Test Director',
+				'email' => 'testdirector@cityofloveland.org',
+				'password' => Hash::make('password'),
+				'role_id' => 3,
+			]
+		);
 	}
 }
 
@@ -55,6 +64,7 @@ class IncidentsTableSeeder extends Seeder {
 				'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eu orci nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vehicula sapien id leo fringilla, efficitur scelerisque mauris pellentesque. Nunc sem enim, facilisis venenatis elit a, pharetra dignissim eros. Vestibulum iaculis risus nec leo ullamcorper, non porttitor ligula tempor. Nulla a ex eu metus laoreet porttitor et non arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aenean augue risus, vulputate nec efficitur elementum, semper in dui. Aliquam erat volutpat. Mauris placerat, odio at fringilla tincidunt, risus magna tincidunt diam, a commodo diam dui dignissim libero. Nam aliquam vehicula dui, a dapibus felis iaculis dictum. Nunc tristique tincidunt dolor, eget bibendum risus dictum ac. Suspendisse semper quis nunc in varius. Morbi sed pulvinar odio. Ut congue vitae ex sed blandit. In hac habitasse platea dictumst. Mauris sit amet orci at felis commodo vulputate id vel est. Vestibulum semper eget erat vel consequat. Suspendisse dictum risus elit, et vehicula felis elementum ut. Duis molestie lorem non velit malesuada, porta fermentum metus consectetur. Sed cursus tellus at justo imperdiet, ac varius neque vehicula. Etiam feugiat ante sit amet maximus aliquet. Phasellus pulvinar maximus tincidunt. Nullam faucibus dui sem, et tincidunt urna commodo mollis. Maecenas id ultricies ex, et elementum eros. Donec ultricies, diam vitae molestie tristique, dolor risus maximus elit, nec congue quam tortor vitae leo. Vivamus a libero ac sapien consectetur dictum at congue libero. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.',
 				'patron_description' => 'Grey hoodie, average height and build',
 				'user_id' => 1,
+				'card_number' => '00154545454'
 			]
 		);
 
@@ -85,6 +95,13 @@ class RolesTableSeeder extends Seeder {
 			[
 				'id' => 2,
 				'role' => 'User',
+			]
+		);
+
+		Role::create (
+			[
+				'id' => 3,
+				'role' => 'Director',
 			]
 		);
 	}
