@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Incident;
+use Auth;
 use Session;
 
 class IncidentController extends Controller
@@ -62,10 +63,32 @@ class IncidentController extends Controller
         }
 
         // save it to the database
-        if($incident->save()) {
+        if ($incident->save()) {
             Session::flash('success_message', "Incident Saved - \"$incident->title\"");
             return redirect("incidents/$incident->id");
         }
+    }
+
+
+    public function edit(Incident $incident)
+    {
+        if (Auth::user()->id == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
+        {
+            return view('incidents.edit', compact('incident'));
+        }
+        else
+        {
+            $errors = ['Permission Denied' => 'Only ' . Auth::user()->find($incident->user_id)->name .
+                                              ' or a supervisor can modify this incident.'];
+            return view('incidents.show', compact('incident', 'errors'));
+        }
+    }
+
+
+    public function update(Request $request)
+    {
+        $incident = Incident::find($request->incident);
+        return view('incidents.show', compact('incident'));
     }
 
 

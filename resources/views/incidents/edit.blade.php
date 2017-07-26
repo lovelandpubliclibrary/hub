@@ -8,7 +8,7 @@
 	</div>
 
   <div class="h1 text-center">
-    Report an Incident
+    Edit an Incident
   </div>
 
 	@if (count($errors) > 0)
@@ -21,49 +21,52 @@
 		</div>
 	@endif
 
-	{{ Form::open(['action' => 'IncidentController@store', 'files' => true]) }}
+	{{ Form::open(['action' => 'IncidentController@update', 'files' => true]) }}
 		<div class="form-group">
 		    {{ Form::label('date', 'Date of Incident:') }}
-		    {{ Form::date('date', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required']) }}
+		    {{ Form::date('date', $incident->date, ['class' => 'form-control']) }}
 	  	</div>
 
 		<div class="form-group">
 			{{ Form::label('patronName', 'Patron Name:') }}
-			{{ Form::text('patronName', null, ['class' => 'form-control']) }}
+			{{ Form::text('patronName', $incident->patron_name, ['class' => 'form-control']) }}
 		</div>
 
 		<div class="form-group">
 			{{ Form::label('patronCardNumber', 'Patron Library Card Number:') }}
-			{{ Form::text('patronCardNumber', null, ['class' => 'form-control']) }}
+			{{ Form::text('patronCardNumber', $incident->card_number, ['class' => 'form-control']) }}
 		</div>
 
 		<div class="form-group">
 			{{ Form::label('patronDescription', 'Patron Description:') }}
-			{{ Form::text('patronDescription', null, ['class' => 'form-control']) }}
+			{{ Form::text('patronDescription', $incident->patron_description, ['class' => 'form-control']) }}
 		</div>
 
 		<div class="form-group">
 			{{ Form::label('title', 'Title:') }}
-			{{ Form::text('title', null, ['class' => 'form-control', 'required' => 'required']) }}
+			{{ Form::text('title', $incident->title, ['class' => 'form-control']) }}
 		</div>
 
 		<div class="form-group">
 			{{ Form::label('description', 'Describe the Incident:') }}
-			{{ Form::textarea('description', null,
-							  ['class' => 'form-control', 'rows' => '6', 'required' => 'required']) }}
+			{{ Form::textarea('description', $incident->description, ['class' => 'form-control', 'rows' => '6']) }}
 		</div>
 
 		<div class="form-group">
 			{{ Form::label('patronPicture', 'Patron Picture:') }}
+			@if ($incident->patron_photo)
+				<img class="img-responsive rounded incident-patron-picture"
+					 src="{{ asset('images/patrons/' . $incident->patron_photo) }}" alt="Patron Picture">
+			@endif
 			{{ Form::file('patronPicture', ['class' => 'form-control-file', 'aria-describedby' => 'patronPicture']) }}
 		</div>
 
 		{{ Form::hidden('userId', Auth::user()->id) }}
+		{{ Form::hidden('incident', $incident->id) }}
 		<div class="text-center">
-			{{ Form::button('<span class="glyphicon glyphicon-floppy-disk"></span>',
+			{{ Form::button('<span class="glyphicon glyphicon-floppy-disk repository-save-button"></span>',
 							['class' => 'btn btn-default', 'type' => 'submit', 'title' => 'Save']) }}
 		</div>
-
 	{{ Form::close() }}
   
 @endsection

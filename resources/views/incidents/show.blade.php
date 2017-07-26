@@ -12,11 +12,29 @@
 		</a>
 	</div>
 
-	<div class="panel panel-warning">
+	@if (count($errors) > 0)
+		<div class="alert alert-danger">
+			The following errors occurred:
+			<ul>
+				@foreach ($errors as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
+
+	<div class="panel panel-default">
 		<div class="panel-heading text-center">
 			<h2 class="panel-title">
 				{{ $incident->title }}
 			</h2>
+
+			{{-- Display the button to edit the incident if the user authored it or is an admin --}}
+			@if (Auth::user()->id == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
+				<a class="btn btn-default pull-right repostory-save-button" href="/incidents/edit/{{ $incident->id }}" title="Edit Incident">
+					<span class="glyphicon glyphicon-edit"></span>
+				</a>
+			@endif
 		</div>
 
 		<div class="panel-body">
@@ -59,8 +77,8 @@
 			</div>
 			<blockquote class="blockquote bg-faded text-muted">
 				{{ $incident->description }}
-				<footer class="blockquote-footer">
-					{{ $incident->user->name }}
+				<footer class="blockquote-footer text-right">
+					<span class="glyphicon glyphicon-user"></span> {{ $incident->user->name }}
 				</footer>
 			</blockquote>
 		</div><!-- .panel-body -->

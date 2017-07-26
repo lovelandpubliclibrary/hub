@@ -42,3 +42,5 @@ Route::get('/incidents/create', 'IncidentController@create');
 Route::get('/incidents/{incident}', 'IncidentController@show');
 Route::post('/incidents/create', 'IncidentController@store');
 Route::post('/incidents', 'IncidentController@search');
+Route::get('/incidents/edit/{incident}', 'IncidentController@edit');
+Route::post('/incidents/edit/{incident]', 'IncidentController@update');

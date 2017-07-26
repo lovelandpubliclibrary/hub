@@ -27,12 +27,13 @@
             @include('layouts.breadcrumbs')
         @endif
 
-        <div class='content'>
+        <div class='content repository-margin-bottom-1rem'>
             @yield('content')
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+
 </body>
 </html>

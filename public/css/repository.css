@@ -2,6 +2,16 @@
 	margin-top: 4.5em;
 }
 
+footer {
+	border-top: 1px solid #d3e0e9;
+	padding: 1rem;
+	background-color: #fff;
+}
+
+.repository-save-button {
+	font-size: 2em;
+}
+
 .repository-margin-bottom-halfrem {
 	margin-bottom: .5rem;
 }
@@ -47,4 +57,17 @@
 
 .panel-body blockquote {
 	border-left: 0;
+}
+
+.blockquote-footer {
+	border: 0;
+}
+
+.panel-default > .panel-heading {
+	background-color: gainsboro;
+}
+
+h2.panel-title {
+	font-size: 30px;
+	display: inline-block;
 }
