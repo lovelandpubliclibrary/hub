@@ -20,7 +20,7 @@
 
 
 <body>
-    <div id="repository" class="container">
+    <div id="app" class="container">
         @if (Auth::check())
             @include('layouts.navigation')
 

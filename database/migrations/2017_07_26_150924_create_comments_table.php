@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddLibraryCardColToIncidents extends Migration
+class CreateCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class AddLibraryCardColToIncidents extends Migration
      */
     public function up()
     {
-        Schema::table('incidents', function (Blueprint $table)
-        {
-            $table->string('card_number')->nullable()->after('patron_photo');
+        Schema::create('comments', function (Blueprint $table) {
+            $table->increments('id');
+            $table->text('comment');
+            $table->integer('user_id')->unsigned();
+            $table->integer('incident_id')->unsigned();
+            $table->timestamps();
         });
     }
 
@@ -26,9 +29,6 @@ class AddLibraryCardColToIncidents extends Migration
      */
     public function down()
     {
-        Schema::table('incidents', function (Blueprint $table)
-        {
-            $table->dropColumn('card_number');
-        });
+        Schema::dropIfExists('comments');
     }
 }

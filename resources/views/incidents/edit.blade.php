@@ -28,18 +28,18 @@
 	  	</div>
 
 		<div class="form-group">
-			{{ Form::label('patronName', 'Patron Name:') }}
-			{{ Form::text('patronName', $incident->patron_name, ['class' => 'form-control']) }}
+			{{ Form::label('patron_name', 'Patron Name:') }}
+			{{ Form::text('patron_name', $incident->patron_name, ['class' => 'form-control']) }}
 		</div>
 
 		<div class="form-group">
-			{{ Form::label('patronCardNumber', 'Patron Library Card Number:') }}
-			{{ Form::text('patronCardNumber', $incident->card_number, ['class' => 'form-control']) }}
+			{{ Form::label('card_number', 'Patron Library Card Number:') }}
+			{{ Form::text('card_number', $incident->card_number, ['class' => 'form-control']) }}
 		</div>
 
 		<div class="form-group">
-			{{ Form::label('patronDescription', 'Patron Description:') }}
-			{{ Form::text('patronDescription', $incident->patron_description, ['class' => 'form-control']) }}
+			{{ Form::label('patron_description', 'Patron Description:') }}
+			{{ Form::text('patron_description', $incident->patron_description, ['class' => 'form-control']) }}
 		</div>
 
 		<div class="form-group">
@@ -53,15 +53,15 @@
 		</div>
 
 		<div class="form-group">
-			{{ Form::label('patronPicture', 'Patron Picture:') }}
+			{{ Form::label('patron_photo', 'Patron Picture:') }}
 			@if ($incident->patron_photo)
 				<img class="img-responsive rounded incident-patron-picture"
 					 src="{{ asset('images/patrons/' . $incident->patron_photo) }}" alt="Patron Picture">
 			@endif
-			{{ Form::file('patronPicture', ['class' => 'form-control-file', 'aria-describedby' => 'patronPicture']) }}
+			{{ Form::file('patron_photo', ['class' => 'form-control-file', 'aria-describedby' => 'patron_photo']) }}
 		</div>
 
-		{{ Form::hidden('userId', Auth::user()->id) }}
+		{{ Form::hidden('user', Auth::user()->id) }}
 		{{ Form::hidden('incident', $incident->id) }}
 		<div class="text-center">
 			{{ Form::button('<span class="glyphicon glyphicon-floppy-disk repository-save-button"></span>',

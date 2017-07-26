@@ -19,7 +19,8 @@ class IncidentController extends Controller
 
     public function show(Incident $incident)
     {
-    	return view('incidents.show', compact('incident'));
+        $comments = $incident->comment;
+    	return view('incidents.show', compact('incident', 'comments'));
     }
 
 
@@ -36,7 +37,7 @@ class IncidentController extends Controller
             'date' => 'required',
             'title' => 'required',
             'description' => 'required',
-            'userId' => 'required'
+            'user' => 'required'
         ];
         $this->validate($request, $rules);
 
@@ -45,18 +46,18 @@ class IncidentController extends Controller
         $incident->date = $request->date;
         $incident->title = $request->title;
         $incident->description = $request->description;
-        $incident->user_id = $request->userId;
-        $incident->patron_name = ($request->patronName ?: null);
-        $incident->card_number = ($request->patronCardNumber ?: null);
-        $incident->patron_description = ($request->patronDescription ?: null);
+        $incident->user_id = $request->user;
+        $incident->patron_name = ($request->patron_name ?: null);
+        $incident->card_number = ($request->card_number ?: null);
+        $incident->patron_description = ($request->patron_description ?: null);
         
 
         // validate and upload the patron photo
-        if ($request->hasFile('patronPicture') && $request->file('patronPicture')->isValid()) {
+        if ($request->hasFile('patron_photo') && $request->file('patron_photo')->isValid()) {
             // create a unique name for the file
-            $filename = uniqid('img_') . '.' . $request->patronPicture->getClientOriginalExtension();
+            $filename = uniqid('img_') . '.' . $request->patron_photo->getClientOriginalExtension();
             // move the file to the public/images/patrons/ directory
-            if ($request->file('patronPicture')->move(public_path('images/patrons/'), $filename)) {
+            if ($request->file('patron_photo')->move(public_path('images/patrons/'), $filename)) {
                 // save the path to our instance of incident
                 $incident->patron_photo = $filename;
             }
@@ -87,7 +88,31 @@ class IncidentController extends Controller
 
     public function update(Request $request)
     {
+        // validate the form
+        $rules = [
+            'date' => 'required',
+            'title' => 'required',
+            'description' => 'required',
+            'user' => 'required'
+        ];
+        $this->validate($request, $rules);
+
         $incident = Incident::find($request->incident);
+        $updates = $request->only(
+            'date',
+            'patron_name',
+            'card_number',
+            'patron_description',
+            'title',
+            'description'
+        );
+        
+        foreach ($updates as $key => $value) {
+            $incident->$key = $value;
+        }
+
+        $incident->save();
+
         return view('incidents.show', compact('incident'));
     }
 

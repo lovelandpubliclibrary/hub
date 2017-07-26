@@ -28,18 +28,18 @@
 	  	</div>
 
 		<div class="form-group">
-			{{ Form::label('patronName', 'Patron Name:') }}
-			{{ Form::text('patronName', null, ['class' => 'form-control']) }}
+			{{ Form::label('patron_name', 'Patron Name:') }}
+			{{ Form::text('patron_name', null, ['class' => 'form-control']) }}
 		</div>
 
 		<div class="form-group">
-			{{ Form::label('patronCardNumber', 'Patron Library Card Number:') }}
-			{{ Form::text('patronCardNumber', null, ['class' => 'form-control']) }}
+			{{ Form::label('card_number', 'Patron Library Card Number:') }}
+			{{ Form::text('card_number', null, ['class' => 'form-control']) }}
 		</div>
 
 		<div class="form-group">
-			{{ Form::label('patronDescription', 'Patron Description:') }}
-			{{ Form::text('patronDescription', null, ['class' => 'form-control']) }}
+			{{ Form::label('patron_description', 'Patron Description:') }}
+			{{ Form::text('patron_description', null, ['class' => 'form-control']) }}
 		</div>
 
 		<div class="form-group">
@@ -54,8 +54,8 @@
 		</div>
 
 		<div class="form-group">
-			{{ Form::label('patronPicture', 'Patron Picture:') }}
-			{{ Form::file('patronPicture', ['class' => 'form-control-file', 'aria-describedby' => 'patronPicture']) }}
+			{{ Form::label('patron_photo', 'Patron Picture:') }}
+			{{ Form::file('patron_photo', ['class' => 'form-control-file', 'aria-describedby' => 'patron_photo']) }}
 		</div>
 
 		{{ Form::hidden('userId', Auth::user()->id) }}

@@ -89,7 +89,16 @@
 				</footer>
 			</blockquote>
 
+			@if (isset($comments) && count($comments) > 0)
+				@include ('comments.index')
+			@endif
+
+			<div class="panel-group">
+				<h3>Comment on this incident:</h3>
+				@include ('comments.create')
+			</div>
 			
+
 		</div><!-- .panel-body -->
 	</div><!-- .panel -->
 @endsection

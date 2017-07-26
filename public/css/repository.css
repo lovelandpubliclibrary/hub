@@ -76,3 +76,9 @@ td > .glyphicon {
 	margin-left: .2em;
 
 }
+
+
+/* COMMENTS */
+.comments .list-group-item > p {
+	text-indent: 2em;
+}

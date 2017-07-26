@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\User;
 use App\Incident;
 use App\Role;
+use App\Comment;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,6 +18,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersTableSeeder::class);
         $this->call(IncidentsTableSeeder::class);
         $this->call(RolesTableSeeder::class);
+        $this->call(CommentsTableSeeder::class);
+        $this->call(RoleUserRelationshipSeeder::class);
     }
 }
 
@@ -104,5 +107,59 @@ class RolesTableSeeder extends Seeder {
 				'role' => 'Director',
 			]
 		);
+	}
+}
+
+class CommentsTableSeeder extends Seeder {
+	public function run() {
+		Comment::create (
+			[
+				'id' => 1,
+				'comment' => 'This is a comment on incident #1.',
+				'user_id' => 1,
+				'incident_id' => 1
+			]
+		);
+
+		Comment::create (
+			[
+				'id' => 2,
+				'comment' => 'This is also a comment on incident #1.',
+				'user_id' => 2,
+				'incident_id' => 1
+			]
+		);
+
+		Comment::create (
+			[
+				'id' => 3,
+				'comment' => 'This is a comment on incident #2.',
+				'user_id' => 3,
+				'incident_id' => 2
+			]
+		);
+	}
+}
+
+class RoleUserRelationshipSeeder extends Seeder {
+	public function run() {
+		$users = User::all();
+		
+		foreach ($users as $user) {
+			switch ($user->name) {
+				case 'Test User':
+					$user->role()->save(Role::find(2));
+					break;
+				case 'Test Admin':
+					$user->role()->save(Role::find(2));
+					$user->role()->save(Role::find(1));
+					break;
+				case 'Test Director':
+					$user->role()->save(Role::find(2));
+					$user->role()->save(Role::find(1));
+					$user->role()->save(Role::find(3));
+					break;
+			}
+		}
 	}
 }
