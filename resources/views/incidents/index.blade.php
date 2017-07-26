@@ -7,23 +7,19 @@
 		</a>
 	</div>
 
-	<div class="repository-margin-bottom-1rem">
-		<a href="/incidents/create" class="btn btn-primary">
+		<a href="/incidents/create" class="btn btn-default col-xs-12 repository-margin-bottom-1rem">
 			Report a New Incident
 		</a>
-	</div>
 
-	<div class="container">
-		{{ Form::open(['action' => 'IncidentController@search', 'class' => 'form row repository-margin-bottom-1rem']) }}
-			<div class="input-group col-xs-12 col-md-6">
+		{{ Form::open(['action' => 'IncidentController@search', 'class' => 'form repository-margin-bottom-1rem']) }}
+			<div class="input-group col-xs-12">
 				{{ Form::label('search', 'Search: ', ['class' => 'sr-only']) }}
-				{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search...', 'required' => 'required'])}}
+				{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search...', 'required' => 'required']) }}
 				<span class="input-group-btn">
 					{{ Form::button('<span class=\'glyphicon glyphicon-search\'></span>', ['class' => 'btn btn-default', 'type' => 'submit'] )}}
 				</span>
 			</div>
 		{{ Form::close() }}
-	</div>
 
 	@if(count($incidents))
 		<table class="table table-striped table-condensed">
@@ -63,7 +59,11 @@
 						</a>
 
 						@if ($incident->patron_photo)
-							&nbsp;<span class="glyphicon glyphicon-picture"></span>
+							<span class="glyphicon glyphicon-picture"></span>
+						@endif
+
+						@if ($incident->card_number)
+							<span class="glyphicon glyphicon-barcode"></span>
 						@endif
 					</td>
 

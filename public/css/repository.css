@@ -48,3 +48,7 @@
 .panel-body blockquote {
 	border-left: 0;
 }
+
+td > .glyphicon {
+	margin-left: .2em;
+}
