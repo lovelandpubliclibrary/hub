@@ -58,6 +58,13 @@
 				@endisset
 			</div>
 
+			@isset($incident->card_number)
+				<div>
+					<strong>Library Card Number:</strong>
+					{{ $incident->card_number }}
+				</div>
+			@endisset
+
 			@isset($incident->patron_description)
 				<div>
 					<strong>Patron Description:</strong>
@@ -81,6 +88,8 @@
 					<span class="glyphicon glyphicon-user"></span> {{ $incident->user->name }}
 				</footer>
 			</blockquote>
+
+			
 		</div><!-- .panel-body -->
 	</div><!-- .panel -->
 @endsection
