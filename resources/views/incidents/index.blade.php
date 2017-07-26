@@ -21,6 +21,13 @@
 			</div>
 		{{ Form::close() }}
 
+	@if (isset($search) && !empty($search))
+		<p>
+			Showing search results for <strong>{{ $search }}</strong>:
+			<a class="pull-right" href="/incidents">Clear Search</a>
+		</p>
+	@endif
+
 	@if(count($incidents))
 		<table class="table table-striped table-condensed">
 			<tr>
