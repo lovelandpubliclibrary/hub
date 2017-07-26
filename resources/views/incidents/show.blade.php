@@ -76,7 +76,7 @@
 				<strong>Reported by:</strong>
 				{{ $incident->user->name }}
 				on
-				{{ $incident->created_at }}
+				{{ $incident->created_at->toDayDateTimeString() }}
 			</div>
 
 			<div class="repository-margin-top-1rem">
@@ -94,7 +94,7 @@
 			@endif
 
 			<div class="panel-group">
-				<h3>Comment on this incident:</h3>
+				<h3>Comment on this Incident:</h3>
 				@include ('comments.create')
 			</div>
 			
