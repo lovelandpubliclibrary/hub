@@ -1,0 +1,4 @@
+.git
+.dockerignore
+storage/logs
+alpine-repository.Dockerfile
