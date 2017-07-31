@@ -20,7 +20,7 @@
 	            </div>
 
 	            <div class=" col-xs-12 col-sm-3 repository-margin-bottom-1rem">
-	                <a class="btn btn-default homepage-buttons">
+	                <a class="btn btn-default homepage-buttons" href="{{ route('schedule') }}">
 	                	<span class="glyphicon glyphicon-calendar">
 	                		<div>
 	                			Schedule
@@ -30,7 +30,7 @@
 	            </div>
 
 	            <div class=" col-xs-12 col-sm-3 repository-margin-bottom-1rem">
-	                <a class="btn btn-default homepage-buttons">
+	                <a class="btn btn-default homepage-buttons" href="{{ route('cityemail') }}">
 	                	<span class="glyphicon glyphicon-envelope">
 	                		<div>
 	                			City Email
@@ -40,6 +40,6 @@
 	            </div>
             </div><!-- .row -->
         @else
-            @include('auth.login');
+            @include('auth.login')
         @endif
 @endsection
