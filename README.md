@@ -13,6 +13,6 @@ The application is Dockerized so all you need to do is follow the instructions b
 		- `docker-compose up -d`
 		   *Note: the first time you start the containers will take a few minutes.  After that they will start much faster.*
 	- Create and seed tables in database:
-		- `docker exec repository php artisan migrate --seed
+		- `docker exec repository php artisan migrate --seed`
 		
 - The application is being served on port 10000, and phpMyAdmin is on port 8888. MySQL is also available on port 3307 if you prefer to use a different database management tool. If accessing the containers isn't working with localhost, try using the IP output by `docker-machine ip` or `docker inspect repository`.
