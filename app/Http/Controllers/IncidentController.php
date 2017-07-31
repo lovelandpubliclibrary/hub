@@ -134,6 +134,6 @@ class IncidentController extends Controller
         $search = $request->search;
 
         // provide the index view with the search results
-        return view('incidents.index', compact('incidents', 'search'));
+        return view('incidents.index', compact('incidents', $request->search));
     }
 }
