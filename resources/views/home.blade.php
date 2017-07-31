@@ -40,6 +40,6 @@
 	            </div>
             </div><!-- .row -->
         @else
-            @include('auth.login');
+            @include('auth.login')
         @endif
 @endsection
