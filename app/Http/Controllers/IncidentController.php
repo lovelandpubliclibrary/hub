@@ -120,15 +120,17 @@ class IncidentController extends Controller
     public function search(Request $request)
     {
         // validate the form
+        $this->validate($request, ['search' => 'required']);
 
         // search the database
         $incidents = Incident::where('description',   'LIKE', '%' . $request->search . '%')->
                                orWhere('patron_name', 'LIKE', '%' . $request->search . '%')->
-                               orWhere('title',       'LIKE', '%' . $request->search . '%')->get();
-
-        $search = $request->search;
+                               orWhere('title',       'LIKE', '%' . $request->search . '%')->
+                               orWhereHas('comment', function ($query) use ($request) {
+                                   $query->where('comment', 'LIKE', '%' . $request->search . '%');
+                               })->get();
 
         // provide the index view with the search results
-        return view('incidents.index', compact('incidents', 'search'));
+        return view('incidents.index', compact('incidents', $request->search));
     }
 }
