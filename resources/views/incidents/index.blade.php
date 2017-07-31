@@ -65,6 +65,7 @@
 							{{ $incident->title }}
 						</a>
 
+						{{-- display icons based on the properties of the incidents --}}
 						@if ($incident->patron_photo)
 							<span class="glyphicon glyphicon-picture"></span>
 						@endif
@@ -72,11 +73,15 @@
 						@if ($incident->card_number)
 							<span class="glyphicon glyphicon-barcode"></span>
 						@endif
+
+						@if (count($incident->comment))
+							<span class="glyphicon glyphicon-comment"></span>
+						@endif
 					</td>
 
 					<td>
-						@if (strlen($incident->description) > 40)
-							{{ $incident->truncate_description(40) }}...
+						@if (strlen($incident->description) > 75)
+							{{ $incident->truncate_description(75) }}...
 						@else
 							{{ $incident->description }}
 						@endif

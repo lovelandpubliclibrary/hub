@@ -28,16 +28,16 @@
 			<h2 class="panel-title">
 				{{ $incident->title }}
 			</h2>
-
-			{{-- Display the button to edit the incident if the user authored it or is an admin --}}
-			@if (Auth::user()->id == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
-				<a class="btn btn-default pull-right repostory-save-button" href="/incidents/edit/{{ $incident->id }}" title="Edit Incident">
-					<span class="glyphicon glyphicon-edit"></span>
-				</a>
-			@endif
 		</div>
 
 		<div class="panel-body">
+			{{-- Display the button to edit the incident if the user authored it or is an admin --}}
+			@if (Auth::user()->id == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
+				<a class="btn-sm btn-default pull-right link-default" href="/incidents/edit/{{ $incident->id }}" title="Edit Incident">
+					<span class="glyphicon glyphicon-edit"></span> Edit
+				</a>
+			@endif
+
 			<div>
 				@isset($incident->patron_photo)
 					<img class="img-responsive rounded incident-patron-picture" src="{{ asset('images/patrons/' . $incident->patron_photo) }}" alt="Patron Picture">
