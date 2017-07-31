@@ -1,5 +1,4 @@
-![Loveland Public Library Logo](http://lovelandpubliclibrary.org/sites/all/themes/lpltheme/lpllogotag.png)
-# Loveland Public Library Repository
+# ![Loveland Public Library Logo](http://lovelandpubliclibrary.org/sites/all/themes/lpltheme/lpllogotag.png)
 This is a webapp written in PHP 7 with the Laravel 5.4 framework.  It's designed to be a tool for the staff of Loveland Public Library
 to help manage information regarding all aspects of creating an safe, efficient place for Loveland residents.
 
