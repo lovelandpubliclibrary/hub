@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="text-muted">
+	<div class="text-muted repository-margin-bottom-1rem">
 		<a href='/incidents'>
 			<< Back to Incidents
 		</a>
