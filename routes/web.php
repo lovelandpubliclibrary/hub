@@ -39,6 +39,17 @@ Route::get('/cityemail', function() {
 // Incidents
 Route::get('/incidents', 'IncidentController@index')->name('incidents');
 Route::get('/incidents/create', 'IncidentController@create');
-Route::get('/incidents/{incident}', 'IncidentController@show');
+Route::get('/incidents/{incident}', 'IncidentController@show')->name('incident');
 Route::post('/incidents/create', 'IncidentController@store');
 Route::post('/incidents', 'IncidentController@search');
+Route::get('/incidents/edit/{incident}', 'IncidentController@edit');
+Route::post('/incidents/edit/{incident]', 'IncidentController@update');
+
+// Comments
+Route::post('/comments/create', 'CommentController@store');
+
+// Photos
+Route::get('/photos/{photo}', 'PhotoController@show')->name('photo');
+Route::get('/photos/edit/{photo}', 'PhotoController@edit')->name('editPhoto');
+Route::post('/photos/delete/{photo}', 'PhotoController@delete')->name('deletePhoto');
+Route::post('/photos/update/{photo}', 'PhotoController@update')->name('updatePhoto');

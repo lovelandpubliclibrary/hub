@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateIncidentsTable extends Migration
+class CreateCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateIncidentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('incidents', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('date');
-            $table->string('title');
-            $table->text('description');
-            $table->string('patron_name')->nullable();
-            $table->string('card_number')->nullable();
-            $table->text('patron_description')->nullable();
+            $table->text('comment');
             $table->integer('user_id')->unsigned();
+            $table->integer('incident_id')->unsigned();
             $table->timestamps();
         });
     }
@@ -33,6 +29,6 @@ class CreateIncidentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('incidents');
+        Schema::dropIfExists('comments');
     }
 }
