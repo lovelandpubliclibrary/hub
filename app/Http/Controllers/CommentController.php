@@ -25,8 +25,8 @@ class CommentController extends Controller
 
         // save it to the database
         if ($comment->save()) {
-            Session::flash('success_message', "Comment Saved");
-            return redirect("incidents/$comment->incident_id");
+            Session::flash('success_message', "Comment Saved.");
+            return redirect()->route('incident', ['incident' => $comment->incident_id]);
         }
     }
 }

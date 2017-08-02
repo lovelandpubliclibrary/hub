@@ -15,6 +15,10 @@ class Incident extends Model
 		return $this->hasMany('App\Comment');
 	}
 
+	public function photo() {
+		return $this->hasMany('App\Photo');
+	}
+
 
 	// truncate the description field of incidents for summary display
 	public function truncate_description($length) {

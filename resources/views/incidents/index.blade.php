@@ -50,11 +50,11 @@
 
 			@foreach ($incidents as $incident)
 				<tr>
-					<td>
+					<td class="text-nowrap">
 						{{ \Carbon\Carbon::parse($incident->date)->toFormattedDateString() }}
 					</td>
 
-					<td class="hidden-xs">
+					<td class="hidden-xs text-nowrap">
 						@if ($incident->patron_name)
 							{{ $incident->patron_name }}
 						@endif
@@ -66,17 +66,19 @@
 						</a>
 
 						{{-- display icons based on the properties of the incidents --}}
-						@if ($incident->patron_photo)
-							<span class="glyphicon glyphicon-picture"></span>
-						@endif
+						<div class="text-nowrap">
+							@if (count($incident->photo))
+								<span class="glyphicon glyphicon-picture"></span>
+							@endif
 
-						@if ($incident->card_number)
-							<span class="glyphicon glyphicon-barcode"></span>
-						@endif
+							@if ($incident->card_number)
+								<span class="glyphicon glyphicon-barcode"></span>
+							@endif
 
-						@if (count($incident->comment))
-							<span class="glyphicon glyphicon-comment"></span>
-						@endif
+							@if (count($incident->comment))
+								<span class="glyphicon glyphicon-comment"></span>
+							@endif
+						</div>
 					</td>
 
 					<td>

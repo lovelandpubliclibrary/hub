@@ -60,7 +60,7 @@
 
 		{{ Form::hidden('userId', Auth::user()->id) }}
 		<div class="text-center">
-			{{ Form::button('<span class="glyphicon glyphicon-floppy-disk"></span>',
+			{{ Form::button('Save Changes',
 							['class' => 'btn btn-default', 'type' => 'submit', 'title' => 'Save']) }}
 		</div>
 
