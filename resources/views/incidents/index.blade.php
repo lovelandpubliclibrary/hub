@@ -68,15 +68,15 @@
 						{{-- display icons based on the properties of the incidents --}}
 						<div class="text-nowrap">
 							@if (count($incident->photo))
-								<span class="glyphicon glyphicon-picture"></span>
+								<span class="glyphicon glyphicon-picture" title="has photo of patron"></span>
 							@endif
 
 							@if ($incident->card_number)
-								<span class="glyphicon glyphicon-barcode"></span>
+								<span class="glyphicon glyphicon-barcode" title="has library card of patron"></span>
 							@endif
 
 							@if (count($incident->comment))
-								<span class="glyphicon glyphicon-comment"></span>
+								<span class="glyphicon glyphicon-comment" title="has comments by staff"></span>
 							@endif
 						</div>
 					</td>

@@ -21,6 +21,7 @@ class PhotoController extends Controller
 	public function delete(Photo $photo) {
 		$incident_id = $photo->incident->id;
 		$photo->delete();
+        Session::flash('success_message', 'Photo deleted.');
 		return redirect()->route('incident', ['incident' => $incident_id]);
 	}
 
