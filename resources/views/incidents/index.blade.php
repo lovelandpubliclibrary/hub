@@ -7,23 +7,26 @@
 		</a>
 	</div>
 
-	<div class="repository-margin-bottom-1rem">
-		<a href="/incidents/create" class="btn btn-primary">
+		<a href="/incidents/create" class="btn btn-default col-xs-12 repository-margin-bottom-1rem">
 			Report a New Incident
 		</a>
-	</div>
 
-	<div class="container">
-		{{ Form::open(['action' => 'IncidentController@search', 'class' => 'form row repository-margin-bottom-1rem']) }}
-			<div class="input-group col-xs-12 col-md-6">
+		{{ Form::open(['action' => 'IncidentController@search', 'class' => 'form repository-margin-bottom-1rem']) }}
+			<div class="input-group col-xs-12">
 				{{ Form::label('search', 'Search: ', ['class' => 'sr-only']) }}
-				{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search...', 'required' => 'required'])}}
+				{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search...', 'required' => 'required']) }}
 				<span class="input-group-btn">
 					{{ Form::button('<span class=\'glyphicon glyphicon-search\'></span>', ['class' => 'btn btn-default', 'type' => 'submit'] )}}
 				</span>
 			</div>
 		{{ Form::close() }}
-	</div>
+
+	@if (isset($search) && !empty($search))
+		<p>
+			Showing search results for <strong>{{ $search }}</strong>:
+			<a class="pull-right" href="/incidents">Clear Search</a>
+		</p>
+	@endif
 
 	@if(count($incidents))
 		<table class="table table-striped table-condensed">
@@ -47,11 +50,11 @@
 
 			@foreach ($incidents as $incident)
 				<tr>
-					<td>
+					<td class="text-nowrap">
 						{{ \Carbon\Carbon::parse($incident->date)->toFormattedDateString() }}
 					</td>
 
-					<td class="hidden-xs">
+					<td class="hidden-xs text-nowrap">
 						@if ($incident->patron_name)
 							{{ $incident->patron_name }}
 						@endif
@@ -62,14 +65,25 @@
 							{{ $incident->title }}
 						</a>
 
-						@if ($incident->patron_photo)
-							&nbsp;<span class="glyphicon glyphicon-picture"></span>
-						@endif
+						{{-- display icons based on the properties of the incidents --}}
+						<div class="text-nowrap">
+							@if (count($incident->photo))
+								<span class="glyphicon glyphicon-picture" title="has photo of patron"></span>
+							@endif
+
+							@if ($incident->card_number)
+								<span class="glyphicon glyphicon-barcode" title="has library card of patron"></span>
+							@endif
+
+							@if (count($incident->comment))
+								<span class="glyphicon glyphicon-comment" title="has comments by staff"></span>
+							@endif
+						</div>
 					</td>
 
 					<td>
-						@if (strlen($incident->description) > 40)
-							{{ $incident->truncate_description(40) }}...
+						@if (strlen($incident->description) > 75)
+							{{ $incident->truncate_description(75) }}...
 						@else
 							{{ $incident->description }}
 						@endif
