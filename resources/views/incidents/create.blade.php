@@ -1,15 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="text-muted">
-		<a href='/incidents'>
-			<< Back to Incidents
-		</a>
-	</div>
+	@include('layouts.breadcrumbs')
 
-  <div class="h1 text-center">
-    Report an Incident
-  </div>
+	<div class="h1 text-center">
+		Report an Incident
+	</div>
 
 	@if (count($errors) > 0)
 		<div class="alert alert-danger">

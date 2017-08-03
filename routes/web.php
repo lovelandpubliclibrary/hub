@@ -38,7 +38,7 @@ Route::get('/cityemail', function() {
 
 // Incidents
 Route::get('/incidents', 'IncidentController@index')->name('incidents');
-Route::get('/incidents/create', 'IncidentController@create');
+Route::get('/incidents/create', 'IncidentController@create')->name('createIncident');
 Route::get('/incidents/{incident}', 'IncidentController@show')->name('incident');
 Route::post('/incidents/create', 'IncidentController@store');
 Route::post('/incidents', 'IncidentController@search');

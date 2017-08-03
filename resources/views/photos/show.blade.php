@@ -1,11 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="text-muted repository-margin-bottom-1rem">
-		<a href="/incidents/{{ $photo->incident->id }}">
-			<< Back to {{ $photo->incident->title }}
-		</a>
-	</div>
+	@include('layouts.breadcrumbs')
 
 	@if(Session::has('success_message'))
 		<div class="alert alert-success">
@@ -27,12 +23,7 @@
 		<div class="panel-heading col-xs-12 text-center repository-margin-bottom-1rem">
 			<div class="col-xs-10 col-xs-offset-1">
 				<h2 class="panel-title">
-					Picture of
-					@if (isset($photo->incident->patron_name))
-						{{ $photo->incident->patron_name }}
-					@else
-						Unknown Patron
-					@endif
+					Photo of {{ ($photo->incident->patron_name ?: 'Unknown Patron') }}
 				</h2>
 
 				<div>

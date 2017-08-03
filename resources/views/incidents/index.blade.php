@@ -1,13 +1,11 @@
 @extends ('layouts.app')
 
 @section ('content')
-	<div class="text-muted repository-margin-bottom-1rem">
-		<a href='/'>
-			<< Back to Home
-		</a>
-	</div>
+	<div class="repository-margin-bottom-1rem">
 
-		<a href="/incidents/create" class="btn btn-default col-xs-12 repository-margin-bottom-1rem">
+		@include('layouts.breadcrumbs')
+		
+		<a href="/incidents/create" class="btn btn-primary">
 			Report a New Incident
 		</a>
 

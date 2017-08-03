@@ -2,11 +2,7 @@
 
 @section('content')
 	<div class="row">
-		<div class="text-muted repository-margin-bottom-1rem">
-			<a href='/incidents'>
-				<< Back to Incidents
-			</a>
-		</div>
+		@include('layouts.breadcrumbs')
 
 		@if (count($errors) > 0)
 			<div class="alert alert-danger">
@@ -17,6 +13,10 @@
 				</ul>
 			</div>
 		@endif
+
+		<div class="h1 text-center">
+			Edit an Incident
+		</div>
 
 		{{ Form::open(['action' => 'IncidentController@update', 'files' => true]) }}
 			<div class="panel panel-default">
