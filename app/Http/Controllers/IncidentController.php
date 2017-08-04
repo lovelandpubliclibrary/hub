@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Incident;
 use App\Photo;
+use App\Mail\IncidentNotification;
 use Auth;
 use Session;
 
@@ -50,6 +51,7 @@ class IncidentController extends Controller
         $breadcrumbs = [
             ['link' => route('home'), 'text' => 'Home'],
             ['link' => route('incidents'), 'text' => 'Incidents'],
+            ['link' => route('createIncident'), 'text' => 'Report an Incident'],
         ];
 
     	return view('incidents.create', compact('breadcrumbs'));
@@ -92,8 +94,11 @@ class IncidentController extends Controller
                 }
             }
 
+            // email a notification to the library
+            \Mail::to('library@cityofloveland.org')->send(new IncidentNotification($incident));
+
             // redirect back the new incident with a success message
-            Session::flash('success_message', "Incident Saved - \"$incident->title\"");
+            Session::flash('success_message', "The incident was saved and an email notification was sent to the library staff.");
             return redirect()->route('incident', ['incident' => $incident->id]);
         }
     }

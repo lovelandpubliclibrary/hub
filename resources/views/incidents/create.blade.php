@@ -20,13 +20,13 @@
 		@endif
 
 		{{ Form::open(['action' => 'IncidentController@store', 'files' => true]) }}
-			<div class="form-group">
-				{{ Form::label('title', 'Title:') }}
+			<div class="form-group required">
+				{{ Form::label('title', 'Title:', ['class' => 'control-label']) }}
 				{{ Form::text('title', null, ['class' => 'form-control', 'required' => 'required']) }}
 			</div>
 			
-			<div class="form-group">
-			    {{ Form::label('date', 'Date of Incident:') }}
+			<div class="form-group required">
+			    {{ Form::label('date', 'Date of Incident:', ['class' => 'control-label']) }}
 			    {{ Form::date('date', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required']) }}
 		  	</div>
 
@@ -45,8 +45,8 @@
 				{{ Form::text('patron_description', null, ['class' => 'form-control']) }}
 			</div>
 
-			<div class="form-group">
-				{{ Form::label('description', 'Describe the Incident:') }}
+			<div class="form-group required">
+				{{ Form::label('description', 'Describe the Incident:', ['class' => 'control-label']) }}
 				{{ Form::textarea('description', null,
 								  ['class' => 'form-control', 'rows' => '6', 'required' => 'required']) }}
 			</div>
@@ -56,7 +56,7 @@
 				{{ Form::file('patron_photo', ['class' => 'form-control-file', 'aria-describedby' => 'patron_photo']) }}
 			</div>
 
-			{{ Form::hidden('userId', Auth::user()->id) }}
+			{{ Form::hidden('user', Auth::user()->id) }}
 			<div class="text-center">
 				{{ Form::button('Save Changes',
 								['class' => 'btn btn-default', 'type' => 'submit', 'title' => 'Save']) }}
