@@ -13,27 +13,46 @@ class IncidentController extends Controller
 {
     public function index()
     {
+        // set up the breadcrumbs for this action
+        $breadcrumbs = [
+            ['link' => route('home'), 'text' => 'Home'],
+            ['link' => route('incidents'), 'text' => 'Incidents'],
+        ];
+
         // retrieve all the incidents by date, then time
     	$incidents = Incident::orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
-    	return view('incidents.index', compact('incidents'));
+    	return view('incidents.index', compact('incidents', 'breadcrumbs'));
     }
 
 
     public function show(Incident $incident)
     {
+        // set up the breadcrumbs for this action
+        $breadcrumbs = [
+            ['link' => route('home'), 'text' => 'Home'],
+            ['link' => route('incidents'), 'text' => 'Incidents'],
+            ['link' => route('incident', ['incident' => $incident->id]), 'text' => $incident->title]
+        ];
+
         // load the comments for the incident
         $comments = $incident->comment;
 
         // load the photos for the incident
         $photos = $incident->photo;
 
-    	return view('incidents.show', compact('incident', 'comments', 'photos'));
+    	return view('incidents.show', compact('incident', 'comments', 'photos', 'breadcrumbs'));
     }
 
 
     public function create()
     {
-    	return view('incidents.create');
+        // set up the breadcrumbs for this action
+        $breadcrumbs = [
+            ['link' => route('home'), 'text' => 'Home'],
+            ['link' => route('incidents'), 'text' => 'Incidents'],
+        ];
+
+    	return view('incidents.create', compact('breadcrumbs'));
     }
 
 
@@ -82,12 +101,19 @@ class IncidentController extends Controller
 
     public function edit(Incident $incident)
     {
+        // set up the breadcrumbs for this action
+        $breadcrumbs = [
+            ['link' => route('home'), 'text' => 'Home'],
+            ['link' => route('incidents'), 'text' => 'Incidents'],
+            ['link' => route('incident', ['incident' => $incident->id]), 'text' => $incident->title],
+        ];
+
         // make sure the user has permission to edit the incident
         if (Auth::user()->id == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
         {
             // collect the photos associated with this incident
             $photos = $incident->photo;
-            return view('incidents.edit', compact('incident', 'photos'));
+            return view('incidents.edit', compact('incident', 'photos', 'breadcrumbs'));
         }
         else
         {
@@ -95,7 +121,7 @@ class IncidentController extends Controller
             $errors = ['Permission Denied' => 'Only ' .
                                               Auth::user()->find($incident->user_id)->name .
                                               ' or a supervisor can modify this incident. You may comment below.'];
-            return view('incidents.show', compact('incident', 'errors'));
+            return view('incidents.show', compact('incident', 'errors', 'breadcrumbs'));
         }
     }
 
@@ -130,7 +156,8 @@ class IncidentController extends Controller
         }
         $incident->save();
 
-        return view('incidents.show', compact('incident'));
+        Session::flash('success_message', "Incident Updated - \"$incident->title\"");
+        return redirect()->route('incident', ['incident' => $incident->id]);
     }
 
 

@@ -1,11 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="text-muted repository-margin-bottom-1rem">
-		<a href='/incidents'>
-			<< Back to Incidents
-		</a>
-	</div>
+	@include('layouts.breadcrumbs')
 
 	@if(Session::has('success_message'))
 		<div class="alert alert-success">

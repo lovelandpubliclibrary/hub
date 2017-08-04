@@ -36,6 +36,10 @@ td > .glyphicon {
 	max-height: 100%;
 }
 
+.breadcrumb {
+	margin: 0 0 8px 0;
+}
+
 
 
 /* GENERAL LAYOUT */
