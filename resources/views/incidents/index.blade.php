@@ -4,6 +4,10 @@
 	<div class="repository-margin-bottom-1rem">
 
 		@include('layouts.breadcrumbs')
+
+		<div class="h1 text-center repository-margin-bottom-1rem">
+			Incidents
+		</div>
 		
 		<a href="/incidents/create" class="btn btn-default col-xs-12 repository-margin-bottom-1rem">
 			Report a New Incident
