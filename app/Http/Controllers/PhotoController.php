@@ -9,18 +9,37 @@ use Session;
 class PhotoController extends Controller
 {
 	public function edit(Photo $photo) {
-		return view('photos.edit', compact('photo'));
+        // set up breadcrumbs for this action
+        $breadcrumbs = [
+            ['link' => route('home'), 'text' => 'Home'],
+            ['link' => route('incidents'), 'text' => 'Incidents'],
+            ['link' => route('incident', ['incident' => $photo->incident->id]), 'text' => $photo->incident->title],
+            ['link' => route('photo', ['photo' => $photo->id]),
+                'text' => 'Photo of ' . ($photo->incident->patron_name ?: 'Unknown Patron')],
+        ];
+
+		return view('photos.edit', compact('photo', 'breadcrumbs'));
 	}
 
 
 	public function show(Photo $photo) {
-		return view('photos.show', compact('photo'));
+        // set up breadcrumbs for this action
+        $breadcrumbs = [
+            ['link' => route('home'), 'text' => 'Home'],
+            ['link' => route('incidents'), 'text' => 'Incidents'],
+            ['link' => route('incident', ['incident' => $photo->incident->id]), 'text' => $photo->incident->title],
+            ['link' => route('photo', ['photo' => $photo->id]),
+                'text' => 'Photo of ' . ($photo->incident->patron_name ?: 'Unknown Patron')],
+        ];
+
+		return view('photos.show', compact('photo', 'breadcrumbs'));
 	}
 
 
 	public function delete(Photo $photo) {
 		$incident_id = $photo->incident->id;
 		$photo->delete();
+        Session::flash('success_message', 'Photo deleted.');
 		return redirect()->route('incident', ['incident' => $incident_id]);
 	}
 
@@ -46,7 +65,7 @@ class PhotoController extends Controller
         }
         $photo->save();
 
-        Session::flash('success_message', "Caption Saved");
+        Session::flash('success_message', "Caption Updated.");
         return redirect()->route('photo', ['photo' => $photo->id]);
     }
 }

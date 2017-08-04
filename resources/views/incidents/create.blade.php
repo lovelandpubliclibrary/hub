@@ -1,15 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="text-muted">
-		<a href='/incidents'>
-			<< Back to Incidents
-		</a>
-	</div>
+	@include('layouts.breadcrumbs')
 
-  <div class="h1 text-center">
-    Report an Incident
-  </div>
+	<div class="h1 text-center">
+		Report an Incident
+	</div>
 
 	@if (count($errors) > 0)
 		<div class="alert alert-danger">
@@ -22,6 +18,11 @@
 	@endif
 
 	{{ Form::open(['action' => 'IncidentController@store', 'files' => true]) }}
+		<div class="form-group">
+			{{ Form::label('title', 'Title:') }}
+			{{ Form::text('title', null, ['class' => 'form-control', 'required' => 'required']) }}
+		</div>
+		
 		<div class="form-group">
 		    {{ Form::label('date', 'Date of Incident:') }}
 		    {{ Form::date('date', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required']) }}
@@ -40,11 +41,6 @@
 		<div class="form-group">
 			{{ Form::label('patron_description', 'Patron Description:') }}
 			{{ Form::text('patron_description', null, ['class' => 'form-control']) }}
-		</div>
-
-		<div class="form-group">
-			{{ Form::label('title', 'Title:') }}
-			{{ Form::text('title', null, ['class' => 'form-control', 'required' => 'required']) }}
 		</div>
 
 		<div class="form-group">

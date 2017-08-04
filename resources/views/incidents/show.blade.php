@@ -1,11 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="text-muted repository-margin-bottom-1rem">
-		<a href='/incidents'>
-			<< Back to Incidents
-		</a>
-	</div>
+	@include('layouts.breadcrumbs')
 
 	@if(Session::has('success_message'))
 		<div class="alert alert-success">
@@ -42,7 +38,6 @@
 
 		<div class="panel-body">
 			<div class="row">
-
 				@isset($photos)
 					@foreach ($photos as $photo)
 						<a href="{{ route('photo', ['photo' => $photo->id]) }}" class="col-xs-12 col-sm-6 col-md-4">
@@ -89,8 +84,7 @@
 				</div>
 
 				<div class="col-xs-12">
-					<strong>Description of Incident:</strong>
-					<blockquote class="blockquote bg-faded text-muted">
+					<blockquote class="blockquote bg-faded text-muted repository-margin-top-1rem">
 						{{ $incident->description }}
 						<footer class="blockquote-footer text-right">
 							<span class="glyphicon glyphicon-user"></span> {{ $incident->user->name }}

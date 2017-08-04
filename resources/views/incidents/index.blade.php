@@ -1,12 +1,10 @@
 @extends ('layouts.app')
 
 @section ('content')
-	<div class="text-muted repository-margin-bottom-1rem">
-		<a href='/'>
-			<< Back to Home
-		</a>
-	</div>
+	<div class="repository-margin-bottom-1rem">
 
+		@include('layouts.breadcrumbs')
+		
 		<a href="/incidents/create" class="btn btn-default col-xs-12 repository-margin-bottom-1rem">
 			Report a New Incident
 		</a>
@@ -20,7 +18,7 @@
 				</span>
 			</div>
 		{{ Form::close() }}
-
+		
 	@if (isset($search) && !empty($search))
 		<p>
 			Showing search results for <strong>{{ $search }}</strong>:
@@ -68,15 +66,15 @@
 						{{-- display icons based on the properties of the incidents --}}
 						<div class="text-nowrap">
 							@if (count($incident->photo))
-								<span class="glyphicon glyphicon-picture"></span>
+								<span class="glyphicon glyphicon-picture" title="has photo of patron"></span>
 							@endif
 
 							@if ($incident->card_number)
-								<span class="glyphicon glyphicon-barcode"></span>
+								<span class="glyphicon glyphicon-barcode" title="has library card of patron"></span>
 							@endif
 
 							@if (count($incident->comment))
-								<span class="glyphicon glyphicon-comment"></span>
+								<span class="glyphicon glyphicon-comment" title="has comments by staff"></span>
 							@endif
 						</div>
 					</td>

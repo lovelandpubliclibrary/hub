@@ -23,8 +23,6 @@
     <div id="app" class="container">
         @if (Auth::check())
             @include('layouts.navigation')
-
-            @include('layouts.breadcrumbs')
         @endif
 
         <div class='content repository-margin-bottom-1rem'>
