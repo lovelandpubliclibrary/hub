@@ -5,7 +5,7 @@
 
 		@include('layouts.breadcrumbs')
 		
-		<a href="/incidents/create" class="btn btn-primary">
+		<a href="/incidents/create" class="btn btn-default col-xs-12 repository-margin-bottom-1rem">
 			Report a New Incident
 		</a>
 
