@@ -9,12 +9,12 @@
 			Incidents
 		</div>
 		
-		<a href="/incidents/create" class="btn btn-default col-xs-12 repository-margin-bottom-1rem">
+		<a href="/incidents/create" class="btn btn-default col-xs-12 col-sm-3 repository-margin-bottom-1rem">
 			Report a New Incident
 		</a>
 
 		{{ Form::open(['action' => 'IncidentController@search', 'class' => 'form repository-margin-bottom-1rem']) }}
-			<div class="input-group col-xs-12">
+			<div class="input-group col-xs-12 col-sm-8 pull-right-sm repository-margin-bottom-1rem">
 				{{ Form::label('search', 'Search: ', ['class' => 'sr-only']) }}
 				{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search...', 'required' => 'required']) }}
 				<span class="input-group-btn">

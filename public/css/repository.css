@@ -40,6 +40,12 @@ td > .glyphicon {
 	margin: 0 0 8px 0;
 }
 
+@media (min-width: 768px) {
+	.pull-right-sm {
+		float: right !important;
+	}
+}
+
 
 
 /* GENERAL LAYOUT */
