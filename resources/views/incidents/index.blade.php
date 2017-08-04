@@ -20,7 +20,7 @@
 				</span>
 			</div>
 		{{ Form::close() }}
-
+		
 	@if (isset($search) && !empty($search))
 		<p>
 			Showing search results for <strong>{{ $search }}</strong>:
