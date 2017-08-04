@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="row">
+	<div id="#incidents">
 		@include('layouts.breadcrumbs')
 
 		@if (count($errors) > 0)
@@ -79,5 +79,5 @@
 				</div><!-- .panel-body -->
 			</div><!-- .panel -->
 		{{ Form::close() }}
-	</div>
+	</div> <!-- #incidents -->
 @endsection

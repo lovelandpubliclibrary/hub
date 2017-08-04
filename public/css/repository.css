@@ -44,6 +44,10 @@ td > .glyphicon {
 	.pull-right-sm {
 		float: right !important;
 	}
+
+	.table-responsive {
+		overflow-x: inherit;
+	}
 }
 
 
@@ -88,14 +92,17 @@ td > .glyphicon {
 }
 
 
-
-/* NAVIGATION */
-
-
-
 /* INCIDENTS */
 .incident-index-description {
 	text-indent: 1em;
+}
+
+#incidents .h1 {
+	margin-bottom: 22px;
+}
+
+#incidents .table > tbody > tr > td {
+	white-space: normal;
 }
 
 
