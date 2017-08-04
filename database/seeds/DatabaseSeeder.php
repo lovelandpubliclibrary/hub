@@ -61,28 +61,7 @@ class UsersTableSeeder extends Seeder {
 
 class IncidentsTableSeeder extends Seeder {
 	public function run() {
-		Incident::create (
-			[
-				'id' => 1,
-				'date' => '2017-01-01',
-				'title' => 'A Really Long Title for an Incident',
-				'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eu orci nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vehicula sapien id leo fringilla, efficitur scelerisque mauris pellentesque. Nunc sem enim, facilisis venenatis elit a, pharetra dignissim eros. Vestibulum iaculis risus nec leo ullamcorper, non porttitor ligula tempor. Nulla a ex eu metus laoreet porttitor et non arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aenean augue risus, vulputate nec efficitur elementum, semper in dui. Aliquam erat volutpat. Mauris placerat, odio at fringilla tincidunt, risus magna tincidunt diam, a commodo diam dui dignissim libero. Nam aliquam vehicula dui, a dapibus felis iaculis dictum. Nunc tristique tincidunt dolor, eget bibendum risus dictum ac. Suspendisse semper quis nunc in varius. Morbi sed pulvinar odio. Ut congue vitae ex sed blandit. In hac habitasse platea dictumst. Mauris sit amet orci at felis commodo vulputate id vel est. Vestibulum semper eget erat vel consequat. Suspendisse dictum risus elit, et vehicula felis elementum ut. Duis molestie lorem non velit malesuada, porta fermentum metus consectetur. Sed cursus tellus at justo imperdiet, ac varius neque vehicula. Etiam feugiat ante sit amet maximus aliquet. Phasellus pulvinar maximus tincidunt. Nullam faucibus dui sem, et tincidunt urna commodo mollis. Maecenas id ultricies ex, et elementum eros. Donec ultricies, diam vitae molestie tristique, dolor risus maximus elit, nec congue quam tortor vitae leo. Vivamus a libero ac sapien consectetur dictum at congue libero. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.',
-				'patron_description' => 'Grey hoodie, average height and build',
-				'user_id' => 1,
-				'card_number' => '00154545454'
-			]
-		);
-
-		Incident::create (
-			[
-				'id' => 2,
-				'date' => '2017-07-29',
-				'title' => 'Test Incident #2',
-				'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eu orci nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vehicula sapien id leo fringilla, efficitur scelerisque mauris pellentesque. Nunc sem enim, facilisis venenatis elit a, pharetra dignissim eros. Vestibulum iaculis risus nec leo ullamcorper, non porttitor ligula tempor. Nulla a ex eu metus laoreet porttitor et non arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aenean augue risus, vulputate nec efficitur elementum, semper in dui. Aliquam erat volutpat. Mauris placerat, odio at fringilla tincidunt, risus magna tincidunt diam, a commodo diam dui dignissim libero. Nam aliquam vehicula dui, a dapibus felis iaculis dictum. Nunc tristique tincidunt dolor, eget bibendum risus dictum ac. Suspendisse semper quis nunc in varius. Morbi sed pulvinar odio. Ut congue vitae ex sed blandit. In hac habitasse platea dictumst. Mauris sit amet orci at felis commodo vulputate id vel est. Vestibulum semper eget erat vel consequat. Suspendisse dictum risus elit, et vehicula felis elementum ut. Duis molestie lorem non velit malesuada, porta fermentum metus consectetur. Sed cursus tellus at justo imperdiet, ac varius neque vehicula. Etiam feugiat ante sit amet maximus aliquet. Phasellus pulvinar maximus tincidunt. Nullam faucibus dui sem, et tincidunt urna commodo mollis. Maecenas id ultricies ex, et elementum eros. Donec ultricies, diam vitae molestie tristique, dolor risus maximus elit, nec congue quam tortor vitae leo. Vivamus a libero ac sapien consectetur dictum at congue libero. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.',
-				'patron_name' => 'Bill Murray',
-				'user_id' => 2,
-			]
-		);
+		factory(Incident::class, rand(10, 100))->create();
 	}
 }
 
@@ -91,14 +70,14 @@ class RolesTableSeeder extends Seeder {
 		Role::create (
 			[
 				'id' => 1,
-				'role' => 'Admin',
+				'role' => 'User',
 			]
 		);
 
 		Role::create (
 			[
 				'id' => 2,
-				'role' => 'User',
+				'role' => 'Admin',
 			]
 		);
 
@@ -113,54 +92,23 @@ class RolesTableSeeder extends Seeder {
 
 class CommentsTableSeeder extends Seeder {
 	public function run() {
-		Comment::create (
-			[
-				'id' => 1,
-				'comment' => 'This is a comment on incident #1.',
-				'user_id' => 1,
-				'incident_id' => 1
-			]
-		);
+		// count the number of incidents so that we can generate an appropriate range of comments
+		$incident_count = Incident::all()->count();
 
-		Comment::create (
-			[
-				'id' => 2,
-				'comment' => 'This is also a comment on incident #1.',
-				'user_id' => 2,
-				'incident_id' => 1
-			]
-		);
-
-		Comment::create (
-			[
-				'id' => 3,
-				'comment' => 'This is a comment on incident #2.',
-				'user_id' => 3,
-				'incident_id' => 2
-			]
-		);
+		factory(Comment::class, rand($incident_count, 3 * $incident_count))->create();
 	}
 }
 
 class RoleUserRelationshipSeeder extends Seeder {
 	public function run() {
+		// get all the users
 		$users = User::all();
 		
+		// assign a role to each user
+		// this could be improved by adding a variable number of roles to
+		// each user but at this time that isn't necessary
 		foreach ($users as $user) {
-			switch ($user->name) {
-				case 'Test User':
-					$user->role()->save(Role::find(2));
-					break;
-				case 'Test Admin':
-					$user->role()->save(Role::find(2));
-					$user->role()->save(Role::find(1));
-					break;
-				case 'Test Director':
-					$user->role()->save(Role::find(2));
-					$user->role()->save(Role::find(1));
-					$user->role()->save(Role::find(3));
-					break;
-			}
+			$user->role()->save(Role::find(rand(1, Role::all()->count())));
 		}
 	}
 }
@@ -168,31 +116,13 @@ class RoleUserRelationshipSeeder extends Seeder {
 
 class PhotosTableSeeder extends Seeder {
 	public function run() {
-		Photo::create (
-			[
-				'id' => 1,
-				'filename' => 'img_595b46526592b.jpg',
-				'incident_id' => rand(1, count(App\Incident::all())),
-				'caption' => 'The one on the right.'
-			]
-		);
+		// remove all the existing photos within the filesystem
+		$photos = glob(public_path() . '/images/patrons/*');
+		foreach ($photos as $photo) {
+			if (is_file($photo)) unlink($photo);
+		}
 
-		Photo::create (
-			[
-				'id' => 2,
-				'filename' => 'img_595b46526592b.jpg',
-				'incident_id' => rand(1, count(App\Incident::all())),
-				'caption' => 'The one on the left.'
-			]
-		);
-
-		Photo::create (
-			[
-				'id' => 3,
-				'filename' => 'img_595b46526592b.jpg',
-				'incident_id' => rand(1, count(App\Incident::all())),
-				'caption' => 'The one in the middle.'
-			]
-		);
+		// create new photos
+		factory(Photo::class, count(Incident::all()))->create();
 	}
 }

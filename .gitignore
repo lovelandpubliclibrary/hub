@@ -20,3 +20,4 @@ Homestead.json
 # Project-specific
 .DS_Store
 alpine-repository.Dockerfile
+public/images/patrons/*
