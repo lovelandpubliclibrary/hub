@@ -27,7 +27,7 @@
 									<a class="btn btn-info" href="{{ route('incidents') }}">Clear Search</a>
 								</span>
 							@endif
-							{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search...', 'required' => 'required']) }}
+							{{ Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search...', 'required' => 'required', 'autofocus' => 'autofocus']) }}
 							<span class="input-group-btn">
 								{{ Form::button('<span class=\'glyphicon glyphicon-search\'></span>', ['class' => 'btn btn-default', 'type' => 'submit'] )}}
 							</span>
