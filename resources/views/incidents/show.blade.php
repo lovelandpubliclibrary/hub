@@ -98,13 +98,14 @@
 					@include ('comments.index')
 				@endif
 
+			</div><!-- .panel-body -->
+
+			<div class="panel-footer">
 				<div>
 					<h3 id="comment">Comment on this Incident:</h3>
 					@include ('comments.create')
 				</div>
-
-
-			</div><!-- .panel-body -->
+			</div>
 		</div><!-- .panel -->
 	</div> <!-- #incidents -->
 	

@@ -21,7 +21,7 @@
 
 	<div class="panel panel-default">
 		<div class="panel-heading col-xs-12 text-center repository-margin-bottom-1rem">
-			<div class="col-xs-10 col-xs-offset-1">
+			<div class="center-block">
 				<h2 class="panel-title">
 					Photo of {{ ($photo->incident->patron_name ?: 'Unknown Patron') }}
 				</h2>
@@ -44,7 +44,7 @@
 		</div><!-- .panel-heading -->
 
 		<div class="panel-body">
-			<img class="img-responsive" src="{{ asset('images/patrons/' . $photo->filename) }}" alt="Patron Picture">
+			<img class="img-responsive center-block" src="{{ asset('images/patrons/' . $photo->filename) }}" alt="Patron Picture">
 			<div class="well well-sm text-center">
 				{{ $photo->caption }}
 			</div>

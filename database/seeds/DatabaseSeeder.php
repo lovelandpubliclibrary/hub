@@ -16,17 +16,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+    	$this->call(RolesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
-        $this->call(IncidentsTableSeeder::class);
-        $this->call(RolesTableSeeder::class);
-        $this->call(CommentsTableSeeder::class);
         $this->call(RoleUserRelationshipSeeder::class);
+        $this->call(IncidentsTableSeeder::class);
+        $this->call(CommentsTableSeeder::class);
         $this->call(PhotosTableSeeder::class);
     }
 }
 
 class UsersTableSeeder extends Seeder {
 	public function run() {
+		// generate known user accounts for testing
 		User::create (
 			[
 				'id' => 1,
@@ -56,6 +57,9 @@ class UsersTableSeeder extends Seeder {
 				'role_id' => 3,
 			]
 		);
+
+		// generate fake user accounts
+		factory(User::class, rand(20, 200))->create();
 	}
 }
 
