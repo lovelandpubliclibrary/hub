@@ -22,6 +22,7 @@ class CreateIncidentsTable extends Migration
             $table->string('card_number')->nullable();
             $table->text('patron_description')->nullable();
             $table->integer('user_id')->unsigned();
+            $table->integer('updated_by')->unsigned()->nullable();
             $table->timestamps();
         });
     }

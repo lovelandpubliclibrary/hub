@@ -31,6 +31,6 @@ class IncidentNotification extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.incident-notification');
+        return $this->markdown('emails.incidents.incident-created');
     }
 }

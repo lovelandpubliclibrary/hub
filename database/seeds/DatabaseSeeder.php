@@ -58,19 +58,42 @@ class UsersTableSeeder extends Seeder {
 			]
 		);
 
+		// determine the number of users to create
+		$count = rand(20, 200);
+
+		// output progress
+		echo('Creating ' . $count + User::all()->count() . ' Users... ');
+
 		// generate fake user accounts
 		factory(User::class, rand(20, 200))->create();
+
+		// output progress
+		echo('done.' . PHP_EOL);
 	}
 }
 
 class IncidentsTableSeeder extends Seeder {
 	public function run() {
-		factory(Incident::class, rand(10, 100))->create();
+		// get a random number of incidents to create
+		$count = rand(10, 100);
+
+		// output progress
+		echo('Creating ' . $count . ' Incidents... ');
+
+		// create incidents
+		factory(Incident::class, $count)->create();
+
+		// output progress
+		echo('done.' . PHP_EOL);
 	}
 }
 
 class RolesTableSeeder extends Seeder {
 	public function run() {
+		// output progress
+		echo('Creating 3 Roles... ');
+
+		// create roles
 		Role::create (
 			[
 				'id' => 1,
@@ -91,6 +114,9 @@ class RolesTableSeeder extends Seeder {
 				'role' => 'Director',
 			]
 		);
+
+		// output progress
+		echo('done.' . PHP_EOL);
 	}
 }
 
@@ -98,8 +124,16 @@ class CommentsTableSeeder extends Seeder {
 	public function run() {
 		// count the number of incidents so that we can generate an appropriate range of comments
 		$incident_count = Incident::all()->count();
+		$comment_count = rand($incident_count, 3 * $incident_count);
 
-		factory(Comment::class, rand($incident_count, 3 * $incident_count))->create();
+		// output progress
+		echo('Creating ' . $comment_count . ' Comments...');
+
+		// create the comments
+		factory(Comment::class, $comment_count)->create();
+
+		// output progress
+		echo('done.' . PHP_EOL);
 	}
 }
 
@@ -120,13 +154,25 @@ class RoleUserRelationshipSeeder extends Seeder {
 
 class PhotosTableSeeder extends Seeder {
 	public function run() {
+		// figure out how many photos to create
+		$count = Incident::all()->count();
+
+		// output progress
+		echo('Deleting any existing Photos from the filesystem... ');
+
 		// remove all the existing photos within the filesystem
 		$photos = glob(public_path() . '/images/patrons/*');
 		foreach ($photos as $photo) {
 			if (is_file($photo)) unlink($photo);
 		}
 
+		// output progress
+		echo('done.' . PHP_EOL . 'Creating ' . $count . ' Photos... ');
+
 		// create new photos
-		factory(Photo::class, count(Incident::all()))->create();
+		factory(Photo::class, $count)->create();
+
+		// output progress
+		echo('done.' . PHP_EOL);
 	}
 }
