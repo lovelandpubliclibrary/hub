@@ -50,6 +50,7 @@ class IncidentController extends Controller
         $breadcrumbs = [
             ['link' => route('home'), 'text' => 'Home'],
             ['link' => route('incidents'), 'text' => 'Incidents'],
+            ['link' => route('createIncident'), 'text' => 'Report an Incident'],
         ];
 
     	return view('incidents.create', compact('breadcrumbs'));
