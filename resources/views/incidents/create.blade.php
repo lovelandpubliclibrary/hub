@@ -26,13 +26,13 @@
 
 			<div class="panel-body">
 				{{ Form::open(['action' => 'IncidentController@store', 'files' => true]) }}
-					<div class="form-group">
-						{{ Form::label('title', 'Title:') }}
+					<div class="form-group required">
+						{{ Form::label('title', 'Title:', ['class' => 'control-label']) }}
 						{{ Form::text('title', null, ['class' => 'form-control', 'required' => 'required']) }}
 					</div>
 					
-					<div class="form-group">
-					    {{ Form::label('date', 'Date of Incident:') }}
+					<div class="form-group required">
+					    {{ Form::label('date', 'Date of Incident:', ['class' => 'control-label']) }}
 					    {{ Form::date('date', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required']) }}
 				  	</div>
 
@@ -51,8 +51,8 @@
 						{{ Form::text('patron_description', null, ['class' => 'form-control']) }}
 					</div>
 
-					<div class="form-group">
-						{{ Form::label('description', 'Describe the Incident:') }}
+					<div class="form-group required">
+						{{ Form::label('description', 'Describe the Incident:', ['class' => 'control-label']) }}
 						{{ Form::textarea('description', null,
 										  ['class' => 'form-control', 'rows' => '6', 'required' => 'required']) }}
 					</div>
