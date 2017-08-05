@@ -27,7 +27,9 @@ class DatabaseSeeder extends Seeder
 
 class UsersTableSeeder extends Seeder {
 	public function run() {
-		// generate known user accounts for testing
+		// output progress
+		echo('Creating known user accounts...' . PHP_EOL);
+
 		User::create (
 			[
 				'id' => 1,
@@ -37,6 +39,9 @@ class UsersTableSeeder extends Seeder {
 				'role_id' => 1,
 			]
 		);
+
+		// output progress
+		echo $this->getEmail();
 
 		User::create (
 			[
@@ -48,6 +53,9 @@ class UsersTableSeeder extends Seeder {
 			]
 		);
 
+		// output progress
+		echo $this->getEmail();
+
 		User::create (
 			[
 				'id' => 3,
@@ -58,17 +66,24 @@ class UsersTableSeeder extends Seeder {
 			]
 		);
 
+		// output progress
+		echo $this->getEmail();
+
 		// determine the number of users to create
 		$count = rand(20, 200);
 
 		// output progress
-		echo('Creating ' . $count + User::all()->count() . ' Users... ');
+		echo('Creating ' . $count . ' dummy Users... ');
 
 		// generate fake user accounts
-		factory(User::class, rand(20, 200))->create();
+		factory(User::class, $count)->create();
 
 		// output progress
 		echo('done.' . PHP_EOL);
+	}
+
+	private function getEmail() {
+		return User::orderBy('id', 'desc')->first()->email . PHP_EOL;
 	}
 }
 
@@ -139,15 +154,22 @@ class CommentsTableSeeder extends Seeder {
 
 class RoleUserRelationshipSeeder extends Seeder {
 	public function run() {
+		// output progress
+		echo('Establishing relationships... ');
+
 		// get all the users
 		$users = User::all();
 		
 		// assign a role to each user
 		// this could be improved by adding a variable number of roles to
 		// each user but at this time that isn't necessary
+		$max = Role::all()->count();
 		foreach ($users as $user) {
-			$user->role()->save(Role::find(rand(1, Role::all()->count())));
+			$user->role()->save(Role::find(rand(1, $max)));
 		}
+
+		// output progress
+		echo('done.' . PHP_EOL);
 	}
 }
 
@@ -158,7 +180,7 @@ class PhotosTableSeeder extends Seeder {
 		$count = Incident::all()->count();
 
 		// output progress
-		echo('Deleting any existing Photos from the filesystem... ');
+		echo('Deleting existing Photos from the filesystem... ');
 
 		// remove all the existing photos within the filesystem
 		$photos = glob(public_path() . '/images/patrons/*');
