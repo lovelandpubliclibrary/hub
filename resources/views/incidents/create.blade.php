@@ -62,7 +62,7 @@
 						{{ Form::file('patron_photo', ['class' => 'form-control-file', 'aria-describedby' => 'patron_photo']) }}
 					</div>
 
-					{{ Form::hidden('userId', Auth::user()->id) }}
+					{{ Form::hidden('user', Auth::user()->id) }}
 					<div class="text-center">
 						{{ Form::button('Save Changes',
 										['class' => 'btn btn-default', 'type' => 'submit', 'title' => 'Save']) }}
