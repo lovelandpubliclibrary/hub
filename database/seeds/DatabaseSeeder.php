@@ -26,7 +26,9 @@ class DatabaseSeeder extends Seeder
 }
 
 class UsersTableSeeder extends Seeder {
+
 	public function run() {
+
 		// output progress
 		echo('Creating known user accounts...' . PHP_EOL);
 
@@ -36,7 +38,7 @@ class UsersTableSeeder extends Seeder {
 				'name' => 'Test Admin',
 				'email' => 'testadmin@cityofloveland.org',
 				'password' => Hash::make('password'),
-				'role_id' => 1,
+				'role_id' => 2,
 			]
 		);
 
@@ -49,7 +51,7 @@ class UsersTableSeeder extends Seeder {
 				'name' => 'Test User',
 				'email' => 'testuser@cityofloveland.org',
 				'password' => Hash::make('password'),
-				'role_id' => 2,
+				'role_id' => 1,
 			]
 		);
 
@@ -70,7 +72,7 @@ class UsersTableSeeder extends Seeder {
 		echo $this->getEmail();
 
 		// determine the number of users to create
-		$count = rand(20, 200);
+		$count = rand(20, 100);
 
 		// output progress
 		echo('Creating ' . $count . ' dummy Users... ');
@@ -83,12 +85,16 @@ class UsersTableSeeder extends Seeder {
 	}
 
 	private function getEmail() {
+
 		return User::orderBy('id', 'desc')->first()->email . PHP_EOL;
+
 	}
 }
 
 class IncidentsTableSeeder extends Seeder {
+
 	public function run() {
+
 		// get a random number of incidents to create
 		$count = rand(10, 100);
 
@@ -104,7 +110,9 @@ class IncidentsTableSeeder extends Seeder {
 }
 
 class RolesTableSeeder extends Seeder {
+
 	public function run() {
+
 		// output progress
 		echo('Creating 3 Roles... ');
 
@@ -137,8 +145,10 @@ class RolesTableSeeder extends Seeder {
 
 class CommentsTableSeeder extends Seeder {
 	public function run() {
+
 		// count the number of incidents so that we can generate an appropriate range of comments
 		$incident_count = Incident::all()->count();
+
 		$comment_count = rand($incident_count, 3 * $incident_count);
 
 		// output progress
@@ -153,19 +163,31 @@ class CommentsTableSeeder extends Seeder {
 }
 
 class RoleUserRelationshipSeeder extends Seeder {
+
 	public function run() {
+
 		// output progress
 		echo('Establishing relationships... ');
 
-		// get all the users
-		$users = User::all();
-		
-		// assign a role to each user
-		// this could be improved by adding a variable number of roles to
-		// each user but at this time that isn't necessary
-		$max = Role::all()->count();
+		// get all the users and roles
+		$users = User::with('role')->get();
+
 		foreach ($users as $user) {
-			$user->role()->save(Role::find(rand(1, $max)));
+			switch ($user->name) {
+				case 'Test User':
+					$user->role()->save(Role::where('role', '=', 'User')->get()->first());
+					break;
+				case 'Test Admin':
+					$user->role()->save(Role::where('role', '=', 'Admin')->get()->first());
+					break;
+				case 'Test Director':
+					$user->role()->save(Role::where('role', '=', 'Director')->get()->first());
+					break;
+				default:
+					$user->role()->save(Role::where('role', '=', 'User')->get()->first());
+					break;
+			}
+			
 		}
 
 		// output progress
@@ -175,6 +197,7 @@ class RoleUserRelationshipSeeder extends Seeder {
 
 
 class PhotosTableSeeder extends Seeder {
+
 	public function run() {
 		// figure out how many photos to create
 		$count = Incident::all()->count();
@@ -184,8 +207,11 @@ class PhotosTableSeeder extends Seeder {
 
 		// remove all the existing photos within the filesystem
 		$photos = glob(public_path() . '/images/patrons/*');
+
 		foreach ($photos as $photo) {
+
 			if (is_file($photo)) unlink($photo);
+
 		}
 
 		// output progress
@@ -197,4 +223,5 @@ class PhotosTableSeeder extends Seeder {
 		// output progress
 		echo('done.' . PHP_EOL);
 	}
+
 }
