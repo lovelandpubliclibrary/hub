@@ -1,12 +1,11 @@
 @component('mail::message')
 # Incident Updated
 
-An incident you created or have commented on has been updated by {{ App\User::find($incident->updated_by)->name }}.
-
+An incident you created has been updated by {{ App\User::find($incident->updated_by)->name }}:  
 {{ $incident->title }}
 
 @component('mail::button', ['url' => url('incidents', [$incident->id])])
-View Incident
+Click here to view the incident
 @endcomponent
 
 Thanks,<br>

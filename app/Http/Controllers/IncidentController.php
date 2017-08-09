@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Incident;
 use App\Photo;
 use App\User;
+use Mail;
 use App\Mail\IncidentNotification;
 use App\Mail\IncidentUpdated;
 use Auth;
@@ -170,10 +171,9 @@ class IncidentController extends Controller
         // save the updates to the database
         $incident->save();
 
-        // email a notification to the incident creator and anyone who has commented on the incident
-        \Mail::to($incident->user->email)->send(new IncidentUpdated($incident));
-        foreach ($incident->comment as $comment) {
-            \Mail::to($comment->user->email)->send(new IncidentUpdated($incident));
+        // email a notification to the incident creator if someone else modified the incident
+        if ($request->user != $incident->user_id) {
+            Mail::to($incident->user->email)->send(new IncidentUpdated($incident));
         }
 
         Session::flash('success_message', "Incident Updated - \"$incident->title\"");
