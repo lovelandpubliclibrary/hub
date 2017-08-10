@@ -31,6 +31,7 @@ class IncidentUpdated extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.incidents.incident-updated');
+        return $this->subject('Incident Updated: ' . $this->incident->title)
+                    ->markdown('emails.incidents.incident-updated');
     }
 }

@@ -173,7 +173,8 @@ class IncidentController extends Controller
 
         // email a notification to the incident creator if someone else modified the incident
         if ($request->user != $incident->user_id) {
-            Mail::to($incident->user->email)->send(new IncidentUpdated($incident));
+            Mail::to($incident->user->email)
+                  ->send(new IncidentUpdated($incident));
         }
 
         Session::flash('success_message', "Incident Updated - \"$incident->title\"");

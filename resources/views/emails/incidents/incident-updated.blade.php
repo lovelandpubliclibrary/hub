@@ -1,8 +1,9 @@
 @component('mail::message')
-# Incident Updated
+# Incident Updated - {{ $incident->title }}
 
-An incident you created has been updated by {{ App\User::find($incident->updated_by)->name }}:  
-{{ $incident->title }}
+An incident you created was updated by {{ App\User::find($incident->updated_by)->name }} 
+on {{ \Carbon\Carbon::parse($incident->updated_at)->toFormattedDateString() }} 
+at {{ \Carbon\Carbon::parse($incident->updated_at)->format('h:i:s A') }}.
 
 @component('mail::button', ['url' => url('incidents', [$incident->id])])
 Click here to view the incident
