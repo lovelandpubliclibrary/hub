@@ -11,6 +11,12 @@ use Session;
 
 class IncidentController extends Controller
 {
+    // ensure user is authenticated in order to use this controller
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
+    
     public function index()
     {
         // set up the breadcrumbs for this action
@@ -110,7 +116,7 @@ class IncidentController extends Controller
         ];
 
         // make sure the user has permission to edit the incident
-        if (Auth::user()->id == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
+        if (Auth::id() == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
         {
             // collect the photos associated with this incident
             $photos = $incident->photo;
