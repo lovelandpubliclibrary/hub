@@ -8,7 +8,7 @@
 	  	</div>
 
 
-		{{ Form::hidden('user', Auth::user()->id) }}
+		{{ Form::hidden('user', Auth::id()) }}
 		{{ Form::hidden('incident', $incident->id) }}
 		<div class="text-center">
 			{{ Form::button('Save Comment', [

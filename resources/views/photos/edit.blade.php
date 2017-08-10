@@ -49,7 +49,7 @@
 									['class' => 'btn btn-default', 'type' => 'submit', 'title' => 'Save']) }}
 					</div>
 					
-					{{ Form::hidden('user', Auth::user()->id) }}
+					{{ Form::hidden('user', Auth::id()) }}
 
 				{{ Form::close() }}
 			</div><!-- .panel-footer -->

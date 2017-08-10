@@ -69,7 +69,7 @@
 						</div>
 					</div>
 
-					{{ Form::hidden('user', Auth::user()->id) }}
+					{{ Form::hidden('user', Auth::id()) }}
 					{{ Form::hidden('incident', $incident->id) }}
 
 					<div class="col-xs-12 panel-footer text-right repository-margin-top-1rem">

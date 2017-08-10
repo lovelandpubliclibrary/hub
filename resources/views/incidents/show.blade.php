@@ -30,7 +30,7 @@
 				</div>
 
 				{{-- Display the button to edit the incident if the user authored it or is an admin --}}
-				@if (Auth::user()->id == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
+				@if (Auth::id() == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
 					<a class="btn-sm btn-default pull-right link-default" href="/incidents/edit/{{ $incident->id }}" title="Edit Incident">
 						<span class="glyphicon glyphicon-edit"></span> Edit
 					</a>
