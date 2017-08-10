@@ -1,5 +1,5 @@
 @component('mail::message')
-# Incident Updated - {{ $incident->title }}
+# Incident Updated: {{ $incident->title }}
 
 An incident you created was updated by {{ App\User::find($incident->updated_by)->name }} 
 on {{ \Carbon\Carbon::parse($incident->updated_at)->toFormattedDateString() }} 

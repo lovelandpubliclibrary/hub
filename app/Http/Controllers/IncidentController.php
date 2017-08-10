@@ -8,7 +8,7 @@ use App\Incident;
 use App\Photo;
 use App\User;
 use Mail;
-use App\Mail\IncidentNotification;
+use App\Mail\IncidentCreated;
 use App\Mail\IncidentUpdated;
 use Auth;
 use Session;
@@ -99,7 +99,7 @@ class IncidentController extends Controller
 
             // email a notification to all staff
             foreach (User::all() as $user) {
-                \Mail::to($user->email)->send(new IncidentNotification($incident));
+                \Mail::to($user->email)->send(new IncidentCreated($incident));
             }
 
             // redirect back the new incident with a success message

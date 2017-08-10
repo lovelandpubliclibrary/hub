@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Incident;
 
-class IncidentNotification extends Mailable
+class IncidentCreated extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,6 +31,7 @@ class IncidentNotification extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.incidents.incident-created');
+        return $this->subject('Incident Created: ' . $this->incident->title)
+                    ->markdown('emails.incidents.incident-created');
     }
 }

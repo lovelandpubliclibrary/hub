@@ -1,7 +1,9 @@
 @component('mail::message')
-# New Incident
+# New Incident: {{ $incident->title }}
 
-A new incident as been posted to the Repository by {{ $incident->user->name }}.
+A new incident was posted to the Repository by {{ $incident->user->name }} 
+on {{ \Carbon\Carbon::parse($incident->created_at)->toFormattedDateString() }} 
+at {{ \Carbon\Carbon::parse($incident->created_at)->format('h:i:s A') }}.
 
 @component('mail::button', ['url' => url('incidents', [$incident->id])])
 View Incident

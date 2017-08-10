@@ -45,9 +45,12 @@
 
 		<div class="panel-body">
 			<img class="img-responsive center-block" src="{{ asset('images/patrons/' . $photo->filename) }}" alt="Patron Picture">
-			<div class="well well-sm text-center">
-				{{ $photo->caption }}
-			</div>
+			
+			@if ($photo->caption)
+				<div class="well well-sm text-center">
+					{{ $photo->caption }}
+				</div>
+			@endif
 		</div><!-- .panel-body -->
 
 	</div><!-- .panel -->

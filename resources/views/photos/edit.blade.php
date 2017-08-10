@@ -46,7 +46,7 @@
 						</a>
 
 						{{ Form::button('Save Changes',
-									['class' => 'btn btn-default', 'type' => 'submit', 'title' => 'Save']) }}
+									['class' => 'btn btn-default btn-success', 'type' => 'submit', 'title' => 'Save']) }}
 					</div>
 					
 					{{ Form::hidden('user', Auth::user()->id) }}
