@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Incident;
 use App\Photo;
+use App\User;
+use Mail;
+use App\Mail\IncidentCreated;
+use App\Mail\IncidentUpdated;
 use Auth;
 use Session;
 
@@ -99,8 +103,13 @@ class IncidentController extends Controller
                 }
             }
 
+            // email a notification to all staff
+            foreach (User::all() as $user) {
+                \Mail::to($user->email)->send(new IncidentCreated($incident));
+            }
+
             // redirect back the new incident with a success message
-            Session::flash('success_message', "Incident Saved - \"$incident->title\"");
+            Session::flash('success_message', "The incident was saved and an email notification was sent to the library staff.");
             return redirect()->route('incident', ['incident' => $incident->id]);
         }
     }
@@ -161,7 +170,18 @@ class IncidentController extends Controller
         foreach ($updates as $key => $value) {
             $incident->$key = $value;
         }
+
+        // record the user who performed the update
+        $incident->updated_by = Auth::user()->id;
+
+        // save the updates to the database
         $incident->save();
+
+        // email a notification to the incident creator if someone else modified the incident
+        if ($request->user != $incident->user_id) {
+            Mail::to($incident->user->email)
+                  ->send(new IncidentUpdated($incident));
+        }
 
         Session::flash('success_message', "Incident Updated - \"$incident->title\"");
         return redirect()->route('incident', ['incident' => $incident->id]);

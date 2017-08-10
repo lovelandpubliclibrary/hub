@@ -72,9 +72,9 @@
 					{{ Form::hidden('user', Auth::id()) }}
 					{{ Form::hidden('incident', $incident->id) }}
 
-					<div class="col-xs-12 panel-footer text-right repository-margin-top-1rem">
+					<div class="panel-footer text-right repository-margin-top-1rem">
 						{{ Form::button('Save Changes',
-										['class' => 'btn btn-default', 'type' => 'submit', 'title' => 'Save']) }}
+										['class' => 'btn btn-default btn-success', 'type' => 'submit', 'title' => 'Save']) }}
 					</div>
 				</div><!-- .panel-body -->
 			</div><!-- .panel -->

@@ -16,6 +16,10 @@ class User extends Authenticatable
     public function role() {
         return $this->belongsToMany('App\Role');
     }
+
+    public function comment() {
+        return $this->hasMany('App\Comment');
+    }
     
     use Notifiable;
 

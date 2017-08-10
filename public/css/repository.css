@@ -91,6 +91,13 @@ td > .glyphicon {
 	font-family: Raleway, sans-serif;
 }
 
+.form-group.required .control-label:after {
+	content: "*";
+	color: indianred;
+	font-size:1.2em;
+	font-family: "Courier", sans-serif;
+}
+
 
 /* INCIDENTS */
 .incident-index-description {

@@ -10,9 +10,9 @@
 
 		{{ Form::hidden('user', Auth::id()) }}
 		{{ Form::hidden('incident', $incident->id) }}
-		<div class="text-center">
+		<div class="text-right">
 			{{ Form::button('Save Comment', [
-							'class' => 'btn btn-default', 
+							'class' => 'btn btn-default btn-success', 
 							'type' => 'submit', 
 							'title' => 'Save']) }}
 		</div>
