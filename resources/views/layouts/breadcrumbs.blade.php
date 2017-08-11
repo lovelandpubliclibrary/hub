@@ -12,14 +12,29 @@
 
 	{{-- display simple breadcrumbs for mobile screens --}}
 	<div class="breadcrumb visible-xs">
-		@if (!preg_match('/' . Request::segment(1) . '\/?$/', url()->current()))
-			<a href="{{ route(Request::segment(1)) }}">
-				<< Back to {{ ucwords(Request::segment(1)) }}
-			</a>
-		@else
+		{{-- check if the user it at a top-level page and modify the breadcrumb content accordingly --}}
+		@if (preg_match('/' . Request::segment(1) . '\/?$/', url()->current()))
 			<a href="{{ route('home') }}">
 				<< Back to Home
 			</a>
+		@else
+			@php
+				switch (Request::segment(1)) {
+					// route children of incidents to the incident index
+					case 'photos':
+					case 'comments':
+						echo '<a href="' . route('incidents') . '">' .
+							 '<< Back to Incidents' .
+							 '</a>';
+						break;
+					// route all other navigation to the parent resource based on the URL requested
+					default:
+						echo '<a href="' . route(Request::segment(1)) . '">' .
+							 '<< Back to ' . ucwords(Request::segment(1)) .
+							 '</a>';
+						break;
+				}
+			@endphp
 		@endif
 	</div>
 
