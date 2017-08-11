@@ -8,8 +8,7 @@
 
 @section('content')
         @if (Auth::check())
-        	<div class="row text-center">
-        		<div class=" col-xs-12 col-sm-3 repository-margin-bottom-1rem">
+        		<div class="col-xs-12 col-sm-4 repository-margin-bottom-1rem">
 	                <a class="btn btn-default homepage-buttons" href="{{ route('incidents') }}">
 	                	<span class="glyphicon glyphicon-info-sign">
 	                		<div>
@@ -19,7 +18,7 @@
 	                </a>
 	            </div>
 
-	            <div class=" col-xs-12 col-sm-3 repository-margin-bottom-1rem">
+	            <div class="col-xs-12 col-sm-4 repository-margin-bottom-1rem">
 	                <a class="btn btn-default homepage-buttons" href="{{ route('schedule') }}">
 	                	<span class="glyphicon glyphicon-calendar">
 	                		<div>
@@ -29,7 +28,7 @@
 	                </a>
 	            </div>
 
-	            <div class=" col-xs-12 col-sm-3 repository-margin-bottom-1rem">
+	            <div class="col-xs-12 col-sm-4 repository-margin-bottom-1rem">
 	                <a class="btn btn-default homepage-buttons" href="{{ route('cityemail') }}">
 	                	<span class="glyphicon glyphicon-envelope">
 	                		<div>
@@ -38,7 +37,6 @@
 	            		</span>
 	                </a>
 	            </div>
-            </div><!-- .row -->
         @else
             @include('auth.login')
         @endif
