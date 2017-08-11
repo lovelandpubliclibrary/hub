@@ -162,39 +162,6 @@ class CommentsTableSeeder extends Seeder {
 	}
 }
 
-class RoleUserRelationshipSeeder extends Seeder {
-
-	public function run() {
-
-		// output progress
-		echo('Establishing relationships... ');
-
-		// get all the users and roles
-		$users = User::with('role')->get();
-
-		foreach ($users as $user) {
-			switch ($user->name) {
-				case 'Test User':
-					$user->role()->save(Role::where('role', '=', 'User')->get()->first());
-					break;
-				case 'Test Admin':
-					$user->role()->save(Role::where('role', '=', 'Admin')->get()->first());
-					break;
-				case 'Test Director':
-					$user->role()->save(Role::where('role', '=', 'Director')->get()->first());
-					break;
-				default:
-					$user->role()->save(Role::where('role', '=', 'User')->get()->first());
-					break;
-			}
-			
-		}
-
-		// output progress
-		echo('done.' . PHP_EOL);
-	}
-}
-
 
 class PhotosTableSeeder extends Seeder {
 
@@ -224,4 +191,53 @@ class PhotosTableSeeder extends Seeder {
 		echo('done.' . PHP_EOL);
 	}
 
+}
+
+
+class IncidentUserRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		// output progress
+		echo('Establishing Incident/User relationships... ');
+
+		
+
+		// output progress
+		echo('done.' . PHP_EOL);
+	}
+}
+
+
+class RoleUserRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		// output progress
+		echo('Establishing Role/User relationships... ');
+
+		// get all the users and roles
+		$users = User::with('role')->get();
+
+		foreach ($users as $user) {
+			switch ($user->name) {
+				case 'Test User':
+					$user->role()->save(Role::where('role', '=', 'User')->get()->first());
+					break;
+				case 'Test Admin':
+					$user->role()->save(Role::where('role', '=', 'Admin')->get()->first());
+					break;
+				case 'Test Director':
+					$user->role()->save(Role::where('role', '=', 'Director')->get()->first());
+					break;
+				default:
+					$user->role()->save(Role::where('role', '=', 'User')->get()->first());
+					break;
+			}
+			
+		}
+
+		// output progress
+		echo('done.' . PHP_EOL);
+	}
 }

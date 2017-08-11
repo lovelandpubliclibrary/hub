@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Incident extends Model
 {
 	// model relationships
-	public function user() {
+	public function user() {		// this relationship tracks which user authored the incident
 		return $this->belongsTo('App\User');
 	}
 
@@ -17,6 +17,10 @@ class Incident extends Model
 
 	public function photo() {
 		return $this->hasMany('App\Photo');
+	}
+
+	public function users() {		// this relationship track which users have viewed the incident
+		return $this->belongsToMany('App\User');
 	}
 
 

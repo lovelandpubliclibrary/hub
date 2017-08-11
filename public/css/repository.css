@@ -81,9 +81,12 @@ td > .glyphicon {
 	font-style: italic;
 }
 
+.repository-text-wrap {
+	white-space: normal;
+}
+
 .homepage-buttons {
 	font-size: 225%;
-	padding: .5em;
 }
 
 .homepage-buttons > .glyphicon > div {
