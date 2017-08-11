@@ -9,7 +9,7 @@
 @section('content')
         @if (Auth::check())
         		<div class="col-xs-12 col-sm-4 repository-margin-bottom-1rem">
-	                <a class="btn btn-default homepage-buttons" href="{{ route('incidents') }}">
+	                <a class="btn btn-default col-xs-12 homepage-buttons" href="{{ route('incidents') }}">
 	                	<span class="glyphicon glyphicon-info-sign">
 	                		<div>
 	                			Incidents
@@ -19,7 +19,7 @@
 	            </div>
 
 	            <div class="col-xs-12 col-sm-4 repository-margin-bottom-1rem">
-	                <a class="btn btn-default homepage-buttons" href="{{ route('schedule') }}">
+	                <a class="btn btn-default col-xs-12 homepage-buttons" href="{{ route('schedule') }}">
 	                	<span class="glyphicon glyphicon-calendar">
 	                		<div>
 	                			Schedule
@@ -29,7 +29,7 @@
 	            </div>
 
 	            <div class="col-xs-12 col-sm-4 repository-margin-bottom-1rem">
-	                <a class="btn btn-default homepage-buttons" href="{{ route('cityemail') }}">
+	                <a class="btn btn-default col-xs-12 homepage-buttons" href="{{ route('cityemail') }}">
 	                	<span class="glyphicon glyphicon-envelope">
 	                		<div>
 	                			City Email
