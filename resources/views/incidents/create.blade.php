@@ -63,10 +63,6 @@
 					</div>
 
 					{{ Form::hidden('user', Auth::id()) }}
-					<div class="text-center">
-						{{ Form::button('Save Changes',
-										['class' => 'btn btn-default', 'type' => 'submit', 'title' => 'Save']) }}
-					{{ Form::hidden('user', Auth::user()->id) }}
 
 					<div class="panel-footer text-right repository-margin-top-1rem">
 						{{ Form::button('Save Incident',

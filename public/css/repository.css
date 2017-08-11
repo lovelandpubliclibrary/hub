@@ -112,6 +112,10 @@ td > .glyphicon {
 	white-space: normal;
 }
 
+#incidents .btn-default {
+	border: 1px solid #ccc;
+}
+
 
 
 /* COMMENTS */
