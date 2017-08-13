@@ -20,7 +20,7 @@ class Incident extends Model
 	}
 
 	public function users() {		// this relationship track which users have viewed the incident
-		return $this->belongsToMany('App\User');
+		return $this->belongsToMany('App\User')->withTimestamps();
 	}
 
 

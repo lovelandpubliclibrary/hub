@@ -18,10 +18,11 @@ class DatabaseSeeder extends Seeder
     {
     	$this->call(RolesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
-        $this->call(RoleUserRelationshipSeeder::class);
         $this->call(IncidentsTableSeeder::class);
         $this->call(CommentsTableSeeder::class);
         $this->call(PhotosTableSeeder::class);
+        $this->call(IncidentUserRelationshipSeeder::class);
+        $this->call(RoleUserRelationshipSeeder::class);
     }
 }
 
@@ -72,10 +73,10 @@ class UsersTableSeeder extends Seeder {
 		echo $this->getEmail();
 
 		// determine the number of users to create
-		$count = rand(20, 100);
+		$count = rand(20, 30);
 
 		// output progress
-		echo('Creating ' . $count . ' dummy Users... ');
+		echo('Creating ' . $count . ' random Users... ');
 
 		// generate fake user accounts
 		factory(User::class, $count)->create();
@@ -96,7 +97,7 @@ class IncidentsTableSeeder extends Seeder {
 	public function run() {
 
 		// get a random number of incidents to create
-		$count = rand(10, 100);
+		$count = rand(10, 15);
 
 		// output progress
 		echo('Creating ' . $count . ' Incidents... ');
@@ -149,7 +150,7 @@ class CommentsTableSeeder extends Seeder {
 		// count the number of incidents so that we can generate an appropriate range of comments
 		$incident_count = Incident::all()->count();
 
-		$comment_count = rand($incident_count, 3 * $incident_count);
+		$comment_count = rand($incident_count, 1.2 * $incident_count);
 
 		// output progress
 		echo('Creating ' . $comment_count . ' Comments...');
@@ -167,7 +168,8 @@ class PhotosTableSeeder extends Seeder {
 
 	public function run() {
 		// figure out how many photos to create
-		$count = Incident::all()->count();
+		//$count = Incident::all()->count();
+		$count = 10;
 
 		// output progress
 		echo('Deleting existing Photos from the filesystem... ');
@@ -201,7 +203,14 @@ class IncidentUserRelationshipSeeder extends Seeder {
 		// output progress
 		echo('Establishing Incident/User relationships... ');
 
-		
+		$users = User::with('incidents')->get();
+		$incident_count = Incident::all()->count();
+
+		// attach a random number of incidents to each user
+		foreach ($users as $user) {
+				$incidents = Incident::where('id', '<=', rand(1, $incident_count))->get();
+				$user->incidents()->saveMany($incidents);
+		}
 
 		// output progress
 		echo('done.' . PHP_EOL);

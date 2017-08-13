@@ -14,7 +14,7 @@ class User extends Authenticatable
     }
 
     public function role() {
-        return $this->belongsToMany('App\Role');
+        return $this->belongsToMany('App\Role')->withTimestamps();
     }
 
     public function comment() {
@@ -22,7 +22,7 @@ class User extends Authenticatable
     }
 
     public function incidents() {       // this relationship tracks which incidents the user has viewed
-        return $this->belongsToMany('App\Incident');
+        return $this->belongsToMany('App\Incident')->withTimestamps();
     }
     
     use Notifiable;
