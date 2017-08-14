@@ -14,13 +14,22 @@
 	                	<span class="glyphicon glyphicon-info-sign"></span>
 	                	Incidents
 	                </div>
-                	<div class="text-danger repository-text-wrap">
-                		There are {{ $incident_count - $user_count }} incidents which require your review.
-                	</div>
+                	@if ($incident_count - $user_count)
+                        <div class="text-danger repository-text-wrap">
+                            There {{ $incident_count - $user_count > 1 ? 'are ' : 'is ' }}
+                            {{ $incident_count - $user_count }}
+                            incident{{ $incident_count - $user_count > 1 ? 's ' : '' }}
+                            which require{{ $incident_count - $user_count > 1 ? '' : 's' }} your review.
+                        </div>
+                    @else
+                        <div class="text-success repository-text-wrap">
+                            You've viewed all the incidents which have been reported!
+                        </div>
+                    @endif
                 </a>
             </div>
 
-            <div class="col-xs-12 col-sm-4 repository-margin-bottom-1rem">
+            <div class="col-xs-12 repository-margin-bottom-1rem">
                 <a class="btn btn-default col-xs-12 homepage-buttons" href="{{ route('schedule') }}">
                 	<span class="glyphicon glyphicon-calendar">
                 		<div>
@@ -30,7 +39,7 @@
                 </a>
             </div>
 
-            <div class="col-xs-12 col-sm-4 repository-margin-bottom-1rem">
+            <div class="col-xs-12 repository-margin-bottom-1rem">
                 <a class="btn btn-default col-xs-12 homepage-buttons" href="{{ route('cityemail') }}">
                 	<span class="glyphicon glyphicon-envelope">
                 		<div>

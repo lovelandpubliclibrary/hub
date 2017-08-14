@@ -53,6 +53,12 @@ class IncidentController extends Controller
         // load the photos for the incident
         $photos = $incident->photo;
 
+        // record that the user viewed this incident
+        $user = User::find(Auth::id());
+        if (!$user->incidents->contains($incident)) {
+            Auth::user()->incidents()->save($incident);
+        }
+
     	return view('incidents.show', compact('incident', 'comments', 'photos', 'breadcrumbs'));
     }
 
@@ -207,7 +213,10 @@ class IncidentController extends Controller
         // store the search string to pass back to the view
         $search = $request->search;
 
+        // retrieve the incidents which the user has already viewed
+        $user_viewed = Auth::user()->incidents;
+
         // provide the index view with the search results and search string
-        return view('incidents.index', compact('incidents', 'search'));
+        return view('incidents.index', compact('incidents', 'search', 'user_viewed'));
     }
 }

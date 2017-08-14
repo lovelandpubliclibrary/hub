@@ -15,7 +15,7 @@
 			</div><!-- .panel-heading -->
 
 			<div class="panel-body">
-				<div>
+				<div class="col-xs-12">
 					<a href="/incidents/create" class="btn btn-default col-xs-12 col-sm-3 repository-margin-bottom-1rem">
 						Report a New Incident
 					</a>
@@ -65,7 +65,7 @@
 								<tr>
 									<td>
 										@if(!$user_viewed->contains($incident))
-											<span class="glyphicon glyphicon-info-sign text-danger"></span>
+											<span class="glyphicon glyphicon-exclamation-sign text-danger"></span>
 										@endif
 									</td>
 
