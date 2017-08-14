@@ -29,9 +29,12 @@ class IncidentController extends Controller
             ['link' => route('incidents'), 'text' => 'Incidents'],
         ];
 
+        // retrieve the incidents which the user has already viewed
+        $user_viewed = Auth::user()->incidents;
+
         // retrieve all the incidents by date, then time
     	$incidents = Incident::orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
-    	return view('incidents.index', compact('incidents', 'breadcrumbs'));
+    	return view('incidents.index', compact('incidents', 'user_viewed', 'breadcrumbs'));
     }
 
 

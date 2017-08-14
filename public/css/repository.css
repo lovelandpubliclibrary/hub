@@ -112,7 +112,12 @@ td > .glyphicon {
 }
 
 #incidents .table > tbody > tr > td {
+	vertical-align: middle;
 	white-space: normal;
+}
+
+#incidents .table > tbody > tr > td > .glyphicon{
+	font-size: 1.25em;
 }
 
 #incidents .btn-default {

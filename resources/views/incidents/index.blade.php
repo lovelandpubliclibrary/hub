@@ -40,6 +40,9 @@
 						<thead>
 							<tr>
 								<th>
+								</th>
+
+								<th>
 									Date
 								</th>
 
@@ -60,6 +63,12 @@
 						<tbody>
 							@foreach ($incidents as $incident)
 								<tr>
+									<td>
+										@if(!$user_viewed->contains($incident))
+											<span class="glyphicon glyphicon-info-sign text-danger"></span>
+										@endif
+									</td>
+
 									<td class="text-nowrap">
 										<span class="hidden-xs">
 											{{ \Carbon\Carbon::parse($incident->date)->toFormattedDateString() }}

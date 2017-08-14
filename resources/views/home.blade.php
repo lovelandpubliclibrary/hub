@@ -15,7 +15,7 @@
 	                	Incidents
 	                </div>
                 	<div class="text-danger repository-text-wrap">
-                		There are X incidents which require your review.
+                		There are {{ $incident_count - $user_count }} incidents which require your review.
                 	</div>
                 </a>
             </div>
