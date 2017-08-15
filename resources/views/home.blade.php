@@ -8,18 +8,18 @@
 
 @section('content')
         @if (Auth::check())
-    		<div class="col-xs-12 repository-margin-bottom-1rem">
+            <div class="col-xs-12 repository-margin-bottom-1rem">
                 <a class="btn btn-default col-xs-12" href="{{ route('incidents') }}">
                 	<div class="homepage-buttons repository-text-wrap">
 	                	<span class="glyphicon glyphicon-info-sign"></span>
 	                	Incidents
 	                </div>
-                	@if ($incident_count - $user_count)
+                	@if ($unviewed_incidents)
                         <div class="text-danger repository-text-wrap">
-                            There {{ $incident_count - $user_count > 1 ? 'are ' : 'is ' }}
-                            {{ $incident_count - $user_count }}
-                            incident{{ $incident_count - $user_count > 1 ? 's ' : '' }}
-                            which require{{ $incident_count - $user_count > 1 ? '' : 's' }} your review.
+                            There {{ $unviewed_incidents > 1 ? 'are ' : 'is ' }}
+                            {{ $unviewed_incidents }}
+                            incident{{ $unviewed_incidents > 1 ? 's ' : '' }}
+                            which require{{ $unviewed_incidents > 1 ? '' : 's' }} your review.
                         </div>
                     @else
                         <div class="text-success repository-text-wrap">
@@ -29,6 +29,7 @@
                 </a>
             </div>
 
+            {{--
             <div class="col-xs-12 repository-margin-bottom-1rem">
                 <a class="btn btn-default col-xs-12 homepage-buttons" href="{{ route('schedule') }}">
                 	<span class="glyphicon glyphicon-calendar">
@@ -48,6 +49,7 @@
             		</span>
                 </a>
             </div>
+            --}}
         @else
             @include('auth.login')
         @endif

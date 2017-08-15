@@ -37,9 +37,11 @@
 
 			{{-- Display the button to edit the incident if the user authored it or is an admin --}}
 			@if (Auth::id() == $photo->incident->user_id || Auth::user()->role->contains('role', 'Admin'))
-				<a class="btn-sm btn-default pull-right link-default" href="/photos/edit/{{ $photo->id }}" title="Edit Incident">
-					<span class="glyphicon glyphicon-edit"></span> Edit
-				</a>
+				<div class="text-center-xs text-right-sm repository-margin-top-1rem">
+					<a class="btn-sm btn-default link-default" href="/photos/edit/{{ $photo->id }}" title="Edit Incident">
+						<span class="glyphicon glyphicon-edit"></span> Edit Photo
+					</a>
+				</div>
 			@endif
 		</div><!-- .panel-heading -->
 

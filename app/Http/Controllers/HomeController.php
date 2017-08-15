@@ -23,8 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $incident_count = Incident::all()->count();
-        $user_count = User::find(Auth::id())->incidents->count();
-        return view('home', compact('incident_count', 'user_count'));
+        $unviewed_incidents = Incident::all()->count() - User::find(Auth::id())->incidents->count();
+        return view('home', compact('unviewed_incidents'));
     }
 }

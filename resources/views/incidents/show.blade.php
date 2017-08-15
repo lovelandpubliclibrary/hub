@@ -23,7 +23,7 @@
 
 		<div class="panel panel-default" id="incident">
 			<div class="panel-heading col-xs-12 text-center repository-margin-bottom-1rem">
-				<div class="col-xs-10 col-xs-offset-1">
+				<div class="col-xs-12">
 					<h2 class="panel-title">
 						{{ $incident->title }}
 					</h2>
@@ -31,9 +31,11 @@
 
 				{{-- Display the button to edit the incident if the user authored it or is an admin --}}
 				@if (Auth::id() == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
-					<a class="btn-sm btn-default pull-right link-default" href="/incidents/edit/{{ $incident->id }}" title="Edit Incident">
-						<span class="glyphicon glyphicon-edit"></span> Edit
-					</a>
+					<div class="text-center-xs text-right-sm repository-margin-top-1rem">
+						<a class="btn-sm btn-default link-default" href="/incidents/edit/{{ $incident->id }}" title="Edit Incident">
+							<span class="glyphicon glyphicon-edit"></span> Edit Incident
+						</a>
+					</div>
 				@endif
 			</div><!-- .panel-heading -->
 
