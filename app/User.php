@@ -21,8 +21,14 @@ class User extends Authenticatable
         return $this->hasMany('App\Comment');
     }
 
-    public function incidents() {       // this relationship tracks which incidents the user has viewed
-        return $this->belongsToMany('App\Incident')->withTimestamps();
+    // this relationship tracks which incidents the user has viewed
+    public function incidentsViewed() {
+        return $this->belongsToMany('App\Incident', 'incident_user_viewed')->withTimestamps();
+    }
+
+    // track which incidents this user is involved in
+    public function incidentsInvolved() {
+        return $this->belongsToMany('App\Incident', 'incident_user_involved')->withTimestamps();
     }
     
     use Notifiable;
@@ -33,7 +39,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'role_id',
     ];
 
     /**

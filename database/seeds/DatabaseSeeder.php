@@ -15,15 +15,15 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
+    public function run() {
     	$this->call(RolesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(IncidentsTableSeeder::class);
         $this->call(LocationsTableSeeder::class);
         $this->call(CommentsTableSeeder::class);
         $this->call(PhotosTableSeeder::class);
-        $this->call(IncidentUserRelationshipSeeder::class);
+        $this->call(IncidentUserViewedRelationshipSeeder::class);
+        $this->call(IncidentUserInvolvedRelationshipSeeder::class);
         $this->call(RoleUserRelationshipSeeder::class);
     }
 }
@@ -35,7 +35,7 @@ class UsersTableSeeder extends Seeder {
 		// output progress
 		echo('--> Creating known user accounts...' . PHP_EOL);
 
-		User::create (
+		User::create(
 			[
 				'id' => 1,
 				'name' => 'Test Admin',
@@ -48,7 +48,7 @@ class UsersTableSeeder extends Seeder {
 		// output progress
 		echo $this->getEmail();
 
-		User::create (
+		User::create(
 			[
 				'id' => 2,
 				'name' => 'Test User',
@@ -61,7 +61,7 @@ class UsersTableSeeder extends Seeder {
 		// output progress
 		echo $this->getEmail();
 
-		User::create (
+		User::create(
 			[
 				'id' => 3,
 				'name' => 'Test Director',
@@ -230,24 +230,45 @@ class PhotosTableSeeder extends Seeder {
 		// output progress
 		echo('done.' . PHP_EOL);
 	}
-
 }
 
 
-class IncidentUserRelationshipSeeder extends Seeder {
+class IncidentUserViewedRelationshipSeeder extends Seeder {
 
 	public function run() {
 
 		// output progress
-		echo('--> Establishing Incident/User relationships... ');
+		echo('--> Establishing relationships to simulate users viewing incidents... ');
 
-		$users = User::with('incidents')->get();
+		$users = User::with('incidentsViewed')->get();
 		$incident_count = Incident::all()->count();
 
 		// attach a random number of incidents to each user
 		foreach ($users as $user) {
 				$incidents = Incident::where('id', '<=', rand(1, $incident_count))->get();
-				$user->incidents()->saveMany($incidents);
+				$user->incidentsViewed()->saveMany($incidents);
+		}
+
+		// output progress
+		echo('done.' . PHP_EOL);
+	}
+}
+
+
+class IncidentUserInvolvedRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		// output progress
+		echo('--> Establishing relationships to simulate users being involved in incidents... ');
+
+		$users = User::with('incidentsInvolved')->get();
+		$incident_count = Incident::all()->count();
+
+		// attach a random number of incidents to each user
+		foreach ($users as $user) {
+				$incidents = Incident::where('id', '<=', rand(1, $incident_count / 2))->get();
+				$user->incidentsInvolved()->saveMany($incidents);
 		}
 
 		// output progress
