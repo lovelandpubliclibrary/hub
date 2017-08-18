@@ -3,7 +3,7 @@
 
 A new incident was posted to the Repository by {{ $incident->user->name }} 
 on {{ \Carbon\Carbon::parse($incident->created_at)->toFormattedDateString() }} 
-at {{ \Carbon\Carbon::parse($incident->created_at)->format('h:i:s A') }}.
+at {{ \Carbon\Carbon::parse($incident->created_at)->format('g:i:s A') }}.
 
 @component('mail::button', ['url' => url('incidents', [$incident->id])])
 View Incident

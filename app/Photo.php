@@ -12,5 +12,5 @@ class Photo extends Model
     }
 
     // mass assignable attributes
-    protected $fillable = ['filename'];
+    protected $fillable = ['filename', 'incident_id'];
 }

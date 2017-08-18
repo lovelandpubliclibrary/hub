@@ -32,8 +32,19 @@
 					</div>
 					
 					<div class="form-group required">
-					    {{ Form::label('date', 'Date of Incident:', ['class' => 'control-label']) }}
+					    {{ Form::label('date', 'Date of incident:', ['class' => 'control-label']) }}
 					    {{ Form::date('date', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required']) }}
+				  	</div>
+
+				  	<div class="form-group required">
+					    {{ Form::label('time', 'Time of incident:', ['class' => 'control-label']) }}
+					    {{ Form::time('time', \Carbon\Carbon::now()->toTimeString(), ['class' => 'form-control', 'required' => 'required']) }}
+				  	</div>
+
+				  	<div class="form-group required">
+					    {{ Form::label('locations', 'Location(s) the incident took place:', ['class' => 'control-label']) }}
+					    {{ Form::select('locations[]', $locations, null, ['class' => 'selectpicker form-control',
+					    												'multiple' => 'multiple']) }}
 				  	</div>
 
 					<div class="form-group">
@@ -52,14 +63,14 @@
 					</div>
 
 					<div class="form-group required">
-						{{ Form::label('description', 'Describe the Incident:', ['class' => 'control-label']) }}
+						{{ Form::label('description', 'Describe the incident:', ['class' => 'control-label']) }}
 						{{ Form::textarea('description', null,
 										  ['class' => 'form-control', 'rows' => '6', 'required' => 'required']) }}
 					</div>
 
 					<div class="form-group">
-						{{ Form::label('patron_photo', 'Patron Picture:') }}
-						{{ Form::file('patron_photo', ['class' => 'form-control-file', 'aria-describedby' => 'patron_photo']) }}
+						{{ Form::label('patron_photos', 'Patron Picture:') }}
+						{{ Form::file('patron_photos[]', ['class' => 'form-control-file', 'aria-describedby' => 'patron_photos', 'multiple' => 'multiple']) }}
 					</div>
 
 					{{ Form::hidden('user', Auth::id()) }}

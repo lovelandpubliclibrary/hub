@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Incident;
 use App\Photo;
 use App\User;
+use App\Location;
 use Mail;
 use App\Mail\IncidentCreated;
 use App\Mail\IncidentUpdated;
@@ -54,7 +55,7 @@ class IncidentController extends Controller
         $photos = $incident->photo;
 
         // record that the user viewed this incident
-        $user = User::find(Auth::id());
+        $user = Auth::user();
         if (!$user->incidents->contains($incident)) {
             Auth::user()->incidents()->save($incident);
         }
@@ -72,7 +73,10 @@ class IncidentController extends Controller
             ['link' => route('createIncident'), 'text' => 'Report an Incident'],
         ];
 
-    	return view('incidents.create', compact('breadcrumbs'));
+        // collect all the locations
+        $locations = Location::orderBy('location', 'ASC')->pluck('location', 'id');
+
+    	return view('incidents.create', compact('breadcrumbs', 'locations'));
     }
 
 
@@ -83,13 +87,20 @@ class IncidentController extends Controller
             'date' => 'required',
             'title' => 'required',
             'description' => 'required',
-            'user' => 'required'
+            'user' => 'required',
         ];
+
+        $upload_count = count($request->file('patron_photos'));
+        foreach(range(0, $upload_count) as $index) {
+            $rules['patron_photos.' . $index] = 'image|mimes:jpeg,png,jpg,gif,bmp|max:2048';
+        }
+
         $this->validate($request, $rules);
 
         // store it in a new instance of Incident
         $incident = new Incident;
         $incident->date = $request->date;
+        $incident->time = $request->time;
         $incident->title = $request->title;
         $incident->description = $request->description;
         $incident->user_id = $request->user;
@@ -97,25 +108,41 @@ class IncidentController extends Controller
         $incident->card_number = ($request->card_number ?: null);
         $incident->patron_description = ($request->patron_description ?: null);
 
+
         // save it to the database, which will give it an id
         if ($incident->save()) {
+
+            // set the location(s) of the incident
+            foreach ($request->locations as $location_id) {
+                $incident->location()->save(Location::find($location_id));
+            }
+
             // validate and upload the patron photo if necessary
-            if ($request->hasFile('patron_photo') && $request->file('patron_photo')->isValid()) {
-                // create a unique name for the file
-                $filename = uniqid('img_') . '.' . $request->patron_photo->getClientOriginalExtension();
-                // move the file to the public/images/patrons/ directory
-                if ($request->file('patron_photo')->move(public_path('images/patrons/'), $filename)) {
-                    // save the photo id to our instance of incident
-                    $incident->photo()->save(Photo::create([
+            if ($request->hasFile('patron_photos')) {
+
+                // loop through the uploads and save them to the filesystem and database
+                foreach ($request->file('patron_photos') as $upload) {
+
+                    // create a unique name for the file
+                    $filename = uniqid('img_') . '.' . $upload->getClientOriginalExtension();
+
+                    // create a new instance of a photo
+                    $photo = Photo::create([
                         'filename' => $filename,
-                        'incident_id' => $incident->id]));
+                        'incident_id' => $incident->id,
+                    ]);
+
+                    // create the Incident/Photo relationship and move the file
+                    if ($incident->photo()->save($photo)) {
+                        $upload->move(public_path('images/patrons/'), $filename);
+                    }
                 }
             }
 
             // email a notification to all staff
-            foreach (User::all() as $user) {
+            /*foreach (User::all() as $user) {
                 \Mail::to($user->email)->send(new IncidentCreated($incident));
-            }
+            }*/
 
             // redirect back the new incident with a success message
             Session::flash('success_message', "The incident was saved and an email notification was sent to the library staff.");
@@ -138,7 +165,10 @@ class IncidentController extends Controller
         {
             // collect the photos associated with this incident
             $photos = $incident->photo;
-            return view('incidents.edit', compact('incident', 'photos', 'breadcrumbs'));
+
+            // collect the locations
+            $locations = Location::orderBy('location', 'ASC')->pluck('location', 'id');
+            return view('incidents.edit', compact('incident', 'photos', 'locations', 'breadcrumbs'));
         }
         else
         {
@@ -168,6 +198,8 @@ class IncidentController extends Controller
         // retrive the parts of the request we need for the incident
         $updates = $request->only(
             'date',
+            'time',
+            'locations',
             'patron_name',
             'card_number',
             'patron_description',
@@ -177,7 +209,14 @@ class IncidentController extends Controller
         
         // set each attribute and save to the database
         foreach ($updates as $key => $value) {
-            $incident->$key = $value;
+            switch ($key) {
+                case 'locations':
+                    $incident->location()->sync($updates['locations']);
+                    break;
+                default:
+                    $incident->$key = $value;
+                    break;                
+            }  
         }
 
         // record the user who performed the update

@@ -21,16 +21,27 @@
 		{{ Form::open(['action' => 'IncidentController@update', 'files' => true]) }}
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<div class="form-group">
+					<div class="form-group required">
 						{{ Form::label('title', 'Title:') }}
 						{{ Form::text('title', $incident->title, ['class' => 'form-control']) }}
 					</div>
 				</div>
 
 				<div class="panel-body">
-					<div class="form-group">
+					<div class="form-group required">
 					    {{ Form::label('date', 'Date of Incident:') }}
 					    {{ Form::date('date', $incident->date, ['class' => 'form-control']) }}
+				  	</div>
+
+				  	<div class="form-group required">
+					    {{ Form::label('time', 'Time of incident:', ['class' => 'control-label']) }}
+					    {{ Form::time('time', \Carbon\Carbon::now()->toTimeString(), ['class' => 'form-control', 'required' => 'required']) }}
+				  	</div>
+
+				  	<div class="form-group required">
+					    {{ Form::label('locations', 'Location(s) the incident took place:', ['class' => 'control-label']) }}
+					    {{ Form::select('locations[]', $locations, $incident->location->pluck('id'), ['class' => 'selectpicker form-control',
+					    												'multiple' => 'multiple']) }}
 				  	</div>
 
 					<div class="form-group">
@@ -48,7 +59,7 @@
 						{{ Form::text('patron_description', $incident->patron_description, ['class' => 'form-control']) }}
 					</div>
 
-					<div class="form-group">
+					<div class="form-group required">
 						{{ Form::label('description', 'Describe the Incident:') }}
 						{{ Form::textarea('description', $incident->description, ['class' => 'form-control', 'rows' => '6']) }}
 					</div>

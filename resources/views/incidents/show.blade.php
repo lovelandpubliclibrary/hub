@@ -23,7 +23,7 @@
 
 		<div class="panel panel-default" id="incident">
 			<div class="panel-heading col-xs-12 text-center repository-margin-bottom-1rem">
-				<div class="col-xs-12">
+				<div class="col-xs-12 repository-margin-bottom-1rem">
 					<h2 class="panel-title">
 						{{ $incident->title }}
 					</h2>
@@ -54,6 +54,23 @@
 					<div class="col-xs-12">
 						<strong>Date of Incident:</strong>
 						{{ $incident->date }}
+					</div>
+
+					<div class="col-xs-12">
+						<strong>Time of Incident:</strong>
+						{{ \Carbon\Carbon::parse($incident->time)->format('g:i A') }}
+					</div>
+
+					<div class="col-xs-12">
+						<strong>Location(s) of Incident:</strong>
+						@if (count($locations = $incident->location))
+							@foreach ($locations as $location)
+								{{-- add a comma after every location except the last one --}}
+								{{ $locations->last() != $location ? $location->location . ', ' : $location->location }}
+							@endforeach
+						@else
+							<em>Unknown</em>
+						@endif
 					</div>
 
 					<div class="col-xs-12">

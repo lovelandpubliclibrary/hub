@@ -17,7 +17,7 @@ class CreatePhotosTable extends Migration
             $table->increments('id');
             $table->integer('incident_id')->unsigned();
             $table->string('filename');
-            $table->text('caption');
+            $table->text('caption')->nullable();
             $table->timestamps();
         });
     }

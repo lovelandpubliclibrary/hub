@@ -18,6 +18,10 @@ class Incident extends Model
 	public function photo() {
 		return $this->hasMany('App\Photo');
 	}
+	
+	public function location() {
+		return $this->belongsToMany('App\Location')->withTimestamps();
+	}
 
 	public function users() {		// this relationship track which users have viewed the incident
 		return $this->belongsToMany('App\User')->withTimestamps();

@@ -6,6 +6,7 @@ use App\Incident;
 use App\Role;
 use App\Comment;
 use App\Photo;
+use App\Location;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
     	$this->call(RolesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(IncidentsTableSeeder::class);
+        $this->call(LocationsTableSeeder::class);
         $this->call(CommentsTableSeeder::class);
         $this->call(PhotosTableSeeder::class);
         $this->call(IncidentUserRelationshipSeeder::class);
@@ -31,7 +33,7 @@ class UsersTableSeeder extends Seeder {
 	public function run() {
 
 		// output progress
-		echo('Creating known user accounts...' . PHP_EOL);
+		echo('--> Creating known user accounts...' . PHP_EOL);
 
 		User::create (
 			[
@@ -76,7 +78,7 @@ class UsersTableSeeder extends Seeder {
 		$count = rand(20, 30);
 
 		// output progress
-		echo('Creating ' . $count . ' random Users... ');
+		echo('--> Creating ' . $count . ' random Users... ');
 
 		// generate fake user accounts
 		factory(User::class, $count)->create();
@@ -87,7 +89,7 @@ class UsersTableSeeder extends Seeder {
 
 	private function getEmail() {
 
-		return User::orderBy('id', 'desc')->first()->email . PHP_EOL;
+		return '--> ' . User::orderBy('id', 'desc')->first()->email . PHP_EOL;
 
 	}
 }
@@ -100,7 +102,7 @@ class IncidentsTableSeeder extends Seeder {
 		$count = rand(10, 15);
 
 		// output progress
-		echo('Creating ' . $count . ' Incidents... ');
+		echo('--> Creating ' . $count . ' Incidents... ');
 
 		// create incidents
 		factory(Incident::class, $count)->create();
@@ -110,29 +112,65 @@ class IncidentsTableSeeder extends Seeder {
 	}
 }
 
+
+class LocationsTableSeeder extends Seeder {
+
+	public function run() {
+
+		// output progress
+		echo('--> Creating Locations...');
+
+		// create locations
+		$locations = ['Adult Services',
+					  'Computer Lab',
+					  '2nd Floor Hallway',
+					  'Admin Area',
+					  'Customer Service',
+					  'Childrens',
+					  'Outside',
+					  'TeenSeen',
+					  'Galleria',
+					  'Restrooms',
+					  'Other'
+		];
+
+		foreach ($locations as $location) {
+			Location::create(
+				[
+					'location' => $location
+				]
+			);
+		}
+
+		// output progress
+		echo('done.' . PHP_EOL);
+	}
+}
+
+
 class RolesTableSeeder extends Seeder {
 
 	public function run() {
 
 		// output progress
-		echo('Creating 3 Roles... ');
+		echo('--> Creating 3 Roles... ');
 
 		// create roles
-		Role::create (
+		Role::create(
 			[
 				'id' => 1,
 				'role' => 'User',
 			]
 		);
 
-		Role::create (
+		Role::create(
 			[
 				'id' => 2,
 				'role' => 'Admin',
 			]
 		);
 
-		Role::create (
+		Role::create(
 			[
 				'id' => 3,
 				'role' => 'Director',
@@ -153,7 +191,7 @@ class CommentsTableSeeder extends Seeder {
 		$comment_count = rand($incident_count, 1.2 * $incident_count);
 
 		// output progress
-		echo('Creating ' . $comment_count . ' Comments...');
+		echo('--> Creating ' . $comment_count . ' Comments...');
 
 		// create the comments
 		factory(Comment::class, $comment_count)->create();
@@ -172,7 +210,7 @@ class PhotosTableSeeder extends Seeder {
 		$count = 10;
 
 		// output progress
-		echo('Deleting existing Photos from the filesystem... ');
+		echo('--> Deleting existing Photos from the filesystem... ');
 
 		// remove all the existing photos within the filesystem
 		$photos = glob(public_path() . '/images/patrons/*');
@@ -184,7 +222,7 @@ class PhotosTableSeeder extends Seeder {
 		}
 
 		// output progress
-		echo('done.' . PHP_EOL . 'Creating ' . $count . ' Photos... ');
+		echo('done.' . PHP_EOL . '--> Creating ' . $count . ' Photos... ');
 
 		// create new photos
 		factory(Photo::class, $count)->create();
@@ -201,7 +239,7 @@ class IncidentUserRelationshipSeeder extends Seeder {
 	public function run() {
 
 		// output progress
-		echo('Establishing Incident/User relationships... ');
+		echo('--> Establishing Incident/User relationships... ');
 
 		$users = User::with('incidents')->get();
 		$incident_count = Incident::all()->count();
@@ -223,7 +261,7 @@ class RoleUserRelationshipSeeder extends Seeder {
 	public function run() {
 
 		// output progress
-		echo('Establishing Role/User relationships... ');
+		echo('--> Establishing Role/User relationships... ');
 
 		// get all the users and roles
 		$users = User::with('role')->get();
