@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
+use App\Incident;
+use App\User;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
+    // ensure user is authenticated in order to use this controller
+    public function __construct() {
         $this->middleware('auth');
     }
+
+    
 
     /**
      * Show the application dashboard.
@@ -23,6 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $unviewed_incidents = Incident::all()->count() - User::find(Auth::id())->incidents->count();
+        return view('home', compact('unviewed_incidents'));
     }
 }

@@ -12,10 +12,8 @@
 */
 
 // Default routes
-Route::get('/', function () {
-    return view('home');
-});
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index');
 
 
 // Authentication
@@ -42,11 +40,15 @@ Route::get('/incidents/create', 'IncidentController@create')->name('createIncide
 Route::get('/incidents/{incident}', 'IncidentController@show')->name('incident');
 Route::post('/incidents/create', 'IncidentController@store');
 Route::post('/incidents', 'IncidentController@search');
-Route::get('/incidents/edit/{incident}', 'IncidentController@edit');
-Route::post('/incidents/edit/{incident]', 'IncidentController@update');
+Route::get('/incidents/edit/{incident}', 'IncidentController@edit')->name('editIncident');
+Route::post('/incidents/edit/{incident]', 'IncidentController@update')->name('updateIncident');
 
 // Comments
-Route::post('/comments/create', 'CommentController@store');
+Route::post('/comments/create', 'CommentController@store')->name('createComment');
+Route::get('/comments/edit/{comment}', 'CommentController@edit')->name('editComment');
+Route::post('/comments/edit/{comment]', 'CommentController@update')->name('updateComment');
+Route::get('/comments/delete/{comment}', 'CommentController@delete')->name('deleteComment');
+
 
 // Photos
 Route::get('/photos/{photo}', 'PhotoController@show')->name('photo');

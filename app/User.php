@@ -9,12 +9,20 @@ class User extends Authenticatable
 {
 
     // model relationships
-    public function incident() {
+    public function incident() {        // this relations tracks which incidents the user has authored
         return $this->hasMany('App\Incident');
     }
 
     public function role() {
-        return $this->belongsToMany('App\Role');
+        return $this->belongsToMany('App\Role')->withTimestamps();
+    }
+
+    public function comment() {
+        return $this->hasMany('App\Comment');
+    }
+
+    public function incidents() {       // this relationship tracks which incidents the user has viewed
+        return $this->belongsToMany('App\Incident')->withTimestamps();
     }
     
     use Notifiable;

@@ -13,28 +13,27 @@
 		</div>
 	@endif
 
-	<div class="h1 text-center">
-		Edit a Photo
-	</div>
-
 	<div class="panel panel-default">
 		<div class="panel-heading text-center">
 			<h2 class="panel-title">
-				Photo of {{ ($photo->incident->patron_name ?: 'Unknown Patron') }}
+				Edit a Picture
 			</h2>
-
-			<div>
+		</div> <!-- .panel-heading -->
+		<div class="panel-body">
+			<div class="well well-sm well-default">
+				Photo of {{ ($photo->incident->patron_name ?: 'Unknown Patron') }}
 				from 
 				<a href="{{ route('incident', ['incident' => $photo->incident->id]) }}">
 					{{ $photo->incident->title }}
 				</a>
 				on {{ $photo->incident->date }}
 			</div>
-		</div>
-		<div class="panel-body">
-			<img class="img-responsive" src="{{ asset('images/patrons/' . $photo->filename) }}" alt="Patron Picture">
+			<div>
+				<img class="img-responsive center-block" src="{{ asset('images/patrons/' . $photo->filename) }}" alt="Patron Picture">
+			</div>
+		</div><!-- .panel-body -->
 
-			<div class="col-xs-12 panel-footer repository-margin-top-1rem">
+		<div class="panel-footer">
 				{{ Form::open(['action' => ['PhotoController@update', $photo->id]]) }}
 					<div class="form-group">
 						{{ Form::label('caption', 'Caption: ') }}
@@ -47,13 +46,12 @@
 						</a>
 
 						{{ Form::button('Save Changes',
-									['class' => 'btn btn-default', 'type' => 'submit', 'title' => 'Save']) }}
+									['class' => 'btn btn-default btn-success', 'type' => 'submit', 'title' => 'Save']) }}
 					</div>
 					
-					{{ Form::hidden('user', Auth::user()->id) }}
+					{{ Form::hidden('user', Auth::id()) }}
 
 				{{ Form::close() }}
 			</div><!-- .panel-footer -->
-		</div><!-- .panel-body -->
 	</div><!-- .panel -->
 @endsection
