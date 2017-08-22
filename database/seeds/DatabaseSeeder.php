@@ -7,6 +7,7 @@ use App\Role;
 use App\Comment;
 use App\Photo;
 use App\Location;
+use App\Division;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,9 +23,11 @@ class DatabaseSeeder extends Seeder
         $this->call(LocationsTableSeeder::class);
         $this->call(CommentsTableSeeder::class);
         $this->call(PhotosTableSeeder::class);
+        $this->call(DivisionsTableSeeder::class);
         $this->call(IncidentUserViewedRelationshipSeeder::class);
         $this->call(IncidentUserInvolvedRelationshipSeeder::class);
         $this->call(RoleUserRelationshipSeeder::class);
+        $this->call(DivisionUserRelationshipSeeder::class);
     }
 }
 
@@ -238,7 +241,7 @@ class IncidentUserViewedRelationshipSeeder extends Seeder {
 	public function run() {
 
 		// output progress
-		echo('--> Establishing relationships to simulate users viewing incidents... ');
+		echo('--> Simulating Users viewing Incidents... ');
 
 		$users = User::with('incidentsViewed')->get();
 		$incident_count = Incident::all()->count();
@@ -260,7 +263,7 @@ class IncidentUserInvolvedRelationshipSeeder extends Seeder {
 	public function run() {
 
 		// output progress
-		echo('--> Establishing relationships to simulate users being involved in incidents... ');
+		echo('--> Simulating Users being involved in Incidents... ');
 
 		$users = User::with('incidentsInvolved')->get();
 		$incident_count = Incident::all()->count();
@@ -282,7 +285,7 @@ class RoleUserRelationshipSeeder extends Seeder {
 	public function run() {
 
 		// output progress
-		echo('--> Establishing Role/User relationships... ');
+		echo('--> Assigning Users to random Roles... ');
 
 		// get all the users and roles
 		$users = User::with('role')->get();
@@ -303,6 +306,64 @@ class RoleUserRelationshipSeeder extends Seeder {
 					break;
 			}
 			
+		}
+
+		// output progress
+		echo('done.' . PHP_EOL);
+	}
+}
+
+
+class DivisionsTableSeeder extends Seeder {
+
+	public function run() {
+
+		$divisions = [
+			'Admin',
+			'Adult Services',
+			'Children',
+			'Customer Service',
+			'LTI',
+			'Material Handlers',
+			'Subs',
+			'Teen',
+			'Tech Services',
+		];
+
+		foreach ($divisions as $key => $division) {
+			// output progress
+			echo('--> Creating ' . $division . ' Division... ');
+
+			// create division
+			Division::create(
+				[
+					'id' => $key + 1,
+					'division' => $division,
+				]
+			);
+
+			// output progress
+			echo('done.' . PHP_EOL);
+		}
+	}
+}
+
+
+class DivisionUserRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		// output progress
+		echo('--> Assigning Users to random Divisions... ');
+
+		// get all the users
+		$users = User::all();
+		$division_count = Division::all()->count();
+
+		// attach some divisions to each user
+		foreach ($users as $user) {
+				$divisions = Division::where('id', '<=', rand(1, $division_count / 3))->get();
+				$user->division()->saveMany($divisions);
 		}
 
 		// output progress
