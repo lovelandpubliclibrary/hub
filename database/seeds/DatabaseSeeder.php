@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
      * @return void
      */
     public function run() {
+    	// seed the models
     	$this->call(RolesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(IncidentsTableSeeder::class);
@@ -24,10 +25,13 @@ class DatabaseSeeder extends Seeder
         $this->call(CommentsTableSeeder::class);
         $this->call(PhotosTableSeeder::class);
         $this->call(DivisionsTableSeeder::class);
+
+        // seed the model relationships
         $this->call(IncidentUserViewedRelationshipSeeder::class);
         $this->call(IncidentUserInvolvedRelationshipSeeder::class);
         $this->call(RoleUserRelationshipSeeder::class);
         $this->call(DivisionUserRelationshipSeeder::class);
+        $this->call(DivisionUserSupervisorRelationshipSeeder::class);
     }
 }
 
@@ -44,7 +48,6 @@ class UsersTableSeeder extends Seeder {
 				'name' => 'Test Admin',
 				'email' => 'testadmin@cityofloveland.org',
 				'password' => Hash::make('password'),
-				'role_id' => 2,
 			]
 		);
 
@@ -57,7 +60,6 @@ class UsersTableSeeder extends Seeder {
 				'name' => 'Test User',
 				'email' => 'testuser@cityofloveland.org',
 				'password' => Hash::make('password'),
-				'role_id' => 1,
 			]
 		);
 
@@ -70,7 +72,18 @@ class UsersTableSeeder extends Seeder {
 				'name' => 'Test Director',
 				'email' => 'testdirector@cityofloveland.org',
 				'password' => Hash::make('password'),
-				'role_id' => 3,
+			]
+		);
+
+		// output progress
+		echo $this->getEmail();
+
+		User::create(
+			[
+				'id' => 4,
+				'name' => 'Test Supervisor',
+				'email' => 'testsupervisor@cityofloveland.org',
+				'password' => Hash::make('password'),
 			]
 		);
 
@@ -155,33 +168,28 @@ class RolesTableSeeder extends Seeder {
 
 	public function run() {
 
-		// output progress
-		echo('--> Creating 3 Roles... ');
+		$roles = [
+			'User',
+			'Supervisor',
+			'Director',
+			'Administrator',
+		];
 
-		// create roles
-		Role::create(
-			[
-				'id' => 1,
-				'role' => 'User',
-			]
-		);
+		foreach ($roles as $key => $role) {
+			// output progress
+			echo('--> Creating ' . $role . ' Role... ');
 
-		Role::create(
-			[
-				'id' => 2,
-				'role' => 'Admin',
-			]
-		);
+			// create division
+			Role::create(
+				[
+					'id' => $key + 1,
+					'role' => $role,
+				]
+			);
 
-		Role::create(
-			[
-				'id' => 3,
-				'role' => 'Director',
-			]
-		);
-
-		// output progress
-		echo('done.' . PHP_EOL);
+			// output progress
+			echo('done.' . PHP_EOL);
+		}
 	}
 }
 
@@ -250,6 +258,7 @@ class IncidentUserViewedRelationshipSeeder extends Seeder {
 		foreach ($users as $user) {
 				$incidents = Incident::where('id', '<=', rand(1, $incident_count))->get();
 				$user->incidentsViewed()->saveMany($incidents);
+
 		}
 
 		// output progress
@@ -292,21 +301,46 @@ class RoleUserRelationshipSeeder extends Seeder {
 
 		foreach ($users as $user) {
 			switch ($user->name) {
-				case 'Test User':
-					$user->role()->save(Role::where('role', '=', 'User')->get()->first());
-					break;
 				case 'Test Admin':
-					$user->role()->save(Role::where('role', '=', 'Admin')->get()->first());
+					$role = Role::where('role', '=', 'Administrator')->get()->first();
+					$user->role()->save($role);
 					break;
 				case 'Test Director':
-					$user->role()->save(Role::where('role', '=', 'Director')->get()->first());
+					$role = Role::where('role', '=', 'Director')->get()->first();
+					$user->role()->save($role);
+					break;
+				case 'Test Supervisor':
+					$role = Role::where('role', '=', 'Supervisor')->get()->first();
+					$user->role()->save($role);
 					break;
 				default:
-					$user->role()->save(Role::where('role', '=', 'User')->get()->first());
+					$role = Role::where('role', '=', 'User')->get()->first();
+					$user->role()->save($role);
 					break;
 			}
-			
 		}
+
+		// assign random users to the Supervisor role
+		/*  Note: we'll grab all the supervisors in the
+			DivisionUserSupervisorRelationshipSeeder class and actually
+			assign them to a division at that time */
+		$division_count = Division::all()->count();
+		$role = Role::where('role', '=', 'Supervisor')->get()->first();
+		
+		$i = 0;
+		while ($i < $division_count) {		// don't assign too many supervisors
+			$user = $users->random();		// grab a random user
+
+			// ensure that the user isn't already a supervisor
+			$user->load('role');		// reload the relationship
+			if ($user->role->contains($role)) {
+				continue;
+			} else {
+				$user->role()->attach($role);
+				$i++;
+			}
+		}
+
 
 		// output progress
 		echo('done.' . PHP_EOL);
@@ -362,8 +396,38 @@ class DivisionUserRelationshipSeeder extends Seeder {
 
 		// attach some divisions to each user
 		foreach ($users as $user) {
-				$divisions = Division::where('id', '<=', rand(1, $division_count / 3))->get();
-				$user->division()->saveMany($divisions);
+			$divisions = Division::where('id', '<=', rand(1, $division_count / 4))->get();
+			$user->divisions()->saveMany($divisions);
+		}
+
+		// output progress
+		echo('done.' . PHP_EOL);
+	}
+}
+
+
+class DivisionUserSupervisorRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		// output progress
+		echo('--> Assigning supervisors to each Division... ');
+
+		// retrieve all the users with a role of "Supervisor"
+		$supervisors = User::whereHas('role', function ($query){
+			$query->where('role', '=', 'Supervisor');
+		})->get();
+
+		// retrieve all the divisions
+		$divisions = Division::all();
+
+		// assign all the supervisors to each division
+		/*	Note: this would never be the case in production
+			however we want to be sure each division can have as many supervisors
+			as are needed, and this makes testing permissions much easier
+			in development. */
+		foreach ($divisions as $division) {
+			$division->supervisors()->saveMany($supervisors);
 		}
 
 		// output progress

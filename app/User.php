@@ -29,8 +29,12 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Incident', 'incident_user_involved')->withTimestamps();
     }
 
-    public function division() {        // track which divisions the user is a part of
+    public function divisions() {        // track which divisions the user is a part of
         return $this->belongsToMany('App\Division')->withTimestamps();
+    }
+
+    public function supervisor() {        // track which divisions the user is a part of
+        return $this->belongsToMany('App\Division', 'division_user_supervisors')->withTimestamps();
     }
     
     use Notifiable;
