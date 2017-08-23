@@ -1,6 +1,7 @@
 <?php
 
 $factory->define(App\Photo::class, function (Faker\Generator $faker) {
+	
 	// generate random height and widths for each image, within likely constraints
 	$width = rand(640, 1586);
 	$height = rand(480, 1024);

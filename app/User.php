@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Incident;
+use App\Role;
 
 class User extends Authenticatable
 {
@@ -30,12 +32,9 @@ class User extends Authenticatable
     }
 
     public function divisions() {        // track which divisions the user is a part of
-        return $this->belongsToMany('App\Division')->withTimestamps();
+        return $this->belongsToMany('App\Division')->withPivot('supervisor')->withTimestamps();
     }
 
-    public function supervisor() {        // track which divisions the user is a part of
-        return $this->belongsToMany('App\Division', 'division_user_supervisors')->withTimestamps();
-    }
     
     use Notifiable;
 
@@ -56,4 +55,13 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+
+    public function unviewedIncidents() {
+        return Incident::all()->count() - count($this->incidentsViewed);
+    }
+
+    public function hasRole(Role $role) {
+        return $this->role->contains($role) ? true : false;
+    }
 }

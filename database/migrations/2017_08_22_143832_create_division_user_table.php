@@ -17,6 +17,7 @@ class CreateDivisionUserTable extends Migration
             $table->primary(['division_id', 'user_id']);
             $table->integer('division_id')->unsigned();
             $table->integer('user_id')->unsigned();
+            $table->boolean('supervisor')->nullable()->default(null);
             $table->timestamps();
         });
     }
