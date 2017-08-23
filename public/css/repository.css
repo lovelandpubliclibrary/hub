@@ -40,6 +40,10 @@ td > .glyphicon {
 	margin: 0 0 8px 0;
 }
 
+.badge-error {
+  background-color: #a94442;
+}
+
 @media (min-width: 768px) {
 	.pull-right-sm {
 		float: right !important;

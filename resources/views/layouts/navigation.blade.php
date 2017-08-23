@@ -19,6 +19,9 @@
                 <li>
                     <a href="{{ route('incidents') }}">
                         Incidents
+                        <span class="badge badge-error badge-sm">
+                            {{ Auth::user()->unviewedIncidents() }}
+                        </span>
                     </a>
                 </li>
                 <li>

@@ -22,8 +22,7 @@ class IncidentController extends Controller
     }
 
     
-    public function index()
-    {
+    public function index() {
         // set up the breadcrumbs for this action
         $breadcrumbs = [
             ['link' => route('home'), 'text' => 'Home'],
@@ -31,7 +30,7 @@ class IncidentController extends Controller
         ];
 
         // retrieve the incidents which the user has already viewed
-        $user_viewed = Auth::user()->incidents;
+        $user_viewed = Auth::user()->incidentsViewed;
 
         // retrieve all the incidents by date, then time
     	$incidents = Incident::orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
@@ -39,8 +38,7 @@ class IncidentController extends Controller
     }
 
 
-    public function show(Incident $incident)
-    {
+    public function show(Incident $incident) {
         // set up the breadcrumbs for this action
         $breadcrumbs = [
             ['link' => route('home'), 'text' => 'Home'],
@@ -56,16 +54,15 @@ class IncidentController extends Controller
 
         // record that the user viewed this incident
         $user = Auth::user();
-        if (!$user->incidents->contains($incident)) {
-            Auth::user()->incidents()->save($incident);
+        if (!$user->incidentsViewed->contains($incident)) {
+            Auth::user()->incidentsViewed()->save($incident);
         }
 
     	return view('incidents.show', compact('incident', 'comments', 'photos', 'breadcrumbs'));
     }
 
 
-    public function create()
-    {
+    public function create() {
         // set up the breadcrumbs for this action
         $breadcrumbs = [
             ['link' => route('home'), 'text' => 'Home'],
@@ -76,18 +73,21 @@ class IncidentController extends Controller
         // collect all the locations
         $locations = Location::orderBy('location', 'ASC')->pluck('location', 'id');
 
-    	return view('incidents.create', compact('breadcrumbs', 'locations'));
+        // collect all the staff
+        $staff = User::orderBy('name', 'ASC')->pluck('name', 'id');
+
+    	return view('incidents.create', compact('breadcrumbs', 'locations', 'staff'));
     }
 
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         // validate the request input
         $rules = [
             'date' => 'required',
             'title' => 'required',
             'description' => 'required',
             'user' => 'required',
+            'locations' => 'required',
         ];
 
         $upload_count = count($request->file('patron_photos'));
@@ -109,12 +109,20 @@ class IncidentController extends Controller
         $incident->patron_description = ($request->patron_description ?: null);
 
 
-        // save it to the database, which will give it an id
+        // save it to the database, which will give it an id,
+        // which is needed for relationships to be created
         if ($incident->save()) {
 
             // set the location(s) of the incident
             foreach ($request->locations as $location_id) {
                 $incident->location()->save(Location::find($location_id));
+            }
+
+            // set the users involved in the incident
+            if (count($request->usersInvolved)) {
+                foreach ($request->usersInvolved as $user_id) {
+                    $incident->usersInvolved()->save(User::find($user_id));
+                }
             }
 
             // validate and upload the patron photo if necessary
@@ -140,9 +148,9 @@ class IncidentController extends Controller
             }
 
             // email a notification to all staff
-            /*foreach (User::all() as $user) {
-                \Mail::to($user->email)->send(new IncidentCreated($incident));
-            }*/
+            foreach (User::pluck('email') as $email) {
+                \Mail::to($email)->send(new IncidentCreated($incident));
+            }
 
             // redirect back the new incident with a success message
             Session::flash('success_message', "The incident was saved and an email notification was sent to the library staff.");
@@ -151,8 +159,7 @@ class IncidentController extends Controller
     }
 
 
-    public function edit(Incident $incident)
-    {
+    public function edit(Incident $incident) {
         // set up the breadcrumbs for this action
         $breadcrumbs = [
             ['link' => route('home'), 'text' => 'Home'],
@@ -168,10 +175,12 @@ class IncidentController extends Controller
 
             // collect the locations
             $locations = Location::orderBy('location', 'ASC')->pluck('location', 'id');
-            return view('incidents.edit', compact('incident', 'photos', 'locations', 'breadcrumbs'));
-        }
-        else
-        {
+
+            // collect all the staff member
+            $staff = User::orderBy('name', 'ASC')->pluck('name', 'id');
+
+            return view('incidents.edit', compact('incident', 'photos', 'locations', 'staff', 'breadcrumbs'));
+        } else {
             // return to the incident with an error message
             $errors = ['Permission Denied' => 'Only ' .
                                               Auth::user()->find($incident->user_id)->name .
@@ -181,14 +190,14 @@ class IncidentController extends Controller
     }
 
 
-    public function update(Request $request)
-    {
+    public function update(Request $request) {
         // validate the form
         $rules = [
             'date' => 'required',
             'title' => 'required',
             'description' => 'required',
-            'user' => 'required'
+            'user' => 'required',
+            'locations' => 'required',
         ];
         $this->validate($request, $rules);
 
@@ -200,6 +209,7 @@ class IncidentController extends Controller
             'date',
             'time',
             'locations',
+            'staffInvolved',
             'patron_name',
             'card_number',
             'patron_description',
@@ -212,6 +222,9 @@ class IncidentController extends Controller
             switch ($key) {
                 case 'locations':
                     $incident->location()->sync($updates['locations']);
+                    break;
+                case 'staffInvolved':
+                    $incident->usersInvolved()->sync($updates['staffInvolved']);
                     break;
                 default:
                     $incident->$key = $value;
@@ -236,8 +249,7 @@ class IncidentController extends Controller
     }
 
 
-    public function search(Request $request)
-    {
+    public function search(Request $request) {
         // validate the form
         $this->validate($request, ['search' => 'required']);
 

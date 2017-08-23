@@ -44,6 +44,13 @@
 					    												'multiple' => 'multiple']) }}
 				  	</div>
 
+				  	<div class="form-group">
+					    {{ Form::label('staffInvolved', 'Other staff members involved:', ['class' => 'control-label']) }}
+					    {{ Form::select('staffInvolved[]', $staff, $incident->usersInvolved->pluck('id'), ['class' => 'selectpicker form-control',
+					    												'data-size' => '8',
+					    												'multiple' => 'multiple']) }}
+				  	</div>
+
 					<div class="form-group">
 						{{ Form::label('patron_name', 'Patron Name:') }}
 						{{ Form::text('patron_name', $incident->patron_name, ['class' => 'form-control']) }}
@@ -80,10 +87,9 @@
 						</div>
 					</div>
 
-					{{ Form::hidden('user', Auth::id()) }}
-					{{ Form::hidden('incident', $incident->id) }}
-
-					<div class="panel-footer text-right repository-margin-top-1rem">
+					<div class="panel-footer col-xs-12 text-right repository-margin-top-1rem">
+						{{ Form::hidden('user', Auth::id()) }}
+						{{ Form::hidden('incident', $incident->id) }}
 						{{ Form::button('Save Changes',
 										['class' => 'btn btn-default btn-success', 'type' => 'submit', 'title' => 'Save']) }}
 					</div>

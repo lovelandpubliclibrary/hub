@@ -74,6 +74,18 @@
 					</div>
 
 					<div class="col-xs-12">
+						<strong>Other staff members involved:</strong>
+						@if (count($staff = $incident->usersInvolved))
+							@foreach ($staff as $user)
+								{{-- add a comma after every location except the last one --}}
+								{{ $staff->last() != $user ? $user->name . ', ' : $user->name }}
+							@endforeach
+						@else
+							<em>None</em>
+						@endif
+					</div>
+
+					<div class="col-xs-12">
 						<strong>Patron Name:</strong>
 						@isset($incident->patron_name)
 							{{ $incident->patron_name }}

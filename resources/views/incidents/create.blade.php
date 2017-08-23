@@ -44,6 +44,14 @@
 				  	<div class="form-group required">
 					    {{ Form::label('locations', 'Location(s) the incident took place:', ['class' => 'control-label']) }}
 					    {{ Form::select('locations[]', $locations, null, ['class' => 'selectpicker form-control',
+					    												'data-size' => '8',
+					    												'multiple' => 'multiple']) }}
+				  	</div>
+
+				  	<div class="form-group">
+					    {{ Form::label('usersInvolved', 'Other staff members involved:', ['class' => 'control-label']) }}
+					    {{ Form::select('usersInvolved[]', $staff, null, ['class' => 'selectpicker form-control',
+					    					    						'data-size' => '8',
 					    												'multiple' => 'multiple']) }}
 				  	</div>
 

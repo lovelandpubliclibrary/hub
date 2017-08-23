@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
-use App\Incident;
 use App\User;
 
 class HomeController extends Controller
@@ -23,7 +22,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $unviewed_incidents = Incident::all()->count() - User::find(Auth::id())->incidents->count();
+        $unviewed_incidents = Auth::user()->unviewedIncidents();
         return view('home', compact('unviewed_incidents'));
     }
 }
