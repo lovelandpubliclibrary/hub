@@ -38,10 +38,9 @@ class DatabaseSeeder extends Seeder
 class UsersTableSeeder extends Seeder {
 
 	public function run() {
+		echo('--> Creating known user accounts...' . PHP_EOL);		// output progress
 
-		// output progress
-		echo('--> Creating known user accounts...' . PHP_EOL);
-
+		// create the Test Admin
 		User::create(
 			[
 				'id' => 1,
@@ -51,9 +50,9 @@ class UsersTableSeeder extends Seeder {
 			]
 		);
 
-		// output progress
-		echo $this->getEmail();
+		echo $this->printEmail();		// output progress
 
+		// create the Test User
 		User::create(
 			[
 				'id' => 2,
@@ -63,9 +62,9 @@ class UsersTableSeeder extends Seeder {
 			]
 		);
 
-		// output progress
-		echo $this->getEmail();
+		echo $this->printEmail();		// output progress
 
+		// create the Test Director
 		User::create(
 			[
 				'id' => 3,
@@ -75,9 +74,9 @@ class UsersTableSeeder extends Seeder {
 			]
 		);
 
-		// output progress
-		echo $this->getEmail();
+		echo $this->printEmail();		// output progress
 
+		// create the Test Supervisor
 		User::create(
 			[
 				'id' => 4,
@@ -87,26 +86,20 @@ class UsersTableSeeder extends Seeder {
 			]
 		);
 
-		// output progress
-		echo $this->getEmail();
+		echo $this->printEmail();		// output progress
 
-		// determine the number of users to create
-		$count = rand(20, 30);
+		$count = rand(20, 30);		// determine the number of users to create
 
-		// output progress
-		echo('--> Creating ' . $count . ' random Users... ');
+		echo('--> Creating ' . $count . ' random Users... ');		// output progress
 
-		// generate fake user accounts
-		factory(User::class, $count)->create();
+		factory(User::class, $count)->create();		// generate fake user accounts
 
-		// output progress
-		echo('done.' . PHP_EOL);
+		echo('done.' . PHP_EOL);		// output progress
 	}
 
-	private function getEmail() {
-
+	// wrapper function for outputting progress
+	private function printEmail() {
 		return '--> ' . User::orderBy('id', 'desc')->first()->email . PHP_EOL;
-
 	}
 }
 
@@ -114,17 +107,13 @@ class IncidentsTableSeeder extends Seeder {
 
 	public function run() {
 
-		// get a random number of incidents to create
-		$count = rand(10, 15);
+		$count = rand(10, 15);		// get a random number of incidents to create
 
-		// output progress
-		echo('--> Creating ' . $count . ' Incidents... ');
+		echo('--> Creating ' . $count . ' Incidents... ');		// output progress
 
-		// create incidents
-		factory(Incident::class, $count)->create();
+		factory(Incident::class, $count)->create();		// create incidents
 
-		// output progress
-		echo('done.' . PHP_EOL);
+		echo('done.' . PHP_EOL);		// output progress
 	}
 }
 
@@ -133,10 +122,9 @@ class LocationsTableSeeder extends Seeder {
 
 	public function run() {
 
-		// output progress
-		echo('--> Creating Locations...');
+		echo('--> Creating Locations...');		// output progress
 
-		// create locations
+		// define locations
 		$locations = ['Adult Services',
 					  'Computer Lab',
 					  '2nd Floor Hallway',
@@ -150,6 +138,7 @@ class LocationsTableSeeder extends Seeder {
 					  'Other'
 		];
 
+		// create locations
 		foreach ($locations as $location) {
 			Location::create(
 				[
@@ -158,8 +147,7 @@ class LocationsTableSeeder extends Seeder {
 			);
 		}
 
-		// output progress
-		echo('done.' . PHP_EOL);
+		echo('done.' . PHP_EOL);		// output progress
 	}
 }
 
@@ -168,6 +156,7 @@ class RolesTableSeeder extends Seeder {
 
 	public function run() {
 
+		// define roles
 		$roles = [
 			'User',
 			'Supervisor',
@@ -175,11 +164,10 @@ class RolesTableSeeder extends Seeder {
 			'Administrator',
 		];
 
+		// create roles
 		foreach ($roles as $key => $role) {
-			// output progress
-			echo('--> Creating ' . $role . ' Role... ');
+			echo('--> Creating ' . $role . ' Role... ');			// output progress
 
-			// create division
 			Role::create(
 				[
 					'id' => $key + 1,
@@ -187,28 +175,24 @@ class RolesTableSeeder extends Seeder {
 				]
 			);
 
-			// output progress
-			echo('done.' . PHP_EOL);
+			echo('done.' . PHP_EOL);			// output progress
 		}
 	}
 }
 
 class CommentsTableSeeder extends Seeder {
+
 	public function run() {
 
-		// count the number of incidents so that we can generate an appropriate range of comments
+		// count the number of incidents and set a limit on the number of comments to generate
 		$incident_count = Incident::all()->count();
-
 		$comment_count = rand($incident_count, 1.2 * $incident_count);
 
-		// output progress
-		echo('--> Creating ' . $comment_count . ' Comments...');
+		echo('--> Creating ' . $comment_count . ' Comments...');		// output progress
 
-		// create the comments
-		factory(Comment::class, $comment_count)->create();
+		factory(Comment::class, $comment_count)->create();		// create the comments
 
-		// output progress
-		echo('done.' . PHP_EOL);
+		echo('done.' . PHP_EOL);		// output progress
 	}
 }
 
@@ -216,30 +200,22 @@ class CommentsTableSeeder extends Seeder {
 class PhotosTableSeeder extends Seeder {
 
 	public function run() {
-		// figure out how many photos to create
-		//$count = Incident::all()->count();
-		$count = 10;
 
-		// output progress
-		echo('--> Deleting existing Photos from the filesystem... ');
+		$count = Incident::all()->count() * rand(1, 3);		// determine the number of photos to create
+
+		echo('--> Deleting existing Photos from the filesystem... ');		// output progress
 
 		// remove all the existing photos within the filesystem
-		$photos = glob(public_path() . '/images/patrons/*');
-
+		$photos = glob(public_path() . '/images/patrons/*');		// http://php.net/manual/en/function.glob.php
 		foreach ($photos as $photo) {
-
 			if (is_file($photo)) unlink($photo);
-
 		}
 
-		// output progress
-		echo('done.' . PHP_EOL . '--> Creating ' . $count . ' Photos... ');
+		echo('done.' . PHP_EOL . '--> Creating ' . $count . ' Photos... ');		// output progress
 
-		// create new photos
-		factory(Photo::class, $count)->create();
+		factory(Photo::class, $count)->create();		// create new photos
 
-		// output progress
-		echo('done.' . PHP_EOL);
+		echo('done.' . PHP_EOL);		// output progress
 	}
 }
 
@@ -248,9 +224,9 @@ class IncidentUserViewedRelationshipSeeder extends Seeder {
 
 	public function run() {
 
-		// output progress
-		echo('--> Simulating Users viewing Incidents... ');
+		echo('--> Simulating Users viewing Incidents... ');		// output progress
 
+		// retrieve all users and the number of incidents already in the database
 		$users = User::with('incidentsViewed')->get();
 		$incident_count = Incident::all()->count();
 
@@ -258,11 +234,9 @@ class IncidentUserViewedRelationshipSeeder extends Seeder {
 		foreach ($users as $user) {
 				$incidents = Incident::where('id', '<=', rand(1, $incident_count))->get();
 				$user->incidentsViewed()->saveMany($incidents);
-
 		}
 
-		// output progress
-		echo('done.' . PHP_EOL);
+		echo('done.' . PHP_EOL);		// output progress
 	}
 }
 
@@ -271,9 +245,9 @@ class IncidentUserInvolvedRelationshipSeeder extends Seeder {
 
 	public function run() {
 
-		// output progress
-		echo('--> Simulating Users being involved in Incidents... ');
+		echo('--> Simulating Users being involved in Incidents... ');		// output progress
 
+		// retrieve all users and the number of incidents already in the database
 		$users = User::with('incidentsInvolved')->get();
 		$incident_count = Incident::all()->count();
 
@@ -283,8 +257,7 @@ class IncidentUserInvolvedRelationshipSeeder extends Seeder {
 				$user->incidentsInvolved()->saveMany($incidents);
 		}
 
-		// output progress
-		echo('done.' . PHP_EOL);
+		echo('done.' . PHP_EOL);		// output progress
 	}
 }
 
@@ -293,45 +266,52 @@ class RoleUserRelationshipSeeder extends Seeder {
 
 	public function run() {
 
-		// output progress
-		echo('--> Assigning Users to random Roles... ');
+		echo('--> Assigning Users to random Roles... ');		// output progress
 
-		// get all the users and roles
-		$users = User::with('role')->get();
+		$users = User::with('role')->get();		// get all the users and their roles
 
+		// assign the correct roles to each user
 		foreach ($users as $user) {
+			// assign the appropriate role to each of the test users
 			switch ($user->name) {
 				case 'Test Admin':
-					$role = Role::where('role', '=', 'Administrator')->get()->first();
-					$user->role()->save($role);
+					$role = Role::where('role', 'Administrator')->get()->first();
+					$user->role()->attach($role);
+					echo('---> Test Admin assigned the Administrator role.' . PHP_EOL);		// output progress
 					break;
 				case 'Test Director':
-					$role = Role::where('role', '=', 'Director')->get()->first();
-					$user->role()->save($role);
+					$role = Role::where('role', 'Director')->get()->first();
+					$user->role()->attach($role);
+					echo('---> Test Director assigned the Director role.' . PHP_EOL);		// output progress
 					break;
 				case 'Test Supervisor':
-					$role = Role::where('role', '=', 'Supervisor')->get()->first();
-					$user->role()->save($role);
-					break;
-				default:
-					$role = Role::where('role', '=', 'User')->get()->first();
-					$user->role()->save($role);
+					$role = Role::where('role', 'Supervisor')->get()->first();
+					$user->role()->attach($role);
+					echo('---> Test Supervisor assigned the Supervisor role.' . PHP_EOL);		// output progress
 					break;
 			}
+
+			// assign the 'User' role to all users
+			echo('---> Assigning all users to the User role.' . PHP_EOL);		// output progress
+			$role = Role::where('role', 'User')->get()->first();
+			$user->role()->attach($role);
 		}
 
-		// assign random users to the Supervisor role
-		/*  Note: we'll grab all the supervisors in the
-			DivisionUserSupervisorRelationshipSeeder class and actually
-			assign them to a division at that time */
+		// assign random users the Supervisor role
+		/*  Note: this doesn't assign them as a supervisor to
+			a division, it simply specifies the user as
+			a supervisor.  Division assignment happens in the
+			DivisionUserSupervisorRelationshipSeeder class */
 		$division_count = Division::all()->count();
 		$role = Role::where('role', '=', 'Supervisor')->get()->first();
+
+		echo('---> Assigning random users to the Supervisor role.' . PHP_EOL);		// output progress
 		
 		$i = 0;
 		while ($i < $division_count) {		// don't assign too many supervisors
 			$user = $users->random();		// grab a random user
 
-			// ensure that the user isn't already a supervisor
+			// assign the User as a supervisor if they aren't already
 			$user->load('role');		// reload the relationship
 			if ($user->role->contains($role)) {
 				continue;
@@ -341,9 +321,7 @@ class RoleUserRelationshipSeeder extends Seeder {
 			}
 		}
 
-
-		// output progress
-		echo('done.' . PHP_EOL);
+		echo('done.' . PHP_EOL);		// output progress
 	}
 }
 
@@ -352,6 +330,7 @@ class DivisionsTableSeeder extends Seeder {
 
 	public function run() {
 
+		// define divisions
 		$divisions = [
 			'Admin',
 			'Adult Services',
@@ -364,11 +343,10 @@ class DivisionsTableSeeder extends Seeder {
 			'Tech Services',
 		];
 
+		// create divisions
 		foreach ($divisions as $key => $division) {
-			// output progress
-			echo('--> Creating ' . $division . ' Division... ');
+			echo('--> Creating ' . $division . ' Division... ');	// output progress
 
-			// create division
 			Division::create(
 				[
 					'id' => $key + 1,
@@ -376,8 +354,7 @@ class DivisionsTableSeeder extends Seeder {
 				]
 			);
 
-			// output progress
-			echo('done.' . PHP_EOL);
+			echo('done.' . PHP_EOL);		// output progress
 		}
 	}
 }
@@ -387,8 +364,7 @@ class DivisionUserRelationshipSeeder extends Seeder {
 
 	public function run() {
 
-		// output progress
-		echo('--> Assigning Users to random Divisions... ');
+		echo('--> Assigning Users to random Divisions... ');		// output progress
 
 		// get all the users
 		$users = User::all();
@@ -400,8 +376,7 @@ class DivisionUserRelationshipSeeder extends Seeder {
 			$user->divisions()->saveMany($divisions);
 		}
 
-		// output progress
-		echo('done.' . PHP_EOL);
+		echo('done.' . PHP_EOL);		// output progress
 	}
 }
 
@@ -410,16 +385,14 @@ class DivisionUserSupervisorRelationshipSeeder extends Seeder {
 
 	public function run() {
 
-		// output progress
-		echo('--> Assigning supervisors to each Division... ');
+		echo('--> Assigning supervisors to each Division... ');		// output progress
 
 		// retrieve all the users with a role of "Supervisor"
 		$supervisors = User::whereHas('role', function ($query){
 			$query->where('role', '=', 'Supervisor');
 		})->get();
 
-		// retrieve all the divisions
-		$divisions = Division::all();
+		$divisions = Division::all();		// retrieve all the divisions
 
 		// assign all the supervisors to each division
 		/*	Note: this would never be the case in production
@@ -430,7 +403,6 @@ class DivisionUserSupervisorRelationshipSeeder extends Seeder {
 			$division->supervisors()->saveMany($supervisors);
 		}
 
-		// output progress
-		echo('done.' . PHP_EOL);
+		echo('done.' . PHP_EOL);		// output progress
 	}
 }
