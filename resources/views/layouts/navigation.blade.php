@@ -46,12 +46,6 @@
 
                         <ul class="dropdown-menu" role="menu">
 
-                            <!--<li>
-                                <a href="{{ route('password.reset', ['token' => null]) }}">
-                                    Change Password
-                                </a>
-                            </li>-->
-
                             @if (Auth::user()->hasRole($supervisor_role))
                                 <li>
                                     <a href="{{ route('reports') }}">
