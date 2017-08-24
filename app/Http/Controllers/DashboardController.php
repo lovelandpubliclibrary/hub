@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\User;
+use App\Role;
 
-class HomeController extends Controller
+class DashboardController extends Controller
 {
     // ensure user is authenticated in order to use this controller
     public function __construct() {
@@ -23,6 +24,6 @@ class HomeController extends Controller
     public function index()
     {
         $unviewed_incidents = Auth::user()->unviewedIncidents();
-        return view('home', compact('unviewed_incidents'));
+        return view('dashboard', compact('unviewed_incidents'));
     }
 }

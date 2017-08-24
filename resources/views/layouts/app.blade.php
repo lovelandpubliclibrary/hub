@@ -23,9 +23,7 @@
 
 <body>
     <div id="app" class="container">
-        @if (Auth::check())
-            @include('layouts.navigation')
-        @endif
+        @include('layouts.navigation')
 
         <div class='content repository-margin-bottom-1rem'>
             @yield('content')
