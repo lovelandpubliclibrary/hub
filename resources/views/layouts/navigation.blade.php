@@ -46,11 +46,11 @@
 
                         <ul class="dropdown-menu" role="menu">
 
-                            <li>
+                            <!--<li>
                                 <a href="{{ route('password.reset', ['token' => null]) }}">
                                     Change Password
                                 </a>
-                            </li>
+                            </li>-->
 
                             @if (Auth::user()->hasRole($supervisor_role))
                                 <li>
@@ -58,9 +58,10 @@
                                         Reports
                                     </a>
                                 </li>
+
+                                <li role="separator" class="divider"></li>
                             @endif
 
-                            <li role="separator" class="divider"></li>
                             
                             <li>
                                 <a href="{{ route('logout') }}"
