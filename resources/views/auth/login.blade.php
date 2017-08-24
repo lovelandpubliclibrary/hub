@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('content')
     <div class="panel">
         <div class="panel-heading text-center">
             <img src="{{ URL::asset('images/lpl_logo.png') }}" alt="Loveland Public Library Logo" class="text-center">
@@ -52,3 +55,4 @@
             </form>
         </div><!-- .panel-body -->
     </div><!-- .panel -->
+@endsection
