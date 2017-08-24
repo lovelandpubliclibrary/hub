@@ -58,7 +58,13 @@ class User extends Authenticatable
 
 
     public function unviewedIncidents() {
-        return Incident::all()->count() - count($this->incidentsViewed);
+        $cutoff_date = $this->created_at->subMonth()->toDateString();
+        $incidents_count = Incident::where('date', '>=', $cutoff_date)->get()->count();
+        $viewed_after_cutoff = Incident::whereHas('usersViewed', function ($query) use ($cutoff_date) {
+            $query->where('users.created_at', '>=', $cutoff_date);
+        })->where('date', '>=', $cutoff_date)->get()->count();
+        $viewed_after_cutoff = Incident::where('date', '>=', $cutoff_date)->get()->count();
+        return $incidents_count - $viewed_after_cutoff;
     }
 
     public function hasRole(Role $role) {

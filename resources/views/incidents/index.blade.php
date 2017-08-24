@@ -64,8 +64,12 @@
 							@foreach ($incidents as $incident)
 								<tr>
 									<td>
-										@if(!$user_viewed->contains($incident))
-											<span class="glyphicon glyphicon-exclamation-sign text-danger"></span>
+										@if (!$user_viewed->contains($incident))
+											<span class="glyphicon glyphicon-exclamation-sign 
+												{{ \Carbon\Carbon::createFromFormat('Y-m-d', $incident->date) >= Auth::user()->created_at->subMonth() ?
+													'text-danger' : 'text-info' }}
+												">
+											</span>
 										@endif
 									</td>
 
