@@ -22,7 +22,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $unviewed_incidents = Auth::user()->unviewedIncidents();
+        $unviewed_incidents = Auth::user()->unviewedIncidents(true);
         return view('home', compact('unviewed_incidents'));
     }
 }

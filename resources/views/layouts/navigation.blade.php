@@ -20,9 +20,9 @@
                     <li>
                         <a href="{{ route('incidents') }}">
                             Incidents
-                            @if (Auth::user()->unviewedIncidents())
+                            @if (Auth::user()->unviewedIncidents(true))
                                 <span class="badge badge-error badge-sm">
-                                    {{ Auth::user()->unviewedIncidents() }}
+                                    {{ Auth::user()->unviewedIncidents(true) }}
                                 </span>
                             @endif
                         </a>

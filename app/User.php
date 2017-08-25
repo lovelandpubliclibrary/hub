@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Incident;
 use App\Role;
+Use Carbon;
 
 class User extends Authenticatable
 {
@@ -57,14 +58,22 @@ class User extends Authenticatable
     ];
 
 
-    public function unviewedIncidents() {
-        $cutoff_date = $this->created_at->subMonth()->toDateString();
-        $incidents_count = Incident::where('date', '>=', $cutoff_date)->get()->count();
+    public function unviewedIncidents($count_only = false) {
+        $cutoff_date = $this->created_at->subMonth();
+
+        // retrieve all the incidents that occurred after the cutoff date
+        $incidents = Incident::where('date', '>=', $cutoff_date->toDateString())->get();
+
+        // retrieve all the incidents that the user has viewed after the cutoff date
         $viewed_after_cutoff = Incident::whereHas('usersViewed', function ($query) use ($cutoff_date) {
-            $query->where('users.created_at', '>=', $cutoff_date);
-        })->where('date', '>=', $cutoff_date)->get()->count();
-        $viewed_after_cutoff = Incident::where('date', '>=', $cutoff_date)->get()->count();
-        return $incidents_count - $viewed_after_cutoff;
+            $query->where('users.created_at', '<=', $cutoff_date);
+        })->get();
+        
+        // determine which incidents the user hasn't viewed
+        $unviewed_incidents = $viewed_after_cutoff->diff($incidents);
+
+        // return the number of unviewed incidents
+        return $count_only ? $unviewed_incidents->count() : $unviewed_incidents;
     }
 
     public function hasRole(Role $role) {
