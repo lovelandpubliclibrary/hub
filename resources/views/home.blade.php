@@ -23,7 +23,7 @@
                         </div>
                     @else
                         <div class="text-success repository-text-wrap">
-                            You have no new incidents to view.
+                            There are no incidents which require your review.
                         </div>
                     @endif
                 </a>

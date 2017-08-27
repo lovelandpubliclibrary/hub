@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 use App\User;
 use App\Incident;
 use App\Role;
@@ -40,6 +41,8 @@ class UsersTableSeeder extends Seeder {
 	public function run() {
 		echo('--> Creating known user accounts...' . PHP_EOL);		// output progress
 
+		$faker = Faker::create();		// instantiate the faker class
+
 		// create the Test Admin
 		User::create(
 			[
@@ -47,6 +50,7 @@ class UsersTableSeeder extends Seeder {
 				'name' => 'Test Admin',
 				'email' => 'testadmin@cityofloveland.org',
 				'password' => Hash::make('password'),
+				'created_at' => $faker->dateTime(),
 			]
 		);
 		echo $this->printEmail();		// output progress
@@ -58,6 +62,7 @@ class UsersTableSeeder extends Seeder {
 				'name' => 'Test User',
 				'email' => 'testuser@cityofloveland.org',
 				'password' => Hash::make('password'),
+				'created_at' => $faker->dateTime(),
 			]
 		);
 		echo $this->printEmail();		// output progress
@@ -69,6 +74,7 @@ class UsersTableSeeder extends Seeder {
 				'name' => 'Test Director',
 				'email' => 'testdirector@cityofloveland.org',
 				'password' => Hash::make('password'),
+				'created_at' => $faker->dateTime(),
 			]
 		);
 		echo $this->printEmail();		// output progress
@@ -80,6 +86,7 @@ class UsersTableSeeder extends Seeder {
 				'name' => 'Test Supervisor',
 				'email' => 'testsupervisor@cityofloveland.org',
 				'password' => Hash::make('password'),
+				'created_at' => $faker->dateTime(),
 			]
 		);
 		echo $this->printEmail();		// output progress

@@ -57,24 +57,31 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /**
+     * Find all the incidents that the user hasn't viewed after a specified date
+     * 
+     * @return \Collection Collection of incidents which have not be viewed by the user
+     */
+    public function unviewedIncidents() {
 
-    public function unviewedIncidents($count_only = false) {
-        $cutoff_date = $this->created_at->subMonth();
-
+        $cutoff_date = $this->created_at->subMonth();       // determine how far back users are responsible for viewing incidents
+        
         // retrieve all the incidents that occurred after the cutoff date
         $incidents = Incident::where('date', '>=', $cutoff_date->toDateString())->get();
 
         // retrieve all the incidents that the user has viewed after the cutoff date
-        $viewed_after_cutoff = Incident::whereHas('usersViewed', function ($query) use ($cutoff_date) {
-            $query->where('users.created_at', '<=', $cutoff_date);
-        })->get();
-        
-        // determine which incidents the user hasn't viewed
-        $unviewed_incidents = $viewed_after_cutoff->diff($incidents);
+        $viewed_after_cutoff = $this->incidentsViewed()->where('date', '>=', $cutoff_date->toDateString())->get();
 
-        // return the number of unviewed incidents
-        return $count_only ? $unviewed_incidents->count() : $unviewed_incidents;
+        /*$viewed_after_cutoff = Incident::whereHas('usersViewed', function ($query) use ($cutoff_date) {
+            $query->where('users.created_at', '>=', $cutoff_date);
+        })->get();*/
+        
+        //dd($cutoff_date, $incidents->count(), $viewed_after_cutoff->count());
+
+        // return the unviewed incidents
+        return $incidents->diff($viewed_after_cutoff);
     }
+
 
     public function hasRole(Role $role) {
         return $this->role->contains($role) ? true : false;

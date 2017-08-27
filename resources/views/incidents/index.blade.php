@@ -65,10 +65,10 @@
 								<tr>
 									<td>
 										@if (!$user_viewed->contains($incident))
-											<span class="glyphicon glyphicon-exclamation-sign 
+											<span class="label 
 												{{ \Carbon\Carbon::createFromFormat('Y-m-d', $incident->date) >= Auth::user()->created_at->subMonth() ?
-													'text-danger' : 'text-info' }}
-												">
+													'label-danger' : 'label-info' }}
+												">New
 											</span>
 										@endif
 									</td>
