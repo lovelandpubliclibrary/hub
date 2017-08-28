@@ -329,9 +329,11 @@ class RoleUserRelationshipSeeder extends Seeder {
 					echo('done.' . PHP_EOL);		// output progress
 					break;
 				case 'Test Director':
-					echo('---> Assigning the Test Director to the Director role... ');		// output progress
-					$role = Role::where('role', 'Director')->get()->first();
-					$user->role()->attach($role);
+					echo('---> Assigning the Test Director to the Director and Supervisor roles... ');		// output progress
+					$roles = Role::where('role', 'Director')->orWhere('role', 'Supervisor')->get();
+					foreach ($roles as $role) {
+						$user->role()->attach($role);
+					}
 					echo('done.' . PHP_EOL);		// output progress
 					break;
 				case 'Test Supervisor':
