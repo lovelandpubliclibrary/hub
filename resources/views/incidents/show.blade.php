@@ -94,36 +94,19 @@
 						@endisset
 					</div>
 
-					@isset($incident->card_number)
-						<div class="col-xs-12">
-							<strong>Library Card Number:</strong>
-							{{ $incident->card_number }}
-						</div>
-					@endisset
-
-					@isset($incident->patron_description)
+					@isset ($incident->patron_description)
 						<div class="col-xs-12">
 							<strong>Patron Description:</strong>
 							{{ $incident->patron_description }}
 						</div>
 					@endisset
 
-					@if (Auth::user()->hasRole($supervisor_role) && !empty($unviewed_by))
+					@isset ($incident->card_number)
 						<div class="col-xs-12">
-
-							
-
-							<ul class="list-group">
-								<strong>Not viewed by:</strong>
-								@foreach ($unviewed_by as $user)
-									<li class="list-group-item">
-										{{-- add a comma after every name except the last one --}}
-										{{ $unviewed_by->last() != $user ? $user->name . ', ' : $user->name }}
-									</li>
-								@endforeach
-							</ul>
+							<strong>Library Card Number:</strong>
+							{{ $incident->card_number }}
 						</div>
-					@endif
+					@endisset
 
 					<div class="col-xs-12">
 						<strong>Reported by:</strong>
@@ -144,6 +127,19 @@
 
 				@if (isset($comments) && count($comments) > 0)
 					@include ('comments.index')
+				@endif
+
+				@if (Auth::user()->hasRole($supervisor_role) && !empty($unviewed_by))
+					<div class="col-xs-12 bg-warning not-viewed">
+						<ul class="list-group">
+							<strong>Not yet viewed by:</strong>
+							@foreach ($unviewed_by as $user)
+								<li class="list-group-item">
+									{{ $user->name }}
+								</li>
+							@endforeach
+						</ul>
+					</div>
 				@endif
 
 			</div><!-- .panel-body -->
