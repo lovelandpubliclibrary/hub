@@ -54,7 +54,7 @@
 									Title
 								</th>
 
-								<th>
+								<th class="hidden-xs">
 									Summary
 								</th>
 							</tr>
@@ -109,7 +109,7 @@
 										</div>
 									</td>
 
-									<td>
+									<td class="hidden-xs">
 										@if (strlen($incident->description) > 75)
 											{{ $incident->truncate_description(75) }}...
 										@else

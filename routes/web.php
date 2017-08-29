@@ -35,8 +35,8 @@ Route::get('/cityemail', function() {
 
 
 // Report routes
-Route::get('/reports', 'ReportController@index')->name('reports');
-Route::get('/reports/incidents', 'ReportController@incidents')->name('reportIncidents');
+Route::get('/reports', 'DashboardController@reports')->name('reports');
+Route::get('/reports/incidents', 'DashboardController@incidents')->name('reportIncidents');
 
 
 // Incidents

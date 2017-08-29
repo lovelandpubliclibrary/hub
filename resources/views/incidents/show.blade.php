@@ -110,12 +110,18 @@
 
 					@if (Auth::user()->hasRole($supervisor_role) && !empty($unviewed_by))
 						<div class="col-xs-12">
-							<strong>Not viewed by:</strong>
-						
-							@foreach ($unviewed_by as $user)
-								{{-- add a comma after every name except the last one --}}
-								{{ $unviewed_by->last() != $user ? $user->name . ', ' : $user->name }}
-							@endforeach
+
+							
+
+							<ul class="list-group">
+								<strong>Not viewed by:</strong>
+								@foreach ($unviewed_by as $user)
+									<li class="list-group-item">
+										{{-- add a comma after every name except the last one --}}
+										{{ $unviewed_by->last() != $user ? $user->name . ', ' : $user->name }}
+									</li>
+								@endforeach
+							</ul>
 						</div>
 					@endif
 
