@@ -58,7 +58,19 @@ class IncidentController extends Controller
             Auth::user()->incidentsViewed()->save($incident);
         }
 
-    	return view('incidents.show', compact('incident', 'comments', 'photos', 'breadcrumbs'));
+        // load the users who haven't viewed the incident
+        $unviewed_by = collect([]);
+        foreach ($incident->unviewedBy() as $user) {
+            foreach ($user->divisions as $division) {
+                if (Auth::user()->divisions->contains($division)) {
+                    if (!$unviewed_by->contains($user)) {
+                        $unviewed_by->push($user);
+                    }
+                }
+            }
+        }
+
+    	return view('incidents.show', compact('incident', 'comments', 'photos', 'unviewed_by', 'breadcrumbs'));
     }
 
 

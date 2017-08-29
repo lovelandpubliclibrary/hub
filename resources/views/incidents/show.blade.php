@@ -108,6 +108,17 @@
 						</div>
 					@endisset
 
+					@if (Auth::user()->hasRole($supervisor_role) && !empty($unviewed_by))
+						<div class="col-xs-12">
+							<strong>Not viewed by:</strong>
+						
+							@foreach ($unviewed_by as $user)
+								{{-- add a comma after every name except the last one --}}
+								{{ $unviewed_by->last() != $user ? $user->name . ', ' : $user->name }}
+							@endforeach
+						</div>
+					@endif
+
 					<div class="col-xs-12">
 						<strong>Reported by:</strong>
 						{{ $incident->user->name }}

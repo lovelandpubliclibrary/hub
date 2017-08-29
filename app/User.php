@@ -33,7 +33,7 @@ class User extends Authenticatable
     }
 
     public function divisions() {        // track which divisions the user is a part of
-        return $this->belongsToMany('App\Division')->withPivot('supervisor')->withTimestamps();
+        return $this->belongsToMany('App\Division')->withTimestamps();
     }
 
     
@@ -71,12 +71,6 @@ class User extends Authenticatable
 
         // retrieve all the incidents that the user has viewed after the cutoff date
         $viewed_after_cutoff = $this->incidentsViewed()->where('date', '>=', $cutoff_date->toDateString())->get();
-
-        /*$viewed_after_cutoff = Incident::whereHas('usersViewed', function ($query) use ($cutoff_date) {
-            $query->where('users.created_at', '>=', $cutoff_date);
-        })->get();*/
-        
-        //dd($cutoff_date, $incidents->count(), $viewed_after_cutoff->count());
 
         // return the unviewed incidents
         return $incidents->diff($viewed_after_cutoff);
