@@ -77,7 +77,28 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Determine if a user contains a given role
+     * 
+     * @return boolean
+     */
     public function hasRole(Role $role) {
         return $this->role->contains($role) ? true : false;
+    }
+
+
+    /**
+     * Retrieve all the users in the same divisions as the current user
+     * 
+     * @return \Collection Collection of users in the same divisions
+     */
+    public function usersInDivisions() {
+        $coworkers = collect();
+
+        foreach ($this->divisions as $division) {
+            $coworkers = $coworkers->merge($division->users);
+        }
+
+        return $coworkers;
     }
 }

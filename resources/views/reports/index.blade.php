@@ -15,7 +15,25 @@
 			</div><!-- .panel-heading -->
 
 			<div class="panel-body">
-				
+				<div class="col-xs-12 repository-margin-bottom-1rem">
+					<a class="btn btn-default col-xs-12" href="{{ route('reportIncidents') }}">
+						<h2>Incidents</h2>
+		                <p>
+		                	{{ $percentage }}% of employees in the same divisions as you are caught up on Incidents.
+		                </p>
+
+		                <div class="progress">
+							<div class="progress-bar"
+								 role="progressbar"
+								 aria-valuenow="{{ $percentage }}"
+								 aria-valuemin="0"
+								 aria-valuemax="{{ $coworkers->count() }}"
+								 style="width:{{ $percentage }}%">
+								 <span class="sr-only">{{ $percentage }}% of employees in the same divisions as you are caught up on Incidents.
+							</div>
+						</div>
+		            </a>
+	            </div>
 			</div> <!-- .panel-body -->
 		</div> <!-- .panel -->
 	</div> <!-- #incidents -->

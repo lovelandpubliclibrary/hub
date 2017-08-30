@@ -28,6 +28,18 @@
                     @endif
                 </a>
             </div>
+
+            @if (Auth::user()->hasRole($supervisor_role))
+                <div class="col-xs-12 repository-margin-bottom-1rem">
+                    <a class="btn btn-default col-xs-12" href="{{ route('reports') }}">
+                        <div class="homepage-buttons repository-text-wrap">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                            Reports
+                        </div>
+                    </a>
+                </div>
+            @endif
+
         @else
             @include('auth.login')
         @endif

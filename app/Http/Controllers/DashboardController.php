@@ -33,7 +33,16 @@ class DashboardController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function reports() {
-        return view('reports.index');
+        $coworkers = Auth::user()->usersInDivisions();
+        $unviewed_by_count = 0;
+        foreach ($coworkers as $user) {
+            if (!$user->unviewedIncidents()->count()) {
+                $unviewed_by_count++;
+            }
+        }
+        $percentage = round($unviewed_by_count / $coworkers->count(), 1);
+
+        return view('reports.index', compact('percentage', 'coworkers'));
     }
 
 

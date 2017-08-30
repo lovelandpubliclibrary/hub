@@ -215,6 +215,7 @@ td > .glyphicon {
 
 #incidents .not-viewed {
     border: 1px solid #e8c930;
+    border-radius: 4px;
 }
 
 #incidents .not-viewed .list-group {
