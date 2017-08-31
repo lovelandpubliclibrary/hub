@@ -26,6 +26,12 @@
         @include('layouts.navigation')
 
         <div class='content repository-margin-bottom-1rem'>
+            @if (Session::has('message'))
+                <div class="alert alert-danger">
+                    {{ Session::get('message') }}
+                </div>
+            @endif
+
             @yield('content')
         </div>
     </div>
