@@ -33,50 +33,18 @@ class DashboardController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function reports() {
-        $coworkers = Auth::user()->usersInDivisions();
-        $unviewed_by_count = 0;
-        foreach ($coworkers as $user) {
-            if (!$user->unviewedIncidents()->count()) {
-                $unviewed_by_count++;
+        $supervises = Auth::user()->supervises;
+        $supervises_count = $supervises->count();
+        $caught_up_count = 0;
+
+        foreach ($supervises as $user) {
+            if ($user->unviewedIncidents()->isEmpty()) {
+                $caught_up_count++;
             }
         }
-        $percentage = round($unviewed_by_count / $coworkers->count(), 1);
 
-        return view('reports.index', compact('percentage', 'coworkers'));
-    }
+        $percentage = $caught_up_count / $supervises_count;
 
-
-    /**
-     * Show the Incidents module.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function incidents() {
-
-        $breadcrumbs = [
-            'home',
-            'reports',
-        ];
-
-        dd($unviewed_by = collect());
-
-        foreach (Incident::all() as $incident) {
-            if ($incident->unviewedBy()->isNotEmpty()) {
-                dd($incident->unviewedBy());
-            } else {
-                dd($incident->unviewedBy());
-            }
-            foreach ($incident->unviewedBy() as $user) {
-                foreach ($user->divisions as $division) {
-                    if (Auth::user()->divisions->contains($division)) {
-                        if (!$unviewed_by->contains($user)) {
-                            $unviewed_by->push($user);
-                        }
-                    }
-                }
-            }
-        }
-        
-        return view('reports.incidents', compact('unviewed_by', 'breadcrumbs'));
+        return view('reports.index', compact('caught_up_count', 'supervises_count', 'percentage'));
     }
 }

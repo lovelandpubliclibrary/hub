@@ -277,7 +277,7 @@ class IncidentController extends Controller
         $search = $request->search;
 
         // retrieve the incidents which the user has already viewed
-        $user_viewed = Auth::user()->incidents;
+        $user_viewed = Auth::user()->incidentsViewed;
 
         // provide the index view with the search results and search string
         return view('incidents.index', compact('incidents', 'search', 'user_viewed'));

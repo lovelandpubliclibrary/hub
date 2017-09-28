@@ -19,7 +19,7 @@
 					<a class="btn btn-default col-xs-12" href="{{ route('reportIncidents') }}">
 						<h2>Incidents</h2>
 		                <p>
-		                	{{ $percentage }}% of employees in the same divisions as you are caught up on Incidents.
+		                	{{ $caught_up_count }} of {{ $supervises_count }} employees you supervise are caught up on Incidents.
 		                </p>
 
 		                <div class="progress">
@@ -27,9 +27,9 @@
 								 role="progressbar"
 								 aria-valuenow="{{ $percentage }}"
 								 aria-valuemin="0"
-								 aria-valuemax="{{ $coworkers->count() }}"
+								 aria-valuemax="{{ $supervises_count }}"
 								 style="width:{{ $percentage }}%">
-								 <span class="sr-only">{{ $percentage }}% of employees in the same divisions as you are caught up on Incidents.
+								 <span class="sr-only">{{ $percentage }}% of employees you supervise are caught up on Incidents.
 							</div>
 						</div>
 		            </a>
