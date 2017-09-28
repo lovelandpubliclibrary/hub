@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Incident extends Model
 {
@@ -38,4 +39,10 @@ class Incident extends Model
 	public function truncate_description($length) {
 		return substr($this->description, 0, strpos(wordwrap($this->description, $length, '\n'), '\n'));
 	}
+
+
+	public function unviewedBy() {
+		$users = User::all();
+		return $users->diff($this->usersViewed);
+    }
 }

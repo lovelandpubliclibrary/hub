@@ -12,8 +12,8 @@
 */
 
 // Default routes
-Route::get('/', 'HomeController@index')->name('home');
-Route::get('/home', 'HomeController@index');
+Route::get('/', 'DashboardController@index')->name('dashboard');
+Route::get('/home', 'DashboardController@index')->name('home');
 
 
 // Authentication
@@ -34,6 +34,11 @@ Route::get('/cityemail', function() {
 })->name('cityemail');
 
 
+// Report routes
+Route::get('/reports', 'DashboardController@reports')->name('reports')->middleware('supervisors');
+Route::get('/reports/incidents', 'ReportController@incidents')->name('reportIncidents')->middleware('supervisors');
+
+
 // Incidents
 Route::get('/incidents', 'IncidentController@index')->name('incidents');
 Route::get('/incidents/create', 'IncidentController@create')->name('createIncident');
@@ -48,7 +53,6 @@ Route::post('/comments/create', 'CommentController@store')->name('createComment'
 Route::get('/comments/edit/{comment}', 'CommentController@edit')->name('editComment');
 Route::post('/comments/edit/{comment]', 'CommentController@update')->name('updateComment');
 Route::get('/comments/delete/{comment}', 'CommentController@delete')->name('deleteComment');
-
 
 // Photos
 Route::get('/photos/{photo}', 'PhotoController@show')->name('photo');

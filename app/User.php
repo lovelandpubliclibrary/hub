@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Incident;
 use App\Role;
+Use Carbon;
 
 class User extends Authenticatable
 {
@@ -32,7 +33,15 @@ class User extends Authenticatable
     }
 
     public function divisions() {        // track which divisions the user is a part of
-        return $this->belongsToMany('App\Division')->withPivot('supervisor')->withTimestamps();
+        return $this->belongsToMany('App\Division')->withTimestamps();
+    }
+
+    public function reportsTo() {
+        return $this->belongsTo('App\User', 'supervisor_id');
+    }
+
+    public function supervises() {
+        return $this->hasMany('App\User', 'supervisor_id');
     }
 
     
@@ -44,7 +53,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'role_id',
+        'name', 'email', 'password',
     ];
 
     /**
@@ -56,12 +65,48 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-
+    /**
+     * Find all the incidents that the user hasn't viewed after a specified date
+     * 
+     * @return \Collection Collection of incidents which have not be viewed by the user
+     */
     public function unviewedIncidents() {
-        return Incident::all()->count() - count($this->incidentsViewed);
+
+        $cutoff_date = $this->created_at->subMonth();       // determine how far back users are responsible for viewing incidents
+        
+        // retrieve all the incidents that occurred after the cutoff date
+        $incidents = Incident::where('date', '>=', $cutoff_date->toDateString())->get();
+
+        // retrieve all the incidents that the user has viewed after the cutoff date
+        $viewed_after_cutoff = $this->incidentsViewed()->where('date', '>=', $cutoff_date->toDateString())->get();
+
+        // return the unviewed incidents
+        return $incidents->diff($viewed_after_cutoff);
     }
 
+
+    /**
+     * Determine if a user contains a given role
+     * 
+     * @return boolean
+     */
     public function hasRole(Role $role) {
         return $this->role->contains($role) ? true : false;
+    }
+
+
+    /**
+     * Retrieve all the users in the same divisions as the current user
+     * 
+     * @return \Collection Collection of users in the same divisions
+     */
+    public function usersInDivisions() {
+        $coworkers = collect();
+
+        foreach ($this->divisions as $division) {
+            $coworkers = $coworkers->merge($division->users);
+        }
+
+        return $coworkers;
     }
 }

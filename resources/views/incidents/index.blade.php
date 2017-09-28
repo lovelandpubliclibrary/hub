@@ -54,7 +54,7 @@
 									Title
 								</th>
 
-								<th>
+								<th class="hidden-xs">
 									Summary
 								</th>
 							</tr>
@@ -64,8 +64,12 @@
 							@foreach ($incidents as $incident)
 								<tr>
 									<td>
-										@if(!$user_viewed->contains($incident))
-											<span class="glyphicon glyphicon-exclamation-sign text-danger"></span>
+										@if (!$user_viewed->contains($incident))
+											<span class="label 
+												{{ \Carbon\Carbon::createFromFormat('Y-m-d', $incident->date) >= Auth::user()->created_at->subMonth() ?
+													'label-danger' : 'label-info' }}
+												">New
+											</span>
 										@endif
 									</td>
 
@@ -105,7 +109,7 @@
 										</div>
 									</td>
 
-									<td>
+									<td class="hidden-xs">
 										@if (strlen($incident->description) > 75)
 											{{ $incident->truncate_description(75) }}...
 										@else

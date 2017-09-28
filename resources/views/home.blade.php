@@ -23,33 +23,23 @@
                         </div>
                     @else
                         <div class="text-success repository-text-wrap">
-                            You've viewed all the incidents which have been reported!
+                            There are no incidents which require your review.
                         </div>
                     @endif
                 </a>
             </div>
 
-            {{--
-            <div class="col-xs-12 repository-margin-bottom-1rem">
-                <a class="btn btn-default col-xs-12 homepage-buttons" href="{{ route('schedule') }}">
-                	<span class="glyphicon glyphicon-calendar">
-                		<div>
-                			Schedule
-                		</div>
-            		</span>
-                </a>
-            </div>
+            @if (Auth::user()->hasRole($supervisor_role))
+                <div class="col-xs-12 repository-margin-bottom-1rem">
+                    <a class="btn btn-default col-xs-12" href="{{ route('reports') }}">
+                        <div class="homepage-buttons repository-text-wrap">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                            Reports
+                        </div>
+                    </a>
+                </div>
+            @endif
 
-            <div class="col-xs-12 repository-margin-bottom-1rem">
-                <a class="btn btn-default col-xs-12 homepage-buttons" href="{{ route('cityemail') }}">
-                	<span class="glyphicon glyphicon-envelope">
-                		<div>
-                			City Email
-                		</div>
-            		</span>
-                </a>
-            </div>
-            --}}
         @else
             @include('auth.login')
         @endif
