@@ -231,5 +231,14 @@ td > .glyphicon {
 
 
 
-/* COMMENTS */
+/* REPORTS */
+#reports .report-item {
+     padding: 3px 5px;
+}
+
+#reports .report-item .bordered {
+    border: 1px solid darkgray;
+    border-radius: 4px;
+    padding: 15px;
+}
 
