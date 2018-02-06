@@ -36,14 +36,6 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Division')->withTimestamps();
     }
 
-    public function reportsTo() {
-        return $this->belongsTo('App\User', 'supervisor_id');
-    }
-
-    public function supervises() {
-        return $this->hasMany('App\User', 'supervisor_id');
-    }
-
     
     use Notifiable;
 
