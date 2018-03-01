@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 use App\Role;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,7 +18,9 @@ class AppServiceProvider extends ServiceProvider
     {
         // the Supervisor role needs to be shared with the entire application
         // because it's used in the navigation menu to determine if certain links should be displayed.
-        View::share('supervisor_role', Role::where('role', 'Supervisor')->get()->first());
+        if (Schema::hasTable('roles')) {
+            View::share('supervisor_role', Role::where('role', 'Supervisor')->get()->first());
+        }
     }
 
     /**

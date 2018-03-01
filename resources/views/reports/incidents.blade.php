@@ -62,7 +62,7 @@
 						@foreach ($divisions as $division)
 							<table class="table table-striped table-condensed">
 								<comment>
-									<h4>
+									<h4 class="report-division-heading">
 										{{ $division->division }}
 									</h4>
 								</comment>

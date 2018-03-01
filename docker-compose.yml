@@ -9,6 +9,7 @@ services:
   ports:
    - 10000:10000
   container_name: repository
+  hostname: repository
 
  phpmyadmin:
   depends_on:
@@ -17,6 +18,7 @@ services:
   ports:
    - 8888:80
   container_name: phpmyadmin-repository
+  hostname: phpmyadmin-repository
 
  db:
   image: mysql:5.7
@@ -30,6 +32,7 @@ services:
   ports:
    - 3307:3306
   container_name: mysql-repository
+  hostname: mysql-repository
 
 volumes:
   dbdata:

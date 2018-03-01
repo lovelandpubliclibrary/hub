@@ -34,7 +34,7 @@ class DashboardController extends Controller
      */
     public function reports() {
         $supervises = Auth::user()->supervises;
-        $supervises_count = $supervises->count();
+        $supervises_count = $supervises->count() ?: 0;
         $caught_up_count = 0;
 
         foreach ($supervises as $user) {

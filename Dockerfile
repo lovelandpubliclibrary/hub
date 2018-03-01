@@ -1,6 +1,6 @@
 FROM php:7
 
-MAINTAINER "Loveland Public Library, Library Technology & Innovation"
+MAINTAINER "Kevin Briggs, redisforlosers@gmail.com"
 
 # copy the source files to the image
 WORKDIR /repository
