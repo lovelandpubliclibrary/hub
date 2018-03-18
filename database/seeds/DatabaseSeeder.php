@@ -314,7 +314,7 @@ class IncidentUserInvolvedRelationshipSeeder extends Seeder {
 
 		// attach a random number of incidents to each user
 		foreach ($users as $user) {
-				$incidents = Incident::where('id', '<=', rand(1, $incident_count / 5))->get();
+				$incidents = Incident::where('id', '<=', rand(1, $incident_count / 2))->get();
 				$user->incidentsInvolved()->saveMany($incidents);
 		}
 	}
