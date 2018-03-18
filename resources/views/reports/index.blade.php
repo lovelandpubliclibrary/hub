@@ -17,19 +17,20 @@
 			<div class="panel-body">
 				<div class="col-xs-12 repository-margin-bottom-1rem">
 					<a class="btn btn-default col-xs-12" href="{{ route('reportIncidents') }}">
-						<h2>Incidents</h2>
+						<h2>Incident Report</h2>
 		                <p>
 		                	{{ $caught_up_count }} of {{ $supervises_count }} employees you supervise are caught up on Incidents.
 		                </p>
 
 		                <div class="progress">
-							<div class="progress-bar"
+							<div class="progress-bar {{ $bg_color }} "
 								 role="progressbar"
 								 aria-valuenow="{{ $percentage }}"
 								 aria-valuemin="0"
 								 aria-valuemax="{{ $supervises_count }}"
 								 style="width:{{ $percentage }}%">
-								 <span class="sr-only">{{ $percentage }}% of employees you supervise are caught up on Incidents.
+								 {{ $percentage }}%
+
 							</div>
 						</div>
 		            </a>
