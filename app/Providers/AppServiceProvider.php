@@ -21,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
         if (Schema::hasTable('roles')) {
             View::share('supervisor_role', Role::where('role', 'Supervisor')->get()->first());
         }
+
+        Schema::defaultStringLength(191);
     }
 
     /**
