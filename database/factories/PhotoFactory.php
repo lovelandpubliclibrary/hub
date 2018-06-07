@@ -7,7 +7,7 @@ $factory->define(App\Photo::class, function (Faker\Generator $faker) {
 	$height = rand(480, 1024);
 
 	return [
-        'incident_id' => rand(1, App\Incident::all()->count()),
+        'incident_id' => rand(0, App\Incident::all()->count()),
         'filename'	  => $faker->unique()->image(public_path() . '/images/patrons/', $width, $height, 'people', false),
         'caption'	  => $faker->realText(),
     ];

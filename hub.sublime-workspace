@@ -4,6 +4,190 @@
 		"selected_items":
 		[
 			[
+				"sel",
+				"select2"
+			],
+			[
+				"patron",
+				"patron_id"
+			],
+			[
+				"s",
+				"select"
+			],
+			[
+				"added",
+				"added_patrons"
+			],
+			[
+				"sele",
+				"selected_existing_patrons"
+			],
+			[
+				"json_",
+				"json_encode"
+			],
+			[
+				"modal",
+				"modal_footer"
+			],
+			[
+				"moda",
+				"modal_footer_buttons"
+			],
+			[
+				"addPatr",
+				"addPatronModal"
+			],
+			[
+				"bw",
+				"border-width"
+			],
+			[
+				"add",
+				"added_patron_ids"
+			],
+			[
+				"filled",
+				"filled_inputs"
+			],
+			[
+				"exising",
+				"existing_patrons"
+			],
+			[
+				"existing",
+				"existing_patrons"
+			],
+			[
+				"exi",
+				"existing_patrons"
+			],
+			[
+				"exisg",
+				"existing_value"
+			],
+			[
+				"cur",
+				"currently_associated_existing_patrons"
+			],
+			[
+				"cu",
+				"currently_associated_existing_patrons"
+			],
+			[
+				"patron_id",
+				"patron_ids_in_select"
+			],
+			[
+				"jq",
+				"jq_object"
+			],
+			[
+				"remove",
+				"removeAttr"
+			],
+			[
+				"sav",
+				"save_button_state"
+			],
+			[
+				"save",
+				"save_button"
+			],
+			[
+				"patrons",
+				"patrons_in_select"
+			],
+			[
+				"curre",
+				"currently_associated_existing_patrons"
+			],
+			[
+				"sa",
+				"savePatrons"
+			],
+			[
+				"addP",
+				"addPatronModalBody"
+			],
+			[
+				"err",
+				"errors"
+			],
+			[
+				"associated",
+				"associated_patrons"
+			],
+			[
+				"se",
+				"selected"
+			],
+			[
+				"selected",
+				"selected_patrons"
+			],
+			[
+				"asso",
+				"associated_patrons"
+			],
+			[
+				"ass",
+				"associated_patrons"
+			],
+			[
+				"reset",
+				"reset_associate_patron_form"
+			],
+			[
+				"patro",
+				"patron_wells"
+			],
+			[
+				"col",
+				"col-xs-12"
+			],
+			[
+				"form",
+				"form-control"
+			],
+			[
+				"first",
+				"first_name"
+			],
+			[
+				"flat",
+				"flattened"
+			],
+			[
+				"new",
+				"new_patron"
+			],
+			[
+				"repos",
+				"repository-margin-top-1rem"
+			],
+			[
+				"incident",
+				"incident_id"
+			],
+			[
+				"li",
+				"line-height"
+			],
+			[
+				"photo",
+				"photo_count"
+			],
+			[
+				"bg",
+				"bg_color"
+			],
+			[
+				"caug",
+				"caught_up_ratio"
+			],
+			[
 				"php",
 				"phpmyadmin-repository"
 			],
@@ -128,10 +312,6 @@
 				"repository-margin-bottom-1rem"
 			],
 			[
-				"incident",
-				"incident_id"
-			],
-			[
 				"incidn",
 				"incidents"
 			],
@@ -142,10 +322,6 @@
 			[
 				"border",
 				"border-top"
-			],
-			[
-				"form",
-				"form-group"
 			],
 			[
 				"clla",
@@ -234,10 +410,6 @@
 			[
 				"threads",
 				"threads_count"
-			],
-			[
-				"ass",
-				"assert_template"
 			],
 			[
 				"message",
@@ -342,55 +514,100 @@
 			[
 				"strt",
 				"strtotime"
-			],
-			[
-				"iss",
-				"is_string"
-			],
-			[
-				"inline",
-				"inline-block"
-			],
-			[
-				"delet",
-				"deleteLink"
-			],
-			[
-				"exec",
-				"execute"
-			],
-			[
-				"path",
-				"path_to_image"
-			],
-			[
-				"Slide",
-				"SlideView"
-			],
-			[
-				"con",
-				"controller"
-			],
-			[
-				"object",
-				"object-fit"
-			],
-			[
-				"slide",
-				"slideArray"
-			],
-			[
-				"print",
-				"print_r"
-			],
-			[
-				"setting",
-				"setting_value"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "app/Http/Controllers/IncidentController.php",
+			"settings":
+			{
+				"buffer_size": 11599,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/Patron.php",
+			"settings":
+			{
+				"buffer_size": 1363,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/Http/Controllers/PatronController.php",
+			"settings":
+			{
+				"buffer_size": 1055,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "resources/views/incidents/create.blade.php",
+			"settings":
+			{
+				"buffer_size": 6493,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "resources/views/patrons/create.blade.php",
+			"settings":
+			{
+				"buffer_size": 921,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "resources/views/photos/create.blade.php",
+			"settings":
+			{
+				"buffer_size": 884,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/Http/Controllers/PhotoController.php",
+			"settings":
+			{
+				"buffer_size": 3451,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/js/hub.js",
+			"settings":
+			{
+				"buffer_size": 4104,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "resources/views/layouts/app.blade.php",
+			"settings":
+			{
+				"buffer_size": 1566,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/css/repository.css",
+			"settings":
+			{
+				"buffer_size": 4937,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -399,10 +616,18 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 81.0,
-		"last_filter": "matching",
+		"height": 185.0,
+		"last_filter": "brow",
 		"selected_items":
 		[
+			[
+				"brow",
+				"Preferences: Browse Packages"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
 			[
 				"matching",
 				"Emmet: Go to Matching Pair"
@@ -417,10 +642,6 @@
 			],
 			[
 				"inst",
-				"Package Control: Install Package"
-			],
-			[
-				"install",
 				"Package Control: Install Package"
 			],
 			[
@@ -476,7 +697,7 @@
 				"Build With: Markdown"
 			]
 		],
-		"width": 494.0
+		"width": 428.0
 	},
 	"console":
 	{
@@ -497,10 +718,58 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/kevin/Sites/hub"
+		"/Users/kevin/Sites/hub",
+		"/Users/kevin/Sites/hub/resources",
+		"/Users/kevin/Sites/hub/resources/views",
+		"/Users/kevin/Sites/hub/resources/views/patrons",
+		"/Users/kevin/Sites/hub/resources/views/photos"
 	],
 	"file_history":
 	[
+		"/Users/kevin/Sites/hub/routes/web.php",
+		"/Users/kevin/Sites/hub/resources/views/layouts/app.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/patrons/create.blade.php",
+		"/Users/kevin/Sites/hub/composer.json",
+		"/Users/kevin/Sites/hub/storage/framework/views/1ab587a0bfec8f573c2290a7e5da4a782b4e3e63.php",
+		"/Users/kevin/Sites/hub/database/migrations/2018_03_18_184747_create_patrons_table.php",
+		"/Users/kevin/Sites/hub/database/factories/PatronFactory.php",
+		"/Users/kevin/Sites/hub/public/js/app.js",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/CommentController.php",
+		"/Users/kevin/Sites/hub/app/Patron.php",
+		"/Users/kevin/Sites/hub/app/Incident.php",
+		"/Users/kevin/Sites/hub/database/migrations/2017_06_27_204203_create_incidents_table.php",
+		"/Users/kevin/Sites/hub/resources/views/incidents/create.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/comments/create.blade.php",
+		"/Users/kevin/Sites/hub/public/js/hub.js",
+		"/Users/kevin/Sites/hub/resources/views/incidents/show.blade.php",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/PhotoController.php",
+		"/Users/kevin/Sites/hub/vendor/symfony/routing/Route.php",
+		"/Users/kevin/Sites/hub/vendor/laravel/framework/src/Illuminate/Auth/RequestGuard.php",
+		"/Users/kevin/Sites/hub/public/css/repository.css",
+		"/Users/kevin/Sites/hub/database/seeds/DatabaseSeeder.php",
+		"/Users/kevin/Sites/hub/app/Comment.php",
+		"/Users/kevin/Sites/hub/database/factories/IncidentFactory.php",
+		"/Users/kevin/Sites/hub/app/Photo.php",
+		"/Users/kevin/Sites/hub/resources/views/incidents/index.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/photos/show.blade.php",
+		"/Users/kevin/Sites/hub/storage/framework/views/7c8abf6ff685e57fdf4217b267d4b1cdc4d84180.php",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/IncidentController.php",
+		"/Users/kevin/Sites/hub/database/migrations/2018_03_23_183249_create_incident_patron_table.php",
+		"/Users/kevin/Sites/hub/database/migrations/2018_03_18_194313_create_patron_photo_table.php",
+		"/Users/kevin/Sites/hub/database/factories/PhotoFactory.php",
+		"/Users/kevin/Sites/hub/database/migrations/2017_08_01_015214_create_photos_table.php",
+		"/Users/kevin/Sites/hub/app/User.php",
+		"/Users/kevin/Sites/hub/app/Division.php",
+		"/Users/kevin/Sites/hub/database/factories/CommentFactory.php",
+		"/Users/kevin/Sites/hub/database/migrations/2017_07_26_150924_create_comments_table.php",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/DashboardController.php",
+		"/Users/kevin/Sites/hub/resources/views/reports/index.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/auth/login.blade.php",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/ReportController.php",
+		"/Users/kevin/Sites/hub/public/css/app.css",
+		"/Users/kevin/Sites/hub/.gitignore",
+		"/Users/kevin/Sites/hub/docker-compose.yml",
+		"/Users/kevin/Sites/hub/app/Providers/AppServiceProvider.php",
 		"/Volumes/TravelStore/Sites/psaudio.com/wp-content/plugins/ps-find-dealer/dbcnx.php",
 		"/Volumes/TravelStore/Sites/psaudio.com/wp-config.php",
 		"/Volumes/TravelStore/Sites/psaudio.com/wp-content/themes/superstore_child/content-podcast.php",
@@ -509,24 +778,19 @@
 		"/Volumes/TravelStore/Sites/psaudio.com/info.php",
 		"/Volumes/Storage/SteamLibrary/steamapps/common/Borderlands 2/Borderlands2.app/Contents/GameData/WillowGame/Config/DefaultEngine.ini",
 		"/Users/kevin/Sites/psaudio.com/.gitignore",
-		"/Users/kevin/Sites/hub/app/Http/Controllers/ReportController.php",
 		"/Users/kevin/Sites/hub/database/migrations/2014_10_12_000000_create_users_table.php",
-		"/Users/kevin/Sites/hub/docker-compose.yml",
 		"/Users/kevin/Downloads/id_ed25519.pub",
 		"/private/var/folders/q3/xmsfh3wn4ksb8ls_xs314tbr0000gq/T/fz3temp-2/wp-config.php",
 		"/Users/kevin/Sites/psaudio.com/docker/db/init/drop_tables.sql",
 		"/Users/kevin/Sites/psaudio.com/wp-content/themes/superstore_child/functions.php",
 		"/Users/kevin/Sites/psaudio.com/wp-content/themes/superstore_child/footer.php",
 		"/Users/kevin/.ssh/bitbucket_rsa.pub",
-		"/Users/kevin/Sites/hub/app/Http/Controllers/DashboardController.php",
 		"/Volumes/Storage/psaudio.com/wp-content/plugins/issuem-issue-to-pdf/mpdf/patterns/de.php",
-		"/Users/kevin/Sites/hub/.gitignore",
 		"/Users/kevin/Sites/hub/.env",
 		"/Users/kevin/Sites/hub/config/app.php",
 		"/Users/kevin/.bash_profile",
 		"/Users/kevin/Sites/hub/.env.example",
 		"/Users/kevin/Sites/hub/vendor/fzaninotto/faker/src/Faker/Provider/Image.php",
-		"/Users/kevin/Sites/hub/app/Providers/AppServiceProvider.php",
 		"/etc/hosts",
 		"/Users/kevin/.ssh/known_hosts",
 		"/Users/kevin/Sites/hub/vendor/fzaninotto/faker/src/Faker/Provider/ro_MD/Text.php",
@@ -589,70 +853,124 @@
 		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Routing/Controller.php",
 		"/Users/kevin/Sites/repository/database/factories/PhotoFactory.php",
 		"/Users/kevin/Sites/repository/database/migrations/2017_08_22_143832_create_division_user_table.php",
-		"/Users/kevin/Sites/repository/public/css/repository.css",
-		"/Users/kevin/Sites/repository/app/Http/Controllers/HomeController.php",
-		"/Users/kevin/Sites/kevinbriggsisthebomb.com/README.md",
-		"/Users/kevin/Sites/kevinbriggsisthebomb.com/docker-compose.yml",
-		"/Users/kevin/Sites/kevinbriggsisthebomb.com/.env",
-		"/Users/kevin/Sites/kevinbriggsisthebomb.com/public/index.php",
-		"/Users/kevin/Sites/kevinbriggsisthebomb.com/config/app.php",
-		"/Users/kevin/Sites/repository/resources/views/incidents/create.blade.php",
-		"/Users/kevin/Sites/repository/resources/views/photos/show.blade.php",
-		"/Users/kevin/Sites/repository/resources/views/photos/edit.blade.php",
-		"/Users/kevin/Sites/repository/resources/views/incidents/edit.blade.php",
-		"/Users/kevin/Sites/repository/database/factories/CommentFactory.php",
-		"/Users/kevin/Sites/repository/database/factories/IncidentFactory.php",
-		"/Users/kevin/Sites/repository/.gitignore",
-		"/Users/kevin/Sites/repository/app/Http/Controllers/CommentController.php",
-		"/Users/kevin/Sites/repository/app/Http/Controllers/PhotoController.php",
-		"/Users/kevin/Sites/repository/database/migrations/2017_08_01_015214_create_photos_table.php",
-		"/Users/kevin/Sites/repository/app/Photo.php",
-		"/Users/kevin/Sites/repository/database/migrations/2017_06_27_204203_create_incidents_table.php",
-		"/Users/kevin/Sites/repository/database/migrations/2017_08_01_021217_create_incident_photo_table.php",
-		"/Users/kevin/Sites/repository/app/Role.php",
-		"/Users/kevin/Sites/repository/.dockerignore",
-		"/Users/kevin/Sites/repository/database/migrations/2017_07_25_050804_add_library_card_col_to_incidents.php",
-		"/Users/kevin/Sites/repository/database/migrations/2017_07_05_213819_create_roles_table.php",
-		"/Users/kevin/Sites/repository/storage/framework/views/cbfad85343ba1e877f4482c423ff93defbec7b15.php",
-		"/Users/kevin/Sites/repository/storage/framework/views/cc23b6434f798634f213bc77ab4ca5c74ac81c4a.php",
-		"/Users/kevin/Sites/repository/storage/framework/views/d676d3ff81ec45286da5fb2b9cbe5585772db859.php",
-		"/Users/kevin/Sites/repository/storage/framework/views/ddf0ecf236495c3d511b1606f42651c8dadafe46.php",
-		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Auth/Events/Logout.php",
-		"/Users/kevin/Sites/kevinbriggsisthebomb.com/resources/views/welcome.blade.php",
-		"/Users/kevin/Sites/kevinbriggsisthebomb.com/public/css/kb.css",
-		"/Users/kevin/Sites/kevinbriggsisthebomb.com/resources/views/layouts/partials/navigation.blade.php",
-		"/Users/kevin/Sites/kevinbriggsisthebomb.com/resources/views/layouts",
-		"/Users/kevin/Sites/kevinbriggsisthebomb.com/.gitignore",
-		"/Users/kevin/Sites/repository/Dockerfile",
-		"/Users/kevin/Sites/repository/README.md",
-		"/Users/kevin/Sites/repository/alpine-repository.Dockerfile",
-		"/Users/kevin/Sites/wiki/.gitignore",
-		"/Users/kevin/Sites/wiki/Dockerfile",
-		"/Users/kevin/Sites/wiki/docker-compose.yml"
+		"/Users/kevin/Sites/repository/public/css/repository.css"
 	],
 	"find":
 	{
-		"height": 33.0
+		"height": 46.0
 	},
 	"find_in_files":
 	{
 		"height": 158.0,
 		"where_history":
 		[
+			"",
+			"<selection>",
+			"<open files>",
+			"",
+			"<current file>",
+			"*/node_modules/*",
+			"",
+			"<current file>",
+			""
 		]
 	},
 	"find_state":
 	{
-		"case_sensitive": true,
+		"case_sensitive": false,
 		"find_history":
 		[
+			"group",
+			"Name:\tsmtp.shopify.com\nAddress: ",
+			"response()",
+			"addPatronModal",
+			"addPatron",
+			"right:",
+			"newPatronFormWrapper",
+			"FormWrapper",
+			"data-target",
+			"add_patron_wells",
+			"existing_value",
+			"if",
+			"check_input_form_for_changes",
+			"patron_ids_in_select",
+			"patrons_in_select",
+			"currently_associated_patrons",
+			"jq_object",
+			"check_for_changes",
+			"associate_patron_check",
+			"toggle_disable",
+			"#existing",
+			"#newPatron",
+			"#existingPatrons",
+			"new jQ",
+			"request",
+			"new_patron",
+			"max-height: 518px",
+			"patrons_to_associate",
+			"modal",
+			"associatePatron",
+			"Event",
+			"Listeners",
+			"row",
+			"container",
+			"cont",
+			"container",
+			"dd",
+			"patrons",
+			"$patrons_to_associate",
+			"$new_patron",
+			"function",
+			"url",
+			"error",
+			"content",
+			"patronJson",
+			"existingPatrons",
+			"createComment",
+			"create(",
+			"textarea",
+			"input(",
+			"location",
+			"incident",
+			"s",
+			"incidentst",
+			"\t\t\t\t\t\t\t@",
+			"incidentst",
+			"incidentPa",
+			"patron name",
+			"patron",
+			"incident",
+			"$incident->date",
+			"get_name()",
+			"patron",
+			"photostable",
+			"$patron->photos",
+			"$photo->patrons",
+			"$photo->patron",
+			"$patron->photo",
+			"$photo->incident",
+			"patronstab",
+			"photo of",
+			"photo of ",
+			"Comment",
+			"comment",
+			"caught_up_count"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": true,
+		"regex": false,
 		"replace_history":
 		[
+			"",
+			"addPhoto",
+			"addPatronFormWrapper",
+			"patron_wells",
+			"$patron->photo",
+			"$photo->patron",
+			"$photo->patrons",
+			"$patron->photos",
+			"patron"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -663,8 +981,688 @@
 	"groups":
 	[
 		{
+			"selected": 3,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "app/Http/Controllers/IncidentController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11599,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3450,
+								3455
+							]
+						],
+						"settings":
+						{
+							"color_helper.box_height": 19,
+							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.scan":
+							{
+								"allowed_colors":
+								[
+									"hsla",
+									"hex_compressed",
+									"webcolors",
+									"hsl",
+									"rgba",
+									"rgb",
+									"hex"
+								],
+								"compress_hex_output": true,
+								"current_ext": ".php",
+								"current_syntax": "PHP/PHP",
+								"enabled": true,
+								"last_updated": 1523988491.06,
+								"scan_completion_scopes":
+								[
+								],
+								"scan_scopes":
+								[
+									"meta.declaration-list.css -support.type.property-name.css -comment -string",
+									"meta.property-value.css -comment -string",
+									"meta.value.css -comment -string",
+									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
+									"meta.tag.any.html meta.attribute-with-value.style.html"
+								],
+								"use_hex_argb": false
+							},
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 723.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/Patron.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1363,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								692,
+								692
+							]
+						],
+						"settings":
+						{
+							"color_helper.box_height": 19,
+							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.scan":
+							{
+								"allowed_colors":
+								[
+									"webcolors",
+									"hsla",
+									"hex_compressed",
+									"hsl",
+									"rgba",
+									"rgb",
+									"hex"
+								],
+								"compress_hex_output": true,
+								"current_ext": ".php",
+								"current_syntax": "PHP/PHP",
+								"enabled": true,
+								"last_updated": 1523803654.72,
+								"scan_completion_scopes":
+								[
+								],
+								"scan_scopes":
+								[
+									"meta.declaration-list.css -support.type.property-name.css -comment -string",
+									"meta.property-value.css -comment -string",
+									"meta.value.css -comment -string",
+									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
+									"meta.tag.any.html meta.attribute-with-value.style.html"
+								],
+								"use_hex_argb": false
+							},
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "app/Http/Controllers/PatronController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1055,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								322,
+								322
+							]
+						],
+						"settings":
+						{
+							"color_helper.box_height": 19,
+							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.scan":
+							{
+								"allowed_colors":
+								[
+									"hsla",
+									"hsl",
+									"hex",
+									"webcolors",
+									"rgba",
+									"hex_compressed",
+									"rgb"
+								],
+								"compress_hex_output": true,
+								"current_ext": ".php",
+								"current_syntax": "PHP/PHP",
+								"enabled": true,
+								"last_updated": 1523832596.31,
+								"scan_completion_scopes":
+								[
+								],
+								"scan_scopes":
+								[
+									"meta.declaration-list.css -support.type.property-name.css -comment -string",
+									"meta.property-value.css -comment -string",
+									"meta.value.css -comment -string",
+									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
+									"meta.tag.any.html meta.attribute-with-value.style.html"
+								],
+								"use_hex_argb": false
+							},
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/PHP/PHP.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 250.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "resources/views/incidents/create.blade.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6493,
+						"regions":
+						{
+							"bookmarks":
+							{
+								"flags": 144,
+								"icon": "bookmark",
+								"regions":
+								[
+									[
+										3819,
+										3819
+									]
+								],
+								"scope": "bookmarks"
+							}
+						},
+						"selection":
+						[
+							[
+								4685,
+								4685
+							]
+						],
+						"settings":
+						{
+							"color_helper.box_height": 19,
+							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.preview_meta":
+							{
+							},
+							"color_helper.scan":
+							{
+								"allowed_colors":
+								[
+									"hsla",
+									"hex_compressed",
+									"webcolors",
+									"hsl",
+									"rgba",
+									"rgb",
+									"hex"
+								],
+								"compress_hex_output": true,
+								"current_ext": ".php",
+								"current_syntax": "Laravel Blade Highlighter/blade",
+								"enabled": true,
+								"last_updated": 1523988491.06,
+								"scan_completion_scopes":
+								[
+								],
+								"scan_scopes":
+								[
+									"meta.declaration-list.css -support.type.property-name.css -comment -string",
+									"meta.property-value.css -comment -string",
+									"meta.value.css -comment -string",
+									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
+									"meta.tag.any.html meta.attribute-with-value.style.html"
+								],
+								"use_hex_argb": false
+							},
+							"git_gutter_is_enabled": true,
+							"rulers":
+							[
+								100
+							],
+							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
+							"translate_tabs_to_spaces": false,
+							"wrap_width": 0
+						},
+						"translation.x": 18.0,
+						"translation.y": 3029.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "resources/views/patrons/create.blade.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 921,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								696,
+								442
+							]
+						],
+						"settings":
+						{
+							"color_helper.box_height": 19,
+							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.scan":
+							{
+								"allowed_colors":
+								[
+									"hsla",
+									"hex_compressed",
+									"webcolors",
+									"hsl",
+									"rgba",
+									"rgb",
+									"hex"
+								],
+								"compress_hex_output": true,
+								"current_ext": ".php",
+								"current_syntax": "Laravel Blade Highlighter/blade",
+								"enabled": true,
+								"last_updated": 1523988491.06,
+								"scan_completion_scopes":
+								[
+								],
+								"scan_scopes":
+								[
+									"meta.declaration-list.css -support.type.property-name.css -comment -string",
+									"meta.property-value.css -comment -string",
+									"meta.value.css -comment -string",
+									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
+									"meta.tag.any.html meta.attribute-with-value.style.html"
+								],
+								"use_hex_argb": false
+							},
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 8.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "resources/views/photos/create.blade.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 884,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								757,
+								757
+							]
+						],
+						"settings":
+						{
+							"_anf_new": "",
+							"color_helper.box_height": 19,
+							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.preview_meta":
+							{
+							},
+							"color_helper.scan":
+							{
+								"allowed_colors":
+								[
+									"hsla",
+									"hex_compressed",
+									"webcolors",
+									"hsl",
+									"rgba",
+									"rgb",
+									"hex"
+								],
+								"compress_hex_output": true,
+								"current_ext": ".php",
+								"current_syntax": "Laravel Blade Highlighter/blade",
+								"enabled": true,
+								"last_updated": 1523988491.06,
+								"scan_completion_scopes":
+								[
+								],
+								"scan_scopes":
+								[
+									"meta.declaration-list.css -support.type.property-name.css -comment -string",
+									"meta.property-value.css -comment -string",
+									"meta.value.css -comment -string",
+									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
+									"meta.tag.any.html meta.attribute-with-value.style.html"
+								],
+								"use_hex_argb": false
+							},
+							"git_gutter_is_enabled": true,
+							"rulers":
+							[
+								100
+							],
+							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 108.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "app/Http/Controllers/PhotoController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3451,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								459,
+								459
+							]
+						],
+						"settings":
+						{
+							"color_helper.box_height": 19,
+							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.scan":
+							{
+								"allowed_colors":
+								[
+									"hsla",
+									"hex_compressed",
+									"webcolors",
+									"hsl",
+									"rgba",
+									"rgb",
+									"hex"
+								],
+								"compress_hex_output": true,
+								"current_ext": ".php",
+								"current_syntax": "PHP/PHP",
+								"enabled": true,
+								"last_updated": 1523988491.06,
+								"scan_completion_scopes":
+								[
+								],
+								"scan_scopes":
+								[
+									"meta.declaration-list.css -support.type.property-name.css -comment -string",
+									"meta.property-value.css -comment -string",
+									"meta.value.css -comment -string",
+									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
+									"meta.tag.any.html meta.attribute-with-value.style.html"
+								],
+								"use_hex_argb": false
+							},
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "public/js/hub.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4104,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3558,
+								3558
+							]
+						],
+						"settings":
+						{
+							"color_helper.box_height": 19,
+							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.preview_meta":
+							{
+							},
+							"color_helper.scan":
+							{
+								"current_ext": ".js",
+								"current_syntax": "JavaScript/JavaScript",
+								"enabled": false,
+								"last_updated": 1523988491.06
+							},
+							"git_gutter_is_enabled": true,
+							"rulers":
+							[
+								100
+							],
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1990.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "resources/views/layouts/app.blade.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1566,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1449,
+								1449
+							]
+						],
+						"settings":
+						{
+							"color_helper.box_height": 19,
+							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
+							"color_helper.file_palette":
+							[
+							],
+							"color_helper.preview_meta":
+							{
+							},
+							"color_helper.scan":
+							{
+								"allowed_colors":
+								[
+									"hsla",
+									"hex_compressed",
+									"webcolors",
+									"hsl",
+									"rgba",
+									"rgb",
+									"hex"
+								],
+								"compress_hex_output": true,
+								"current_ext": ".php",
+								"current_syntax": "Laravel Blade Highlighter/blade",
+								"enabled": true,
+								"last_updated": 1523988491.06,
+								"scan_completion_scopes":
+								[
+								],
+								"scan_scopes":
+								[
+									"meta.declaration-list.css -support.type.property-name.css -comment -string",
+									"meta.property-value.css -comment -string",
+									"meta.value.css -comment -string",
+									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
+									"meta.tag.any.html meta.attribute-with-value.style.html"
+								],
+								"use_hex_argb": false
+							},
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 608.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "public/css/repository.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4937,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4521,
+								4521
+							]
+						],
+						"settings":
+						{
+							"color_helper.box_height": 19,
+							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
+							"color_helper.file_palette":
+							[
+								"#a94442ff",
+								"#a9a9a9ff",
+								"#b0c4deff",
+								"#ccccccff",
+								"#cd5c5cff",
+								"#d3e0e9ff",
+								"#dcdcdcff",
+								"#e8c930ff",
+								"#ffffffff"
+							],
+							"color_helper.scan":
+							{
+								"allowed_colors":
+								[
+									"hsla",
+									"hsl",
+									"hex",
+									"webcolors",
+									"rgba",
+									"hex_compressed",
+									"rgb"
+								],
+								"compress_hex_output": true,
+								"current_ext": ".css",
+								"current_syntax": "CSS/CSS",
+								"enabled": true,
+								"last_updated": 1523832596.31,
+								"scan_completion_scopes":
+								[
+								],
+								"scan_scopes":
+								[
+									"meta.declaration-list.css -support.type.property-name.css -comment -string",
+									"meta.property-value.css -comment -string",
+									"meta.value.css -comment -string",
+									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
+									"meta.tag.any.html meta.attribute-with-value.style.html"
+								],
+								"use_hex_argb": false
+							},
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/CSS/CSS.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6236.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -707,6 +1705,10 @@
 	{
 		"height": 100.0
 	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
 	"output.unsaved_changes":
 	{
 		"height": 100.0
@@ -725,12 +1727,220 @@
 		"selected_items":
 		[
 			[
-				"content-pod",
-				"wp-content/themes/superstore_child/content-podcast.php"
+				"layout",
+				"resources/views/layouts/app.blade.php"
 			],
 			[
-				"dbcnx",
-				"wp-content/plugins/ps-find-dealer/dbcnx.php"
+				"hub.js",
+				"public/js/hub.js"
+			],
+			[
+				"web",
+				"routes/web.php"
+			],
+			[
+				"photoc",
+				"app/Http/Controllers/PhotoController.php"
+			],
+			[
+				"patron/c",
+				"resources/views/patrons/create.blade.php"
+			],
+			[
+				"patrons/cre",
+				"resources/views/patrons/create.blade.php"
+			],
+			[
+				"compo",
+				"composer.json"
+			],
+			[
+				"1ab587a0bfec8f573c2290a7e5da4a782b4e3e63",
+				"storage/framework/views/1ab587a0bfec8f573c2290a7e5da4a782b4e3e63.php"
+			],
+			[
+				"repo",
+				"public/css/repository.css"
+			],
+			[
+				"patronf",
+				"database/factories/PatronFactory.php"
+			],
+			[
+				"patron",
+				"app/Patron.php"
+			],
+			[
+				"app.bla",
+				"resources/views/layouts/app.blade.php"
+			],
+			[
+				"web.",
+				"routes/web.php"
+			],
+			[
+				"app.js",
+				"public/js/app.js"
+			],
+			[
+				"commentc",
+				"app/Http/Controllers/CommentController.php"
+			],
+			[
+				"incide",
+				"app/Incident.php"
+			],
+			[
+				"patr",
+				"app/Patron.php"
+			],
+			[
+				"createpatrons",
+				"database/migrations/2018_03_18_184747_create_patrons_table.php"
+			],
+			[
+				"inci",
+				"app/Incident.php"
+			],
+			[
+				"photo",
+				"app/Http/Controllers/PhotoController.php"
+			],
+			[
+				"route",
+				"vendor/symfony/routing/Route.php"
+			],
+			[
+				"incidentc",
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"incid",
+				"app/Incident.php"
+			],
+			[
+				"datasee",
+				"database/seeds/DatabaseSeeder.php"
+			],
+			[
+				"incid/cre",
+				"resources/views/incidents/create.blade.php"
+			],
+			[
+				"creaincid",
+				"database/migrations/2017_06_27_204203_create_incidents_table.php"
+			],
+			[
+				"inc/cre",
+				"resources/views/incidents/create.blade.php"
+			],
+			[
+				"incco",
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"inciden",
+				"database/factories/IncidentFactory.php"
+			],
+			[
+				"incidecont",
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"incf",
+				"database/factories/IncidentFactory.php"
+			],
+			[
+				"repos",
+				"public/css/repository.css"
+			],
+			[
+				"inc/show",
+				"resources/views/incidents/show.blade.php"
+			],
+			[
+				"photo/show",
+				"resources/views/photos/show.blade.php"
+			],
+			[
+				"createincid",
+				"database/migrations/2017_06_27_204203_create_incidents_table.php"
+			],
+			[
+				"7c8abf6ff685e57fdf4217b267d4b1cdc4d84180.",
+				"storage/framework/views/7c8abf6ff685e57fdf4217b267d4b1cdc4d84180.php"
+			],
+			[
+				"inc/sho",
+				"resources/views/incidents/show.blade.php"
+			],
+			[
+				"inci/ind",
+				"resources/views/incidents/index.blade.php"
+			],
+			[
+				"create_in",
+				"database/migrations/2017_06_27_204203_create_incidents_table.php"
+			],
+			[
+				"incidentf",
+				"database/factories/IncidentFactory.php"
+			],
+			[
+				"rep",
+				"public/css/repository.css"
+			],
+			[
+				"incid/ind",
+				"resources/views/incidents/index.blade.php"
+			],
+			[
+				"views/pho",
+				"resources/views/photos/show.blade.php"
+			],
+			[
+				"user",
+				"app/User.php"
+			],
+			[
+				"photocon",
+				"app/Http/Controllers/PhotoController.php"
+			],
+			[
+				"photof",
+				"database/factories/PhotoFactory.php"
+			],
+			[
+				"division",
+				"app/Division.php"
+			],
+			[
+				"comment",
+				"app/Comment.php"
+			],
+			[
+				"blad.p",
+				"resources/views/auth/login.blade.php"
+			],
+			[
+				"reportc",
+				"app/Http/Controllers/ReportController.php"
+			],
+			[
+				"repo/",
+				"resources/views/reports/incidents.blade.php"
+			],
+			[
+				"app.css",
+				"public/css/app.css"
+			],
+			[
+				"seeder",
+				"database/seeds/DatabaseSeeder.php"
+			],
+			[
+				"appser",
+				"app/Providers/AppServiceProvider.php"
 			],
 			[
 				"docker",
@@ -741,12 +1951,16 @@
 				".gitignore"
 			],
 			[
-				"apps",
-				"app/Providers/AppServiceProvider.php"
+				"content-pod",
+				"wp-content/themes/superstore_child/content-podcast.php"
 			],
 			[
-				"repo",
-				"public/css/repository.css"
+				"dbcnx",
+				"wp-content/plugins/ps-find-dealer/dbcnx.php"
+			],
+			[
+				"apps",
+				"app/Providers/AppServiceProvider.php"
 			],
 			[
 				"reports/in",
@@ -775,10 +1989,6 @@
 			[
 				"footer",
 				"wp-content/themes/superstore_child/footer.php"
-			],
-			[
-				"user",
-				"app/User.php"
 			],
 			[
 				"dashr",
@@ -813,20 +2023,12 @@
 				"docker-compose.yml"
 			],
 			[
-				"comment",
-				"app/Http/Controllers/CommentController.php"
-			],
-			[
 				"index",
 				"resources/views/settings/index.blade.php"
 			],
 			[
 				"setting",
 				"app/Http/Controllers/SettingController.php"
-			],
-			[
-				"web",
-				"routes/web.php"
 			],
 			[
 				"pluggabl",
@@ -839,10 +2041,6 @@
 			[
 				"index.",
 				"resources/views/comments/index.blade.php"
-			],
-			[
-				"inciden",
-				"app/Http/Controllers/IncidentController.php"
 			],
 			[
 				"brea",
@@ -889,10 +2087,6 @@
 				"app/Http/Controllers/DashboardController.php"
 			],
 			[
-				"incidentc",
-				"app/Http/Controllers/IncidentController.php"
-			],
-			[
 				"7c8abf6ff685e57fdf4217b267d4b1cdc4d84180",
 				"storage/framework/views/7c8abf6ff685e57fdf4217b267d4b1cdc4d84180.php"
 			],
@@ -903,10 +2097,6 @@
 			[
 				"navigation",
 				"resources/views/layouts/navigation.blade.php"
-			],
-			[
-				"incid",
-				"app/Http/Controllers/IncidentController.php"
 			],
 			[
 				"085550feb21499fa352c76785e10ac7175b201d2",
@@ -947,10 +2137,6 @@
 			[
 				"41475bf2c59e19fd6f1e266298f6a52cc4701cff.php",
 				"storage/framework/views/41475bf2c59e19fd6f1e266298f6a52cc4701cff.php"
-			],
-			[
-				"inci",
-				"app/Incident.php"
 			],
 			[
 				"home",
@@ -1045,148 +2231,12 @@
 				"vendor/laravel/framework/src/Illuminate/Mail/resources/views/html/layout.blade.php"
 			],
 			[
-				"photof",
-				"database/factories/PhotoFactory.php"
-			],
-			[
-				"photo",
-				"database/factories/PhotoFactory.php"
-			],
-			[
 				"database/migrations/",
 				"database/migrations/2017_08_22_143832_create_division_user_table.php"
 			],
 			[
 				"divi",
 				"app/Division.php"
-			],
-			[
-				"homec",
-				"app/Http/Controllers/HomeController.php"
-			],
-			[
-				"repos",
-				"public/css/repository.css"
-			],
-			[
-				".en",
-				".env"
-			],
-			[
-				"emails/",
-				"resources/views/emails/incidents/incident-updated.blade.php"
-			],
-			[
-				"seeder",
-				"database/seeds/DatabaseSeeder.php"
-			],
-			[
-				"creat",
-				"resources/views/incidents/create.blade.php"
-			],
-			[
-				"edit",
-				"resources/views/photos/edit.blade.php"
-			],
-			[
-				"create",
-				"resources/views/incidents/create.blade.php"
-			],
-			[
-				"show.",
-				"resources/views/photos/show.blade.php"
-			],
-			[
-				"in",
-				"app/Http/Controllers/IncidentController.php"
-			],
-			[
-				"pho",
-				"database/factories/PhotoFactory.php"
-			],
-			[
-				"edit.",
-				"resources/views/incidents/edit.blade.php"
-			],
-			[
-				"ic",
-				"app/Http/Controllers/IncidentController.php"
-			],
-			[
-				"seed",
-				"database/seeds/DatabaseSeeder.php"
-			],
-			[
-				"rep",
-				"public/css/repository.css"
-			],
-			[
-				"repository",
-				"public/css/repository.css"
-			],
-			[
-				"logout",
-				"vendor/laravel/framework/src/Illuminate/Auth/Events/Logout.php"
-			],
-			[
-				"dev",
-				"database/wiki_dev.sqlite"
-			],
-			[
-				"datetime",
-				"vendor/fzaninotto/faker/src/Faker/Provider/DateTime.php"
-			],
-			[
-				"carbon",
-				"vendor/nesbot/carbon/src/Carbon/Carbon.php"
-			],
-			[
-				"app.css",
-				"public/css/app.css"
-			],
-			[
-				"hash",
-				"vendor/laravel/framework/src/Illuminate/Support/Facades/Hash.php"
-			],
-			[
-				"boot",
-				"resources/assets/js/bootstrap.js"
-			],
-			[
-				"model",
-				"vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php"
-			],
-			[
-				"hasda",
-				"vendor/laravel/framework/src/Illuminate/Notifications/HasDatabaseNotifications.php"
-			],
-			[
-				"notif",
-				"vendor/laravel/framework/src/Illuminate/Notifications/Notifiable.php"
-			],
-			[
-				"eloquent/mo",
-				"vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php"
-			],
-			[
-				"auth/user",
-				"vendor/laravel/framework/src/Illuminate/Foundation/Auth/User.php"
-			],
-			[
-				"auth",
-				"vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php"
-			],
-			[
-				"logout.php",
-				"vendor/laravel/framework/src/Illuminate/Auth/Events/Logout.php"
-			],
-			[
-				"layouts.app",
-				"resources/views/layouts/app.blade.php"
-			],
-			[
-				"authenticateu",
-				"vendor/laravel/framework/src/Illuminate/Foundation/Auth/AuthenticatesUsers.php"
 			]
 		],
 		"width": 0.0
@@ -1197,6 +2247,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"",
+				"/Volumes/TravelStore/Sites/ssd-psaudio/psaudio.sublime-workspace"
+			]
 		],
 		"width": 380.0
 	},
@@ -1212,12 +2266,16 @@
 	"selected_group": 0,
 	"settings":
 	{
+		"xdebug":
+		{
+			"hide_conflict": false
+		}
 	},
-	"show_minimap": false,
+	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 278.0,
+	"side_bar_width": 223.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

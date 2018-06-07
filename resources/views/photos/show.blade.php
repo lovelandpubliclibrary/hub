@@ -23,7 +23,7 @@
 		<div class="panel-heading col-xs-12 text-center repository-margin-bottom-1rem">
 			<div class="center-block">
 				<h2 class="panel-title">
-					Photo of {{ ($photo->incident->patron_name ?: 'Unknown Patron') }}
+					Photo of {{ $patron->get_full_name() }}
 				</h2>
 
 				<div>

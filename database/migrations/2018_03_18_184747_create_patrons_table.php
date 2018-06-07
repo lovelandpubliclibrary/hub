@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePhotosTable extends Migration
+class CreatePatronsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreatePhotosTable extends Migration
      */
     public function up()
     {
-        Schema::create('photos', function (Blueprint $table) {
+        Schema::create('patrons', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('incident_id')->unsigned()->nullable();
-            $table->string('filename');
-            $table->text('caption')->nullable();
+            $table->text('first_name')->nullable();
+            $table->text('last_name')->nullable();
+            $table->text('description');
+            $table->text('card_number')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreatePhotosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('photos');
+        Schema::dropIfExists('patrons');
     }
 }

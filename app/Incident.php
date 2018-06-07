@@ -25,7 +25,7 @@ class Incident extends Model
 	}
 
 	public function patron() {
-		return $this->hasMany('App\Patron');
+		return $this->belongsToMany('App\Patron')->withTimestamps();
 	}
 
 

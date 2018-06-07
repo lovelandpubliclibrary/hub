@@ -2,3 +2,4 @@
 .dockerignore
 storage/logs
 alpine-repository.Dockerfile
+public/images/patrons/

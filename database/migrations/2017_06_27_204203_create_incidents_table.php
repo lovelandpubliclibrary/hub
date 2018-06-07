@@ -19,9 +19,6 @@ class CreateIncidentsTable extends Migration
             $table->time('time');
             $table->string('title');
             $table->text('description');
-            $table->string('patron_name')->nullable();
-            $table->string('card_number')->nullable();
-            $table->text('patron_description')->nullable();
             $table->integer('user_id')->unsigned();
             $table->integer('updated_by')->unsigned()->nullable();
             $table->timestamps();

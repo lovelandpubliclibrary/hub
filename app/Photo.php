@@ -11,6 +11,10 @@ class Photo extends Model
     	return $this->belongsTo('App\Incident');
     }
 
+    public function patron() {
+    	return $this->belongsToMany('App\Patron')->withTimestamps();
+    }
+
     // mass assignable attributes
-    protected $fillable = ['filename', 'incident_id'];
+    protected $fillable = ['filename'];
 }

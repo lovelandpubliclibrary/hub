@@ -14,6 +14,11 @@ td > .glyphicon {
 	margin-left: .2em;
 }
 
+.panel {
+    -webkit-box-shadow: 5px 5px 30px;
+    box-shadow: 5px 5px 30px;
+}
+
 .panel-body blockquote {
 	border-left: 0;
 	padding-top: 0;
@@ -27,10 +32,6 @@ td > .glyphicon {
 	background-color: gainsboro;
 }
 
-.thumbnail {
-	margin-bottom: .5em;
-}
-
 .navbar-brand > img {
 	display: inline;
 	max-height: 100%;
@@ -42,6 +43,17 @@ td > .glyphicon {
 
 .badge-error {
   background-color: #a94442;
+}
+
+.modal-title {
+    display: inline;
+}
+
+.modal-header {
+    background: gainsboro;
+    text-align: center;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
 }
 
 @media (min-width: 768px) {
@@ -59,6 +71,18 @@ td > .glyphicon {
 /* GENERAL LAYOUT */
 .content {
 	margin-top: 4.5em;
+}
+
+.hub-center {
+    text-align: center;
+}
+
+.hub-float-right {
+    float: right;
+}
+
+.hub-float-left {
+    float: left;
 }
 
 .repository-save-button {
@@ -85,8 +109,20 @@ td > .glyphicon {
 	font-style: italic;
 }
 
+.hub-text-indent-22px {
+    text-indent: 22px;
+}
+
+.hub-text-indent-1em {
+    text-indent: 1em;
+}
+
 .repository-text-wrap {
 	white-space: normal;
+}
+
+.hub-width-100 {
+    width: 100%;
 }
 
 .homepage-buttons {
@@ -205,12 +241,16 @@ td > .glyphicon {
 	white-space: normal;
 }
 
-#incidents .table > tbody > tr > td > .glyphicon{
+#incidents .table > tbody > tr > td > .glyphicon {
 	font-size: 1.25em;
 }
 
 #incidents .btn-default {
 	border: 1px solid #ccc;
+}
+
+#incidents .thumbnail {
+    margin-bottom: .5em;
 }
 
 #incidents .not-viewed {
@@ -229,6 +269,37 @@ td > .glyphicon {
     border: 0;
 }
 
+#incidents .dropdown-menu {
+    max-height: 25em !important;
+}
+
+#incidents #addedPatrons .remove-patron-btn {
+    float: right;
+    border-width: 0;
+    background-color: inherit;
+}
+
+#incidents .associated-patrons-wrapper {
+    text-indent: 1em;
+}
+
+#incidents .associated-patrons-wrapper > label > .patron-name {
+    font-weight: normal;
+}
+
+#incidents #incident-photo-thumbnail-wrapper {
+    margin-bottom: 1em;
+}
+
+#incidents #incident-photo-thumbnail-wrapper button.remove-photo-btn {
+    margin: .5em;
+}
+
+#incidents .incident-photo {
+    text-align: center;
+    border-radius: .5em;
+    box-shadow: 1px 1px 10px 0 #999;
+}
 
 
 /* REPORTS */

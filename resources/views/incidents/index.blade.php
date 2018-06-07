@@ -16,7 +16,7 @@
 
 			<div class="panel-body">
 				<div class="col-xs-12">
-					<a href="/incidents/create" class="btn btn-default col-xs-12 col-sm-3 repository-margin-bottom-1rem">
+					<a href="/incidents/create" class="btn btn-danger col-xs-12 col-sm-3 repository-margin-bottom-1rem">
 						Report a New Incident
 					</a>
 
@@ -47,7 +47,7 @@
 								</th>
 
 								<th class="hidden-xs text-nowrap">
-									Patron Name
+									Patron Names
 								</th>
 
 								<th>
@@ -83,8 +83,12 @@
 									</td>
 
 									<td class="hidden-xs text-nowrap">
-										@if ($incident->patron_name)
-											{{ $incident->patron_name }}
+										@if ($incident->patron)
+											@foreach ($incident->patron as $patron)
+												<div>
+													{{ $patron->get_full_name() }}
+												</div>
+											@endforeach
 										@endif
 									</td>
 

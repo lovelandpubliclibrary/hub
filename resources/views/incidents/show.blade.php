@@ -85,13 +85,19 @@
 						@endif
 					</div>
 
-					<div class="col-xs-12">
-						<strong>Patron Name:</strong>
-						@isset($incident->patron_name)
-							{{ $incident->patron_name }}
-						@else
-							<span class="repository-text-italic">Unknown</span>
-						@endisset
+					<div class="col-xs-12" style="float:left;">
+						<strong>Patrons Involved:</strong>
+						<div class="hub-text-indent-22px">
+							@isset($incident->patron)
+								@foreach ($incident->patron as $patron)
+									<div>
+										{{ $patron->get_full_name() }}
+									</div>
+								@endforeach
+							@else
+								<span class="repository-text-italic">Unknown</span>
+							@endisset
+						</div>
 					</div>
 
 					@isset ($incident->patron_description)

@@ -49,13 +49,17 @@ Route::get('/incidents/edit/{incident}', 'IncidentController@edit')->name('editI
 Route::post('/incidents/edit/{incident]', 'IncidentController@update')->name('updateIncident');
 
 // Comments
-Route::post('/comments/create', 'CommentController@store')->name('createComment');
+Route::post('/comments/create', 'CommentController@store');
 Route::get('/comments/edit/{comment}', 'CommentController@edit')->name('editComment');
 Route::post('/comments/edit/{comment]', 'CommentController@update')->name('updateComment');
 Route::get('/comments/delete/{comment}', 'CommentController@delete')->name('deleteComment');
 
 // Photos
 Route::get('/photos/{photo}', 'PhotoController@show')->name('photo');
+Route::post('/photos/create', 'PhotoController@store');
 Route::get('/photos/edit/{photo}', 'PhotoController@edit')->name('editPhoto');
 Route::get('/photos/delete/{photo}', 'PhotoController@delete')->name('deletePhoto');
 Route::post('/photos/update/{photo}', 'PhotoController@update')->name('updatePhoto');
+
+// Patrons
+Route::post('/patrons/create', 'PatronController@store')->name('storePatronAjax');
