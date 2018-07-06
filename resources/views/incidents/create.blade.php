@@ -84,20 +84,20 @@
 					</h3>
 					<div class="form-group">
 
-							<div class="row" id="incident-photo-thumbnail-wrapper">
-								{{-- photo inputs injected here w/ jQuery when added to incident --}}
+						<div class="row" id="incident-photo-thumbnail-wrapper">
+							{{-- photo thumbnails injected here w/ jQuery when added to incident --}}
+						</div>
+						
+						<div class="row">
+							<div class="col-xs-12" id="toggle-photo-modal-wrapper">
+								<button type="button" id="togglePhotoModal" class="btn btn-default block" data-toggle="modal" data-target="#addPhotoModal">
+									<div>
+										<span class="glyphicon glyphicon-plus-sign"></span>
+									</div>
+									Add a Photo
+								</button>
 							</div>
-							
-							<div class="row">
-								<div class="col-xs-12" id="toggle-photo-modal-wrapper">
-									<button type="button" id="togglePhotoModal" class="btn btn-default block" data-toggle="modal" data-target="#addPhotoModal">
-										<div>
-											<span class="glyphicon glyphicon-plus-sign"></span>
-										</div>
-										Add a Photo
-									</button>
-								</div>
-							</div>
+						</div>
 					</div>	{{-- .form-group --}}
 
 					{{ Form::hidden('user', Auth::id()) }}

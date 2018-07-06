@@ -286,7 +286,7 @@ class PhotosTableSeeder extends Seeder {
 		$this->command->info('--> Deleting existing photos... ');
 		DB::table('photos')->delete();
 		// remove all the existing photos within the filesystem
-		$photos = glob(public_path() . '/images/patrons/*');		// http://php.net/manual/en/function.glob.php
+		$photos = glob(storage_path() . '/app/patrons/*');		// http://php.net/manual/en/function.glob.php
 		foreach ($photos as $photo) {
 			if (is_file($photo)) unlink($photo);
 		}

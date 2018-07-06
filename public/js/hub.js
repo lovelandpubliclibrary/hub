@@ -57,7 +57,7 @@ function addPatron() {
 				modal_footer.html('').append(stashed_buttons);
 			}
 		});
-	} else {		// invalid
+	} else {		// form is invalid
 		errors.push('A description is required in order to save a new patron.');
 	}
 
@@ -82,10 +82,11 @@ function addPhoto() {
 	var form = $('#addPhotoForm');
 	var form_data = new FormData();
 	var file = form.find('input[type="file"]')[0].files[0];
+	var associated_patrons = form.find('#associated-patrons').val();
 	form_data.append('photo', file);
 	form_data.append('caption', form.find('textarea').val());
 	form_data.append('associatingPatrons', form.find('input[name="associatingPatrons"]:checked').val());
-	form_data.append('associatedPatrons', form.find('#associated-patrons').val());
+	form_data.append('associatedPatrons', associated_patrons);
 
 	// validate the form
 	if (typeof file == 'undefined') {		// no file uploaded
@@ -133,12 +134,16 @@ function addPhoto() {
 				photo_container.append($('<div class="thumbnail">'));
 				var photo = photo_container.find('.thumbnail');
 				photo.append($(`<img src="${response.url}" alt="${response.filename}">`));
-				photo.append($(`<input type="hidden" name="photo_id_${response.id}" value="${response.id}">`));
 				photo.append($('<button class="btn btn-sm btn-danger remove-photo-btn">Remove</button>'));
+				photo.append($(`<input type="hidden" name="photos[]" value=${response.id}>`));
 				$('#incident-photo-thumbnail-wrapper').append(photo_column);
 
-				// add the event handler to the remove button
-				photo.find('button.remove-photo-btn').click(function() {
+				// add the event handler to the remove button, which will undo all of this
+				photo.find('button.remove-photo-btn').click(function(event) {
+					event.stopPropagation();
+					event.preventDefault();
+
+					// remove the thumbnail wrapper and it's contents
 					photo_column.remove();
 				});
 				

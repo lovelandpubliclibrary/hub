@@ -23,7 +23,7 @@
 
 			<label class="control-label">
 				{{ Form::radio('associatingPatrons', '1') }}
-				The following patrons:
+				The following patron(s):
 			</label>
 	
 			<select name="associatedPatrons[]" id="associated-patrons" multiple="multiple"

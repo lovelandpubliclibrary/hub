@@ -113,12 +113,8 @@ class IncidentController extends Controller
             'locations' => 'required',
         ];
 
-        $upload_count = count($request->file('photos'));
-        foreach(range(0, $upload_count) as $index) {
-            $rules['photos.' . $index] = 'image|mimes:jpeg,png,jpg,gif,bmp|max:2048';
-        }
-
         $this->validate($request, $rules);
+        // dd($request);
 
         // store it in a new instance of Incident
         $incident = new Incident;
@@ -139,37 +135,25 @@ class IncidentController extends Controller
             }
 
             // set the users (employees) involved in the incident
-            if (count($request->usersInvolved)) {
+            if (isset($request->usersInvolved)) {
                 foreach ($request->usersInvolved as $user_id) {
                     $incident->usersInvolved()->save(User::find($user_id));
                 }
             }
 
             // set the patron(s) involved in the incident, if any
-            if (count($request->patrons)) {
+            if (isset($request->patrons)) {
                 foreach ($request->patrons as $patron) {
                     $incident->patron()->attach($patron);
                 }
             }
 
-            // validate and upload the photo() if necessary
-            if ($request->hasFile('photos')) {
-
-                // loop through the uploads and save them to the filesystem and database
-                foreach ($request->file('photos') as $upload) {
-
-                    // create a unique name for the file
-                    $filename = uniqid('img_') . '.' . $upload->getClientOriginalExtension();
-
-                    // create a new instance of a photo
-                    $photo = Photo::create([
-                        'filename' => $filename,
-                        'incident_id' => $incident->id,
-                    ]);
-
-                    // create the Incident/Photo relationship and move the file
-                    if ($incident->photo()->save($photo)) {
-                        $upload->move(public_path('images/patrons/'), $filename);
+            // set the photos associated with the incident, if any
+            if (isset($request->photos)) {
+                foreach ($request->photos as $photo_id) {
+                    $photo = Photo::find(intval($photo_id));
+                    if ($photo) {
+                        $incident->photo()->save($photo);
                     }
                 }
             }

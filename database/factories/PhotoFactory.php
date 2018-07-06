@@ -8,7 +8,7 @@ $factory->define(App\Photo::class, function (Faker\Generator $faker) {
 
 	return [
         'incident_id' => rand(0, App\Incident::all()->count()),
-        'filename'	  => $faker->unique()->image(public_path() . '/images/patrons/', $width, $height, 'people', false),
+        'filename'	  => $faker->unique()->image(storage_path(). '/app/patrons/', $width, $height, 'people', false),
         'caption'	  => $faker->realText(),
     ];
 });
