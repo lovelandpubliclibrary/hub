@@ -5,6 +5,11 @@ footer {
 	background-color: #fff;
 }
 
+ul {
+    list-style: none;
+    padding: 0;
+}
+
 h2.panel-title {
 	font-size: 30px;
 	display: inline-block;
@@ -299,6 +304,11 @@ td > .glyphicon {
     text-align: center;
     border-radius: .5em;
     box-shadow: 1px 1px 10px 0 #999;
+}
+
+#incidents .patron-list {
+    margin:0 22px;
+    padding: 0;
 }
 
 

@@ -87,22 +87,19 @@
 
 					<div class="col-xs-12" style="float:left;">
 						<strong>Patrons Involved:</strong>
-						<div class="hub-text-indent-22px">
-							@isset($incident->patron)
+							@if (!$incident->patron->isEmpty()))
+								<ul class="patron-list">
 								@foreach ($incident->patron as $patron)
-									<a href="">
-										{{ $patron->get_full_name() }}
-									</a>
-									
-									{{-- add a comma after every patron except the last one --}}
-									@if ($incident->patron->last() !== $patron)
-										,&nbsp;
-									@endif
+									<li>
+										<a href="{{ route('patron', ['patron' => $patron->id]) }}">
+											{{$patron->get_list_name()}}
+										</a>
+									</li>
 								@endforeach
+								</ul>
 							@else
-								<span class="repository-text-italic">Unknown</span>
-							@endisset
-						</div>
+								<span>None</span>
+							@endif
 					</div>
 
 					@isset ($incident->card_number)

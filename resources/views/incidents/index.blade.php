@@ -84,11 +84,13 @@
 
 									<td class="hidden-xs text-nowrap">
 										@if ($incident->patron)
-											@foreach ($incident->patron as $patron)
-												<div>
-													{{ $patron->get_full_name() }}
-												</div>
-											@endforeach
+											<ul>
+												@foreach ($incident->patron as $patron)
+													<li>
+														{{ $patron->get_list_name() }}
+													</li>
+												@endforeach
+											</ul>
 										@endif
 									</td>
 
