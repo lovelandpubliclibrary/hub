@@ -20,12 +20,8 @@ class Patron extends Model
     public function get_full_name() {
     	if (isset($this->first_name) || isset($this->last_name)) {
             // provide placeholder value for any missing names
-            if ($this->first_name || $this->last_name) {
-                $this->first_name = $this->first_name ?: '(Unknown first name)';
-                $this->last_name = $this->last_name ?: '(Unknown last name)';
-            } else {
-
-            }
+            $this->first_name = $this->first_name ?: 'Unknown';
+            $this->last_name = $this->last_name ?: 'Unknown';
             
     		return "{$this->first_name} {$this->last_name}";
     	}
@@ -39,8 +35,8 @@ class Patron extends Model
         if ($this->first_name || $this->last_name) {    // make sure at least one name is set
 
             // provide placeholder value for any missing names
-            $this->first_name = $this->first_name ?: '(Unknown first name)';
-            $this->last_name = $this->last_name ?: '(Unknown last name)';
+            $this->first_name = $this->first_name ?: 'Unkown';
+            $this->last_name = $this->last_name ?: 'Unknown';
 
             return "{$this->last_name}, {$this->first_name}";
         }
