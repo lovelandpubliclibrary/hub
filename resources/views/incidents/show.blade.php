@@ -44,7 +44,7 @@
 					@isset($photos)
 						@foreach ($photos as $photo)
 							<a href="{{ route('photo', ['photo' => $photo->id]) }}" class="col-xs-12 col-sm-6 col-md-4">
-								<img class="img-responsive thumbnail" src="{{ asset('images/patrons/' . $photo->filename) }}" alt="Patron Picture">
+								<img class="img-responsive thumbnail" src="{{ asset('storage/photos/' . $photo->filename) }}" alt="Patron Picture">
 							</a>
 						@endforeach
 					@endisset
@@ -90,22 +90,20 @@
 						<div class="hub-text-indent-22px">
 							@isset($incident->patron)
 								@foreach ($incident->patron as $patron)
-									<div>
+									<a href="">
 										{{ $patron->get_full_name() }}
-									</div>
+									</a>
+									
+									{{-- add a comma after every patron except the last one --}}
+									@if ($incident->patron->last() !== $patron)
+										,&nbsp;
+									@endif
 								@endforeach
 							@else
 								<span class="repository-text-italic">Unknown</span>
 							@endisset
 						</div>
 					</div>
-
-					@isset ($incident->patron_description)
-						<div class="col-xs-12">
-							<strong>Patron Description:</strong>
-							{{ $incident->patron_description }}
-						</div>
-					@endisset
 
 					@isset ($incident->card_number)
 						<div class="col-xs-12">
