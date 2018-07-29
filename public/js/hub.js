@@ -250,4 +250,23 @@ $(document).ready(function() {
 		}
 	});
 
+	// remove parent photo element for .remove-photo-btn buttons
+	$('.remove-photo-btn').click(function() {
+		$(this).closest('.photo').parent().remove();
+	});
+
+	/* Toggle the list of users who haven't viewed an incident */
+	$('.not-viewed ul').click(function() {
+		// collect the arrow element
+		var arrow = $(this).find('.arrow').first().toggleClass('arrow-right arrow-down');
+		
+		// toggle the display of the list items
+		$(this).find('li').toggle();
+	});
+
+	// Prevent links from triggering the toggle of $('.not-viewed ul')
+	$('.not-viewed ul').find('a').click(function(event) {
+		event.stopPropagation();
+	});
+
 });
