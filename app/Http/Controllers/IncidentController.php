@@ -98,7 +98,10 @@ class IncidentController extends Controller
             return $patron->list_name ? [$patron['id'] => $patron['list_name']] : [];
         });
 
-    	return view('incidents.create', compact('breadcrumbs', 'locations', 'staff', 'patrons'));
+        // create a placeholder incident to pass to the view
+        $incident = new Incident;
+
+    	return view('incidents.create', compact('breadcrumbs', 'locations', 'staff', 'patrons', 'incident'));
     }
 
 
@@ -143,18 +146,15 @@ class IncidentController extends Controller
 
             // set the patron(s) involved in the incident, if any
             if (isset($request->patrons)) {
-                foreach ($request->patrons as $patron) {
-                    $incident->patron()->attach($patron);
+                foreach ($request->patrons as $patron_id) {
+                    $incident->patron()->attach($patron_id);
                 }
             }
 
             // set the photos associated with the incident, if any
             if (isset($request->photos)) {
                 foreach ($request->photos as $photo_id) {
-                    $photo = Photo::find(intval($photo_id));
-                    if ($photo) {
-                        $incident->photo()->save($photo);
-                    }
+                        $incident->photo()->attach($photo_id);
                 }
             }
 
@@ -190,7 +190,14 @@ class IncidentController extends Controller
             // collect all the staff member
             $staff = User::orderBy('name', 'ASC')->pluck('name', 'id');
 
-            return view('incidents.edit', compact('incident', 'photos', 'locations', 'staff', 'breadcrumbs'));
+            // collect the patrons associated with this incident
+            $patrons = Patron::all();
+            foreach ($patrons as $patron) {
+                $patron->list_name = $patron->get_list_name();
+            }
+            $patrons = $patrons->pluck('list_name', 'id')->sort();
+
+            return view('incidents.edit', compact('incident', 'patrons', 'photos', 'locations', 'staff', 'breadcrumbs'));
         }
 
         // return to the incident with an error message
@@ -222,9 +229,8 @@ class IncidentController extends Controller
             'time',
             'locations',
             'staffInvolved',
-            'patron_name',
-            'card_number',
-            'patron_description',
+            'patrons',
+            'photos',
             'title',
             'description'
         );
@@ -233,10 +239,16 @@ class IncidentController extends Controller
         foreach ($updates as $key => $value) {
             switch ($key) {
                 case 'locations':
-                    $incident->location()->sync($updates['locations']);
+                    $incident->location()->sync($updates[$key]);
                     break;
                 case 'staffInvolved':
-                    $incident->usersInvolved()->sync($updates['staffInvolved']);
+                    $incident->usersInvolved()->sync($updates[$key]);
+                    break;
+                case 'patrons':
+                    $incident->patron()->sync($updates[$key]);
+                    break;
+                case 'photos':
+                    $incident->photo()->sync($updates[$key]);
                     break;
                 default:
                     $incident->$key = $value;

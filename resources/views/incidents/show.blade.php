@@ -87,7 +87,9 @@
 
 					<div class="col-xs-12" style="float:left;">
 						<strong>Patrons Involved:</strong>
-							@if (!$incident->patron->isEmpty()))
+							@if ($incident->patron->isEmpty())
+								<span>None</span>
+							@else
 								<ul class="patron-list">
 								@foreach ($incident->patron as $patron)
 									<li>
@@ -97,8 +99,6 @@
 									</li>
 								@endforeach
 								</ul>
-							@else
-								<span>None</span>
 							@endif
 					</div>
 
@@ -133,9 +133,11 @@
 				@if (Auth::user()->hasRole($supervisor_role) && !empty($unviewed_by))
 					<div class="col-xs-12 bg-warning not-viewed">
 						<ul class="list-group">
-							<strong>Not yet viewed by:</strong>
+							<strong>Not yet viewed by</strong>
+							<span class="caret"></span>
 							@foreach ($unviewed_by as $user)
-								<li class="list-group-item">
+								{{-- inline style provided to assist w/ $(this).toggle(); --}}
+								<li class="list-group-item" style="display:none;">
 									{{ $user->name }}
 								</li>
 							@endforeach

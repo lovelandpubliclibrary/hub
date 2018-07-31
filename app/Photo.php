@@ -8,7 +8,7 @@ class Photo extends Model
 {
     // model relationships
     public function incident() {
-    	return $this->belongsTo('App\Incident');
+    	return $this->belongsToMany('App\Incident');
     }
 
     public function patron() {

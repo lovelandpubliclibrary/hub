@@ -42,7 +42,7 @@ class Patron extends Model
         }
 
         // both first and last names are unknown, return patron number
-        return null;
+        return "Patron #{$this->id}";
     }
 
 }

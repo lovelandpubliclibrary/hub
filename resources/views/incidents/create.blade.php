@@ -61,44 +61,9 @@
 				  						  ['class' => 'form-control', 'rows' => '6', 'required' => 'required']) }}
 				  	</div>
 
-				  	<div class="form-group">
-						{{ Form::label('existingPatrons[]', 'Patrons Involved:', ['class' => 'control-label']) }}
-						{{ Form::select('existingPatrons[]', $patrons, null, ['class' => 'selectpicker form-control',
-																			'multiple' => 'multiple',
-																			'id' => 'existingPatrons']) }}
-					</div>
-
-					<div class="form-group">
-						<div>
-							<button type="button" id="togglePatronModal" class="btn btn-default" data-toggle="modal" data-target="#addPatronModal">
-								<div>
-									<span class="glyphicon glyphicon-plus-sign"></span>
-								</div>
-								Add a new patron
-							</button>
-						</div>
-					</div> {{-- .form-group --}}
-
-					<h3 class="hub-center">
-						Photos
-					</h3>
-					<div class="form-group">
-
-						<div class="row" id="incident-photo-thumbnail-wrapper">
-							{{-- photo thumbnails injected here w/ jQuery when added to incident --}}
-						</div>
-						
-						<div class="row">
-							<div class="col-xs-12" id="toggle-photo-modal-wrapper">
-								<button type="button" id="togglePhotoModal" class="btn btn-default block" data-toggle="modal" data-target="#addPhotoModal">
-									<div>
-										<span class="glyphicon glyphicon-plus-sign"></span>
-									</div>
-									Add a Photo
-								</button>
-							</div>
-						</div>
-					</div>	{{-- .form-group --}}
+				  	@include('incidents.partials.select_add_patron')
+					
+					@include('photos.partials.show_add_photo')
 
 					{{ Form::hidden('user', Auth::id()) }}
 
@@ -112,65 +77,10 @@
 		</div> <!-- .panel -->
 
 		{{-- Modal Add Patron Form --}}
-		<div class="modal fade" id="addPatronModal" role="dialog" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					
-					<div class="modal-header">
-						<h3 class="modal-title">
-							Add a New Patron
-						</h3>
-
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					
-					<div class="modal-body">
-						<div id="addPatronFormWrapper">
-							@include('patrons.create')
-						</div>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-						<button type="button" class="btn btn-primary" onclick="addPatron()">Save</button>
-					</div>
-
-				</div> {{-- .modal-content --}}
-			</div> {{-- .modal-dialog --}}
-		</div> {{-- #addPatron modal --}}
-
+		@include('patrons.partials.add_patron_modal')
 
 		{{-- Modal Add Photo Form --}}
-		<div class="modal fade" id="addPhotoModal" role="dialog" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					
-					<div class="modal-header">
-						<h3 class="modal-title">
-							Add a Photo
-						</h3>
-
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					
-					<div class="modal-body">
-						<div id="addPhotoFormWrapper">
-							@include('photos.create')
-						</div>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-						<button type="button" class="btn btn-primary" onclick="addPhoto()">Save</button>
-					</div>
-
-				</div> {{-- .modal-content --}}
-			</div> {{-- .modal-dialog --}}
-		</div> {{-- #addPhotoModal --}}
+		@include('photos.partials.add_photo_modal')
 
 	</div> <!-- #incidents -->
   

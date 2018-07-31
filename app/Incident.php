@@ -17,7 +17,7 @@ class Incident extends Model
 	}
 
 	public function photo() {
-		return $this->hasMany('App\Photo');
+		return $this->belongsToMany('App\Photo');
 	}
 	
 	public function location() {
@@ -27,7 +27,6 @@ class Incident extends Model
 	public function patron() {
 		return $this->belongsToMany('App\Patron')->withTimestamps();
 	}
-
 
 	// track which users have viewed the incident
 	public function usersViewed() {

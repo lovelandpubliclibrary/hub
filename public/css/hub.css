@@ -72,43 +72,6 @@ td > .glyphicon {
 }
 
 
-span.arrow {
-    border: solid black;
-    border-width: 0 1px 1px 0;
-    display: inline-block;
-    padding: 3px;
-    vertical-align: top;
-}
-
-span.arrow-right {
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-    margin-left: .2em;
-    margin-top: .5em;
-}
-
-span.arrow-left {
-    transform: rotate(135deg);
-    -webkit-transform: rotate(135deg);
-    margin-left: .2em;
-    margin-top: .5em;
-}
-
-span.arrow-up {
-    transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
-    margin-left: .5em;
-    margin-top: .4em;
-}
-
-span.arrow-down {
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    margin-left: .5em;
-    margin-top: .4em;
-}
-
-
 
 /* GENERAL LAYOUT */
 .content {
@@ -125,6 +88,13 @@ span.arrow-down {
 
 .hub-float-left {
     float: left;
+}
+
+.hub-label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
 .repository-save-button {
@@ -329,23 +299,25 @@ span.arrow-down {
     font-weight: normal;
 }
 
-#incidents #incident-photo-thumbnail-wrapper {
-    margin-bottom: 1em;
-}
-
-#incidents #incident-photo-thumbnail-wrapper button.remove-photo-btn {
-    margin: .5em;
-}
-
-#incidents .incident-photo {
-    text-align: center;
-    border-radius: .5em;
-    box-shadow: 1px 1px 10px 0 #999;
-}
-
 #incidents .patron-list {
     margin:0 22px;
     padding: 0;
+}
+
+
+/* PHOTOS */
+.photo-thumbnail-wrapper {
+    margin-bottom: 1em;
+}
+
+.photo-thumbnail-wrapper button.remove-photo-btn {
+    margin: .5em;
+}
+
+.photo {
+    text-align: center;
+    border-radius: .5em;
+    box-shadow: 1px 1px 10px 0 #999;
 }
 
 

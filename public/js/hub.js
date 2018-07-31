@@ -39,7 +39,7 @@ function addPatron() {
 				};
 
 				var option = new Option(select2_data.text, select2_data.id, true, true);
-				$('#existingPatrons').append(option).trigger('change');
+				$('#patrons').append(option).trigger('change');
 
 				// reset the new patron form
 				filled_inputs.each(function() {
@@ -127,16 +127,16 @@ function addPhoto() {
 				// dismiss the new photo form modal
 				$('#addPhotoModal button[data-dismiss="modal"]:first').click();
 
-				// build the photo DOM/content and append to #incident-photo-thumbnail-wrapper
+				// build the photo DOM/content and append to .photo-thumbnail-wrapper
 				var photo_column = $('<div class="col-xs-3">');		// build the bootstrap column
-				photo_column.append('<div class="incident-photo">');
-				var photo_container = photo_column.find('.incident-photo')	// build the photo container
+				photo_column.append('<div class="photo">');
+				var photo_container = photo_column.find('.photo')	// build the photo container
 				photo_container.append($('<div class="thumbnail">'));
 				var photo = photo_container.find('.thumbnail');
 				photo.append($(`<img src="${response.url}" alt="${response.filename}">`));
 				photo.append($('<button class="btn btn-sm btn-danger remove-photo-btn">Remove</button>'));
 				photo.append($(`<input type="hidden" name="photos[]" value=${response.id}>`));
-				$('#incident-photo-thumbnail-wrapper').append(photo_column);
+				$('.photo-thumbnail-wrapper').append(photo_column);
 
 				// add the event handler to the remove button, which will undo all of this
 				photo.find('button.remove-photo-btn').click(function(event) {
@@ -166,20 +166,11 @@ function buildAssociatedPatronsDropdown(){
 	var patrons = [];
 
 	// collect the patrons from the create incident form
-	var selected_existing_patrons = $('select[name="existingPatrons[]"] option:selected');
-	var added_patrons = $('#addedPatrons .patron:not(:first)');
+	var selected_patrons = $('select[name="patrons[]"] option:selected');
 
 	// add the selected patrons to the placeholder array
-	selected_existing_patrons.each(function() {
+	selected_patrons.each(function() {
 		patrons.push({id:this.value, name:$(this).text()});
-	});
-
-	// add the added patrons to the placeholder array
-	added_patrons.each(function() {
-		var name = $(this).find('.patron-name').text();
-		var value = $(this).find('input[name="patron-id"]').val();
-
-		patrons.push({id:value, name:name});
 	});
 
 	// check if patrons have been identified on the create incident form
@@ -219,12 +210,12 @@ $(document).ready(function() {
 
 	/* Remove a photo added to the create incident form */
 	$('button.remove-photo-btn').click(function() {
-		console.log($(this).closest('.incident-photo').parent());
+		console.log($(this).closest('.photo').parent());
 	});
 
 	/* Prepare photo modal on create incident form */
-	$('#togglePhotoModal').click(function() {
-		// remove any previously added checkboxes
+	$('#toggleAddPhotoModal').click(function() {
+		// remove any previously added checkboxes from the modal form
 		$('#associated-patrons').children('option').each(function() {
 			$(this).remove();
 		});

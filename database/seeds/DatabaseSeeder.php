@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DivisionUserRelationshipSeeder::class);
         $this->call(UserSupervisorRelationshipSeeder::class);
         $this->call(PatronPhotoRelationshipSeeder::class);
+        $this->call(IncidentPhotoRelationshipSeeder::class);
         $this->call(IncidentPatronRelationshipSeeder::class);
         $this->call(IncidentLocationRelationshipSeeder::class);
     }
@@ -293,8 +294,7 @@ class PhotosTableSeeder extends Seeder {
 		
 		$patron_count = Patron::all()->count();
 		$photo_count = round(($patron_count * 2) / 3);		// get 2/3 of the patron_count
-		
-		$this->command->info('--> Creating ' . $photo_count . ' photos of patrons...');		// output progress
+		$this->command->info("--> Creating {$photo_count} photos...");		// output progress
 		factory(Photo::class, $photo_count)->create();		// create photos
 	}
 }
@@ -401,8 +401,6 @@ class RoleUserRelationshipSeeder extends Seeder {
 			$user->load('role');	// reload the relationship on the model
 
 			// assign some users as supervisors
-			$this->command->info('---> Assigning the Supervisor role to ' . $user->name . '... ');		// output progress
-
 			// ensure the user isn't already a supervisor and that every user doesn't get assigned the supervisor Role
 			if (!$user->hasRole($supervisor_role) && $user->id % 4 === 0) {
 				$user->role()->save($supervisor_role);
@@ -410,7 +408,7 @@ class RoleUserRelationshipSeeder extends Seeder {
 
 		}
 
-		$this->command->info('---> Assigning the User role to all users... done.');		// output progress (formatted for consistency with other status messages)
+		$this->command->info('---> Assigning roles to all other users... ');		// output progress (formatted for consistency with other status messages)
 	}
 }
 
@@ -480,11 +478,12 @@ class UserSupervisorRelationshipSeeder extends Seeder {
 	}
 }
 
+
 class PatronPhotoRelationshipSeeder extends Seeder {
 
 	public function run() {
 
-		$this->command->info('--> Assigning Patrons to Photos... ');		// output progress
+		$this->command->info('--> Assigning Photos to Patrons... ');		// output progress
 
 		$patrons = Patron::all();
 
@@ -494,6 +493,26 @@ class PatronPhotoRelationshipSeeder extends Seeder {
 				$photos = $photos->shuffle();
 				$photo = $photos->pop();
 				$patron->photo()->attach($photo);
+			}
+		}
+	}
+}
+
+
+class IncidentPhotoRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		$this->command->info('--> Assigning Photos to Incidents... ');		// output progress
+
+		$incidents = Incident::all();
+
+		foreach ($incidents as $incident) {
+			$photos = Photo::all();
+			for ($i = rand(0,2); $i < 2; $i++) {	// each patron has a chance to be associated with 0-2 photos
+				$photos = $photos->shuffle();
+				$photo = $photos->pop();
+				$incident->photo()->attach($photo);
 			}
 		}
 	}

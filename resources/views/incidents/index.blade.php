@@ -102,26 +102,37 @@
 										{{-- display icons based on the properties of the incidents --}}
 										<div>
 											@if (count($incident->photo))
-												<span class="glyphicon glyphicon-picture" title="has photo of patron"></span>
-											@endif
-
-											@if ($incident->card_number)
-												<span class="glyphicon glyphicon-barcode" title="has library card of patron"></span>
+												<span class="glyphicon glyphicon-picture" title="has photo(s)"></span>
 											@endif
 
 											@if (count($incident->comment))
 												<span class="glyphicon glyphicon-comment" title="has comments by staff"></span>
 											@endif
+
+											@if ($incident->user_id == Auth::user()->id)
+												<span class="glyphicon glyphicon-pencil" title="can edit"></span>
+											@endif
 										</div>
 									</td>
 
 									<td class="hidden-xs">
+										@if ($incident->user_id == Auth::user()->id)
+											<div class="hub-float-right">
+												<a class="btn btn-default" href="/incidents/edit/{{ $incident->id }}" role="button">
+													Edit
+												</a>
+											</div>
+										@endif
+
 										@if (strlen($incident->description) > 75)
 											{{ $incident->truncate_description(75) }}...
 										@else
 											{{ $incident->description }}
 										@endif
 									</td>
+
+
+
 								</tr>
 							@endforeach
 						</tbody>

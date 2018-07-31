@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"list",
+				"list-style\tproperty"
+			],
+			[
 				"sel",
 				"select2"
 			],
@@ -510,91 +514,37 @@
 			[
 				"str",
 				"strtolower"
-			],
-			[
-				"strt",
-				"strtotime"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"file": "resources/views/incidents/edit.blade.php",
+			"settings":
+			{
+				"buffer_size": 3628,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "<?php\n\nnamespace App\\Http\\Controllers;\n\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Hash;\nuse App\\Incident;\nuse App\\Photo;\nuse App\\User;\nuse App\\Location;\nuse App\\Patron;\nuse Mail;\nuse App\\Mail\\IncidentCreated;\nuse App\\Mail\\IncidentUpdated;\nuse Auth;\nuse Session;\n\nclass IncidentController extends Controller\n{\n    // ensure user is authenticated in order to use this controller\n    public function __construct() {\n        $this->middleware('auth');\n    }\n\n    \n    public function index() {\n        // set up the breadcrumbs for this action\n        $breadcrumbs = [\n            ['link' => route('home'), 'text' => 'Home'],\n            ['link' => route('incidents'), 'text' => 'Incidents'],\n        ];\n\n        // retrieve the incidents which the user has already viewed\n        $user_viewed = Auth::user()->incidentsViewed;\n\n        // retrieve all the incidents by date, then time\n    \t$incidents = Incident::orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();\n    \treturn view('incidents.index', compact('incidents', 'user_viewed', 'breadcrumbs'));\n    }\n\n\n    public function show(Incident $incident) {\n        // set up the breadcrumbs for this action\n        $breadcrumbs = [\n            ['link' => route('home'), 'text' => 'Home'],\n            ['link' => route('incidents'), 'text' => 'Incidents'],\n            ['link' => route('incident', ['incident' => $incident->id]), 'text' => $incident->title]\n        ];\n\n        // load the comments for the incident\n        $comments = $incident->comment;\n\n        // load the photos for the incident\n        $photos = $incident->photo;\n\n        // record that the user viewed this incident\n        $user = Auth::user();\n        if (!$user->incidentsViewed->contains($incident)) {\n            Auth::user()->incidentsViewed()->save($incident);\n        }\n\n        // load the users who haven't viewed the incident\n        $unviewed_by = collect([]);\n        foreach ($incident->unviewedBy() as $user) {\n            foreach ($user->divisions as $division) {\n                if (Auth::user()->divisions->contains($division)) {\n                    if (!$unviewed_by->contains($user)) {\n                        $unviewed_by->push($user);\n                    }\n                }\n            }\n        }\n\n    \treturn view('incidents.show', compact('incident', 'comments', 'photos', 'unviewed_by', 'breadcrumbs'));\n    }\n\n\n    public function create() {\n        // set up the breadcrumbs for this action\n        $breadcrumbs = [\n            ['link' => route('home'), 'text' => 'Home'],\n            ['link' => route('incidents'), 'text' => 'Incidents'],\n            ['link' => route('createIncident'), 'text' => 'Report an Incident'],\n        ];\n\n        // collect all the locations\n        $locations = Location::orderBy('location', 'ASC')->pluck('location', 'id');\n\n        // collect all the staff\n        $staff = User::orderBy('name', 'ASC')->pluck('name', 'id');\n\n        // collect all the patrons\n        $patrons = Patron::all();\n\n        // reform the patron collection to work with the view's select element\n        $patrons = $patrons->sortBy('last_name')->mapWithKeys(function ($patron) {\n            $patron->list_name = $patron->get_list_name();\n            return $patron->list_name ? [$patron['id'] => $patron['list_name']] : [];\n        });\n\n    \treturn view('incidents.create', compact('breadcrumbs', 'locations', 'staff', 'patrons'));\n    }\n\n\n    public function store(Request $request) {\n        // validate the request input\n        $rules = [\n            'date' => 'required',\n            'time' => 'required',\n            'title' => 'required',\n            'description' => 'required',\n            'user' => 'required',\n            'locations' => 'required',\n        ];\n\n        $this->validate($request, $rules);\n        // dd($request);\n\n        // store it in a new instance of Incident\n        $incident = new Incident;\n        $incident->date = $request->date;\n        $incident->time = $request->time;\n        $incident->title = $request->title;\n        $incident->description = $request->description;\n        $incident->user_id = $request->user;\n\n\n        // save it to the database, which will give it an id,\n        // which is needed for relationships to be created\n        if ($incident->save()) {\n\n            // set the location(s) of the incident\n            foreach ($request->locations as $location_id) {\n                $incident->location()->save(Location::find($location_id));\n            }\n\n            // set the users (employees) involved in the incident\n            if (isset($request->usersInvolved)) {\n                foreach ($request->usersInvolved as $user_id) {\n                    $incident->usersInvolved()->save(User::find($user_id));\n                }\n            }\n\n            // set the patron(s) involved in the incident, if any\n            if (isset($request->patrons)) {\n                foreach ($request->patrons as $patron) {\n                    $incident->patron()->attach($patron);\n                }\n            }\n\n            // set the photos associated with the incident, if any\n            if (isset($request->photos)) {\n                foreach ($request->photos as $photo_id) {\n                    $photo = Photo::find(intval($photo_id));\n                    if ($photo) {\n                        $incident->photo()->save($photo);\n                    }\n                }\n            }\n\n            // email a notification to all staff\n            foreach (User::pluck('email') as $email) {\n                \\Mail::to($email)->send(new IncidentCreated($incident));\n            }\n\n            // redirect back the new incident with a success message\n            Session::flash('success_message', \"The incident was saved and an email notification was sent to the library staff.\");\n            return redirect()->route('incident', ['incident' => $incident->id]);\n        }\n    }\n\n\n    public function edit(Incident $incident) {\n        // set up the breadcrumbs for this action\n        $breadcrumbs = [\n            ['link' => route('home'), 'text' => 'Home'],\n            ['link' => route('incidents'), 'text' => 'Incidents'],\n            ['link' => route('incident', ['incident' => $incident->id]), 'text' => $incident->title],\n        ];\n\n        // make sure the user has permission to edit the incident\n        if (Auth::id() == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))\n        {\n            // collect the photos associated with this incident\n            $photos = $incident->photo;\n\n            // collect the locations\n            $locations = Location::orderBy('location', 'ASC')->pluck('location', 'id');\n\n            // collect all the staff member\n            $staff = User::orderBy('name', 'ASC')->pluck('name', 'id');\n\n            // collect the patrons associated with this incident\n            $patrons = Patron::all();\n            foreach ($patrons as $patron) {\n                $patron->list_name = $patron->get_list_name();\n            }\n            $patrons = $patrons->pluck('list_name', 'id')->sort();\n\n            return view('incidents.edit', compact('incident', 'patrons', 'photos', 'locations', 'staff', 'breadcrumbs'));\n        }\n\n        // return to the incident with an error message\n        $errors = ['Permission Denied' => 'Only ' .\n                                          Auth::user()->find($incident->user_id)->name .\n                                          ' or a supervisor can modify this incident. You may comment below.'];\n\n        return view('incidents.show', compact('incident', 'errors', 'breadcrumbs'));\n    }\n\n\n    public function update(Request $request) {\n        // validate the form\n        $rules = [\n            'date' => 'required',\n            'title' => 'required',\n            'description' => 'required',\n            'user' => 'required',\n            'locations' => 'required',\n        ];\n        $this->validate($request, $rules);\n\n        // retrieve the incident from the database\n        $incident = Incident::find($request->incident);\n\n        // retrive the parts of the request we need for the incident\n        $updates = $request->only(\n            'date',\n            'time',\n            'locations',\n            'staffInvolved',\n            'patronsInvolved',\n            'photos',\n            'title',\n            'description'\n        );\n        \n        // set each attribute and save to the database\n        foreach ($updates as $key => $value) {\n            switch ($key) {\n                case 'locations':\n                    $incident->location()->sync($updates['locations']);\n                    break;\n                case 'staffInvolved':\n                    $incident->usersInvolved()->sync($updates['staffInvolved']);\n                    break;\n                default:\n                    $incident->$key = $value;\n                    break;                \n            }  \n        }\n\n        // record the user who performed the update\n        $incident->updated_by = Auth::user()->id;\n\n        // save the updates to the database\n        $incident->save();\n\n        // email a notification to the incident creator if someone else modified the incident\n        if ($request->user != $incident->user_id) {\n            Mail::to($incident->user->email)\n                  ->send(new IncidentUpdated($incident));\n        }\n\n        Session::flash('success_message', \"Incident Updated - \\\"$incident->title\\\"\");\n        return redirect()->route('incident', ['incident' => $incident->id]);\n    }\n\n\n    public function search(Request $request) {\n        // validate the form\n        $this->validate($request, ['search' => 'required']);\n\n        // search the database\n        $incidents = Incident::where('description',   'LIKE', '%' . $request->search . '%')->\n                               orWhere('patron_name', 'LIKE', '%' . $request->search . '%')->\n                               orWhere('title',       'LIKE', '%' . $request->search . '%')->\n                               orWhereHas('comment', function ($query) use ($request) {\n                                   $query->where('comment', 'LIKE', '%' . $request->search . '%');\n                               })->get();\n\n        // store the search string to pass back to the view\n        $search = $request->search;\n\n        // retrieve the incidents which the user has already viewed\n        $user_viewed = Auth::user()->incidentsViewed;\n\n        // provide the index view with the search results and search string\n        return view('incidents.index', compact('incidents', 'search', 'user_viewed'));\n    }\n\n    public function syncPatron(Request $request, $incident_id) {\n        // validate the form\n        $this->validate($request, ['patron' => 'required|numeric']);\n\n        $patron_id = $request->patron;\n\n        // check if existing or new patron\n        if ($patron_id) {\n            return Incident::find($incident_id)->patron()->attach(Patron::find($patron_id));\n        }\n\n        // pass the request on to the patron controller create() method\n        return redirect()->route('patron', ['incident' => $incident_id]);\n    }\n}\n",
 			"file": "app/Http/Controllers/IncidentController.php",
+			"file_size": 11174,
+			"file_write_time": 131755634143486737,
 			"settings":
 			{
-				"buffer_size": 11518,
+				"buffer_size": 11139,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "resources/views/incidents/create.blade.php",
+			"file": "app/Incident.php",
 			"settings":
 			{
-				"buffer_size": 6045,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/Patron.php",
-			"settings":
-			{
-				"buffer_size": 1526,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/Http/Controllers/PhotoController.php",
-			"settings":
-			{
-				"buffer_size": 5519,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "public/js/hub.js",
-			"settings":
-			{
-				"buffer_size": 8506,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "database/seeds/DatabaseSeeder.php",
-			"settings":
-			{
-				"buffer_size": 14436,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/User.php",
-			"settings":
-			{
-				"buffer_size": 3229,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "resources/views/home.blade.php",
-			"settings":
-			{
-				"buffer_size": 1866,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "resources/views/layouts/app.blade.php",
-			"settings":
-			{
-				"buffer_size": 1293,
+				"buffer_size": 1286,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -726,52 +676,64 @@
 	"expanded_folders":
 	[
 		"/Users/kevin/Sites/hub",
+		"/Users/kevin/Sites/hub/config",
+		"/Users/kevin/Sites/hub/public",
+		"/Users/kevin/Sites/hub/public/images",
 		"/Users/kevin/Sites/hub/storage",
 		"/Users/kevin/Sites/hub/storage/app",
-		"/Users/kevin/Sites/hub/storage/logs"
+		"/Users/kevin/Sites/hub/storage/app/public",
+		"/Users/kevin/Sites/hub/storage/app/public/photos"
 	],
 	"file_history":
 	[
+		"/Users/kevin/Sites/hub/app/Patron.php",
+		"/Users/kevin/Sites/hub/storage/framework/views/2921d9363bc0be37395eda304f5a7a431e937f7b.php",
+		"/Users/kevin/Sites/hub/public/js/hub.js",
+		"/Users/kevin/Sites/hub/public/js/app.js",
 		"/Users/kevin/Sites/hub/app/Http/Controllers/PatronController.php",
-		"/Users/kevin/Sites/hub/config/mail.php",
-		"/Users/kevin/Sites/hub/.env",
+		"/Users/kevin/Sites/hub/routes/web.php",
+		"/Users/kevin/Sites/hub/resources/views/incidents/index.blade.php",
+		"/Users/kevin/Sites/hub/public/css/hub.css",
+		"/Users/kevin/Sites/hub/resources/views/incidents/show.blade.php",
+		"/Users/kevin/Sites/hub/storage/app/public/photos/13d1eb6b41b6c57e6155cffb14ea9192.jpg",
+		"/Users/kevin/Sites/hub/config/filesystems.php",
 		"/Users/kevin/Sites/hub/app/Http/Controllers/PhotoController.php",
-		"/Users/kevin/Sites/hub/resources/views/patrons/create.blade.php",
-		"/Users/kevin/Sites/hub/resources/views/photos/create.blade.php",
 		"/Users/kevin/Sites/hub/database/factories/PhotoFactory.php",
 		"/Users/kevin/Sites/hub/database/seeds/DatabaseSeeder.php",
-		"/Users/kevin/Sites/hub/app/Providers/AppServiceProvider.php",
+		"/Users/kevin/Sites/hub/storage/framework/views/08012e73876b6c5fd51775885c3f93c7a98a3108.php",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/IncidentController.php",
+		"/Users/kevin/Sites/hub/resources/views/incidents/create.blade.php",
+		"/Users/kevin/Sites/hub/public/index.php",
+		"/Users/kevin/Sites/hub/app/User.php",
+		"/Users/kevin/Sites/hub/app/Incident.php",
+		"/Users/kevin/Sites/hub/app/Comment.php",
+		"/Users/kevin/Sites/hub/app/Photo.php",
+		"/Users/kevin/Sites/hub/database/migrations/2018_07_06_170648_create_incident_photo_table.php",
+		"/Users/kevin/Sites/hub/resources/views/home.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/layouts/app.blade.php",
 		"/Users/kevin/Sites/hub/.gitignore",
+		"/Users/kevin/Sites/hub/config/mail.php",
+		"/Users/kevin/Sites/hub/.env",
+		"/Users/kevin/Sites/hub/resources/views/patrons/create.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/photos/create.blade.php",
+		"/Users/kevin/Sites/hub/app/Providers/AppServiceProvider.php",
 		"/Users/kevin/Sites/hub/docker-compose.yml",
 		"/Users/kevin/Sites/hub/public/css/repository.css",
-		"/Users/kevin/Sites/hub/routes/web.php",
-		"/Users/kevin/Sites/hub/resources/views/layouts/app.blade.php",
 		"/Users/kevin/Sites/hub/composer.json",
 		"/Users/kevin/Sites/hub/storage/framework/views/1ab587a0bfec8f573c2290a7e5da4a782b4e3e63.php",
 		"/Users/kevin/Sites/hub/database/migrations/2018_03_18_184747_create_patrons_table.php",
 		"/Users/kevin/Sites/hub/database/factories/PatronFactory.php",
-		"/Users/kevin/Sites/hub/public/js/app.js",
 		"/Users/kevin/Sites/hub/app/Http/Controllers/CommentController.php",
-		"/Users/kevin/Sites/hub/app/Patron.php",
-		"/Users/kevin/Sites/hub/app/Incident.php",
 		"/Users/kevin/Sites/hub/database/migrations/2017_06_27_204203_create_incidents_table.php",
-		"/Users/kevin/Sites/hub/resources/views/incidents/create.blade.php",
 		"/Users/kevin/Sites/hub/resources/views/comments/create.blade.php",
-		"/Users/kevin/Sites/hub/public/js/hub.js",
-		"/Users/kevin/Sites/hub/resources/views/incidents/show.blade.php",
 		"/Users/kevin/Sites/hub/vendor/symfony/routing/Route.php",
 		"/Users/kevin/Sites/hub/vendor/laravel/framework/src/Illuminate/Auth/RequestGuard.php",
-		"/Users/kevin/Sites/hub/app/Comment.php",
 		"/Users/kevin/Sites/hub/database/factories/IncidentFactory.php",
-		"/Users/kevin/Sites/hub/app/Photo.php",
-		"/Users/kevin/Sites/hub/resources/views/incidents/index.blade.php",
 		"/Users/kevin/Sites/hub/resources/views/photos/show.blade.php",
 		"/Users/kevin/Sites/hub/storage/framework/views/7c8abf6ff685e57fdf4217b267d4b1cdc4d84180.php",
-		"/Users/kevin/Sites/hub/app/Http/Controllers/IncidentController.php",
 		"/Users/kevin/Sites/hub/database/migrations/2018_03_23_183249_create_incident_patron_table.php",
 		"/Users/kevin/Sites/hub/database/migrations/2018_03_18_194313_create_patron_photo_table.php",
 		"/Users/kevin/Sites/hub/database/migrations/2017_08_01_015214_create_photos_table.php",
-		"/Users/kevin/Sites/hub/app/User.php",
 		"/Users/kevin/Sites/hub/app/Division.php",
 		"/Users/kevin/Sites/hub/database/factories/CommentFactory.php",
 		"/Users/kevin/Sites/hub/database/migrations/2017_07_26_150924_create_comments_table.php",
@@ -851,19 +813,11 @@
 		"/Users/kevin/Sites/repository/app/Http/Controllers/Auth/ResetPasswordController.php",
 		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
 		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Foundation/Auth/ResetsPasswords.php",
-		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Foundation/Auth/SendsPasswordResetEmails.php",
-		"/Users/kevin/Sites/repository/app/Http/Controllers/Auth/ForgotPasswordController.php",
-		"/Users/kevin/Sites/repository/app/Http/Controllers/Auth/RegisterController.php",
-		"/Users/kevin/Sites/repository/app/Http/Controllers/Auth/LoginController.php",
-		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Mail/resources/views/html/layout.blade.php",
-		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Support/Facades/View.php",
-		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/View/Factory.php",
-		"/Users/kevin/Sites/repository/app/Http/Controllers/Controller.php",
-		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Routing/Controller.php"
+		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Foundation/Auth/SendsPasswordResetEmails.php"
 	],
 	"find":
 	{
-		"height": 28.0
+		"height": 33.0
 	},
 	"find_in_files":
 	{
@@ -883,9 +837,15 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
+			"select2",
+			"patrons",
+			"asset(",
+			"store",
+			"photo",
+			"show",
 			"associated",
 			"photo",
 			"group",
@@ -989,339 +949,54 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "app/Http/Controllers/IncidentController.php",
+					"file": "resources/views/incidents/edit.blade.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11518,
+						"buffer_size": 3628,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5142,
-								5142
+								2908,
+								2908
 							]
 						],
 						"settings":
 						{
-							"color_helper.box_height": 19,
-							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
-							"color_helper.file_palette":
-							[
-							],
-							"color_helper.scan":
-							{
-								"allowed_colors":
-								[
-									"hsla",
-									"hex_compressed",
-									"webcolors",
-									"hsl",
-									"rgba",
-									"rgb",
-									"hex"
-								],
-								"compress_hex_output": true,
-								"current_ext": ".php",
-								"current_syntax": "PHP/PHP",
-								"enabled": true,
-								"last_updated": 1523988491.06,
-								"scan_completion_scopes":
-								[
-								],
-								"scan_scopes":
-								[
-									"meta.declaration-list.css -support.type.property-name.css -comment -string",
-									"meta.property-value.css -comment -string",
-									"meta.value.css -comment -string",
-									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
-									"meta.tag.any.html meta.attribute-with-value.style.html"
-								],
-								"use_hex_argb": false
-							},
 							"git_gutter_is_enabled": true,
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "resources/views/incidents/create.blade.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6045,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3239,
-								3239
-							]
-						],
-						"settings":
-						{
-							"color_helper.box_height": 19,
-							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
-							"color_helper.file_palette":
-							[
-							],
-							"color_helper.preview_meta":
-							{
-							},
-							"color_helper.scan":
-							{
-								"allowed_colors":
-								[
-									"hsla",
-									"hex_compressed",
-									"webcolors",
-									"hsl",
-									"rgba",
-									"rgb",
-									"hex"
-								],
-								"compress_hex_output": true,
-								"current_ext": ".php",
-								"current_syntax": "Laravel Blade Highlighter/blade",
-								"enabled": true,
-								"last_updated": 1523988491.06,
-								"scan_completion_scopes":
-								[
-								],
-								"scan_scopes":
-								[
-									"meta.declaration-list.css -support.type.property-name.css -comment -string",
-									"meta.property-value.css -comment -string",
-									"meta.value.css -comment -string",
-									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
-									"meta.tag.any.html meta.attribute-with-value.style.html"
-								],
-								"use_hex_argb": false
-							},
-							"git_gutter_is_enabled": true,
-							"rulers":
-							[
-								100
-							],
 							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
-							"translate_tabs_to_spaces": false,
-							"wrap_width": 0
-						},
-						"translation.x": 0.0,
-						"translation.y": 1434.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "app/Patron.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1526,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								90,
-								90
-							]
-						],
-						"settings":
-						{
-							"color_helper.box_height": 19,
-							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
-							"color_helper.file_palette":
-							[
-							],
-							"color_helper.scan":
-							{
-								"allowed_colors":
-								[
-									"webcolors",
-									"hsla",
-									"hex_compressed",
-									"hsl",
-									"rgba",
-									"rgb",
-									"hex"
-								],
-								"compress_hex_output": true,
-								"current_ext": ".php",
-								"current_syntax": "PHP/PHP",
-								"enabled": true,
-								"last_updated": 1523803654.72,
-								"scan_completion_scopes":
-								[
-								],
-								"scan_scopes":
-								[
-									"meta.declaration-list.css -support.type.property-name.css -comment -string",
-									"meta.property-value.css -comment -string",
-									"meta.value.css -comment -string",
-									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
-									"meta.tag.any.html meta.attribute-with-value.style.html"
-								],
-								"use_hex_argb": false
-							},
-							"git_gutter_is_enabled": true,
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "app/Http/Controllers/PhotoController.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5519,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2383,
-								2383
-							]
-						],
-						"settings":
-						{
-							"git_gutter_is_enabled": true,
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 294.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "public/js/hub.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8506,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2684,
-								2684
-							]
-						],
-						"settings":
-						{
-							"color_helper.box_height": 19,
-							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
-							"color_helper.file_palette":
-							[
-							],
-							"color_helper.preview_meta":
-							{
-							},
-							"color_helper.scan":
-							{
-								"current_ext": ".js",
-								"current_syntax": "JavaScript/JavaScript",
-								"enabled": false,
-								"last_updated": 1523988491.06
-							},
-							"git_gutter_is_enabled": true,
-							"rulers":
-							[
-								100
-							],
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 493.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "database/seeds/DatabaseSeeder.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 14436,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								803,
-								803
-							]
-						],
-						"settings":
-						{
-							"git_gutter_is_enabled": true,
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 140.0,
+						"translation.y": 1382.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "app/User.php",
+					"buffer": 1,
+					"file": "app/Http/Controllers/IncidentController.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3229,
+						"buffer_size": 11139,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2763,
-								2763
+								8313,
+								8313
 							]
 						],
 						"settings":
@@ -1332,110 +1007,40 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1386.0,
+						"translation.y": 5109.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "resources/views/home.blade.php",
+					"buffer": 2,
+					"file": "app/Incident.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1866,
+						"buffer_size": 1286,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1342,
-								1342
+								1283,
+								1283
 							]
 						],
 						"settings":
 						{
 							"git_gutter_is_enabled": true,
-							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 224.0,
+						"translation.y": 242.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "resources/views/layouts/app.blade.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1293,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"color_helper.box_height": 19,
-							"color_helper.color_scheme": "Packages/Jeffrey Way Theme/schemes/Facebook.tmTheme",
-							"color_helper.file_palette":
-							[
-							],
-							"color_helper.preview_meta":
-							{
-							},
-							"color_helper.scan":
-							{
-								"allowed_colors":
-								[
-									"hsla",
-									"hex_compressed",
-									"webcolors",
-									"hsl",
-									"rgba",
-									"rgb",
-									"hex"
-								],
-								"compress_hex_output": true,
-								"current_ext": ".php",
-								"current_syntax": "Laravel Blade Highlighter/blade",
-								"enabled": true,
-								"last_updated": 1523988491.06,
-								"scan_completion_scopes":
-								[
-								],
-								"scan_scopes":
-								[
-									"meta.declaration-list.css -support.type.property-name.css -comment -string",
-									"meta.property-value.css -comment -string",
-									"meta.value.css -comment -string",
-									"meta.tag.inline.any.html string.quoted -constant.character.entity.html",
-									"meta.tag.any.html meta.attribute-with-value.style.html"
-								],
-								"use_hex_argb": false
-							},
-							"git_gutter_is_enabled": true,
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 608.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
 					"type": "text"
 				}
 			]
@@ -1443,7 +1048,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 28.0
+		"height": 33.0
 	},
 	"input":
 	{
@@ -1492,7 +1097,7 @@
 	"project": "hub.sublime-project",
 	"replace":
 	{
-		"height": 52.0
+		"height": 62.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1501,6 +1106,114 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"patron",
+				"app/Patron.php"
+			],
+			[
+				"hub.js",
+				"public/js/hub.js"
+			],
+			[
+				"app.js",
+				"public/js/app.js"
+			],
+			[
+				"inciden",
+				"app/Incident.php"
+			],
+			[
+				"incident",
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"patroncon",
+				"app/Http/Controllers/PatronController.php"
+			],
+			[
+				"incid/edit",
+				"resources/views/incidents/edit.blade.php"
+			],
+			[
+				"inci/ind",
+				"resources/views/incidents/index.blade.php"
+			],
+			[
+				"hub.css",
+				"public/css/hub.css"
+			],
+			[
+				"web.",
+				"routes/web.php"
+			],
+			[
+				"show",
+				"resources/views/incidents/show.blade.php"
+			],
+			[
+				"DatabaseSeeder.php",
+				"database/seeds/DatabaseSeeder.php"
+			],
+			[
+				"PhotoFactory.php",
+				"database/factories/PhotoFactory.php"
+			],
+			[
+				"photof",
+				"database/factories/PhotoFactory.php"
+			],
+			[
+				"database",
+				"database/seeds/DatabaseSeeder.php"
+			],
+			[
+				"file",
+				"config/filesystems.php"
+			],
+			[
+				"photocon",
+				"app/Http/Controllers/PhotoController.php"
+			],
+			[
+				"filesy",
+				"config/filesystems.php"
+			],
+			[
+				"incid/cre",
+				"resources/views/incidents/create.blade.php"
+			],
+			[
+				"inc/show",
+				"resources/views/incidents/show.blade.php"
+			],
+			[
+				"index",
+				"public/index.php"
+			],
+			[
+				"incidn",
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"comment",
+				"app/Comment.php"
+			],
+			[
+				"inci",
+				"app/Incident.php"
+			],
+			[
+				"photo",
+				"app/Photo.php"
+			],
+			[
+				"Inciden",
+				"app/Incident.php"
+			],
+			[
+				".giti",
+				".gitignore"
+			],
 			[
 				"databas",
 				"database/seeds/DatabaseSeeder.php"
@@ -1526,10 +1239,6 @@
 				"resources/views/incidents/create.blade.php"
 			],
 			[
-				"photof",
-				"database/factories/PhotoFactory.php"
-			],
-			[
 				".gitig",
 				".gitignore"
 			],
@@ -1544,10 +1253,6 @@
 			[
 				"layout",
 				"resources/views/layouts/app.blade.php"
-			],
-			[
-				"hub.js",
-				"public/js/hub.js"
 			],
 			[
 				"web",
@@ -1578,20 +1283,8 @@
 				"database/factories/PatronFactory.php"
 			],
 			[
-				"patron",
-				"app/Patron.php"
-			],
-			[
 				"app.bla",
 				"resources/views/layouts/app.blade.php"
-			],
-			[
-				"web.",
-				"routes/web.php"
-			],
-			[
-				"app.js",
-				"public/js/app.js"
 			],
 			[
 				"commentc",
@@ -1610,14 +1303,6 @@
 				"database/migrations/2018_03_18_184747_create_patrons_table.php"
 			],
 			[
-				"inci",
-				"app/Incident.php"
-			],
-			[
-				"photo",
-				"app/Http/Controllers/PhotoController.php"
-			],
-			[
 				"route",
 				"vendor/symfony/routing/Route.php"
 			],
@@ -1634,10 +1319,6 @@
 				"database/seeds/DatabaseSeeder.php"
 			],
 			[
-				"incid/cre",
-				"resources/views/incidents/create.blade.php"
-			],
-			[
 				"creaincid",
 				"database/migrations/2017_06_27_204203_create_incidents_table.php"
 			],
@@ -1650,10 +1331,6 @@
 				"app/Http/Controllers/IncidentController.php"
 			],
 			[
-				"inciden",
-				"database/factories/IncidentFactory.php"
-			],
-			[
 				"incidecont",
 				"app/Http/Controllers/IncidentController.php"
 			],
@@ -1664,10 +1341,6 @@
 			[
 				"repos",
 				"public/css/repository.css"
-			],
-			[
-				"inc/show",
-				"resources/views/incidents/show.blade.php"
 			],
 			[
 				"photo/show",
@@ -1684,10 +1357,6 @@
 			[
 				"inc/sho",
 				"resources/views/incidents/show.blade.php"
-			],
-			[
-				"inci/ind",
-				"resources/views/incidents/index.blade.php"
 			],
 			[
 				"create_in",
@@ -1714,16 +1383,8 @@
 				"app/User.php"
 			],
 			[
-				"photocon",
-				"app/Http/Controllers/PhotoController.php"
-			],
-			[
 				"division",
 				"app/Division.php"
-			],
-			[
-				"comment",
-				"app/Comment.php"
 			],
 			[
 				"blad.p",
@@ -1770,10 +1431,6 @@
 				"resources/views/reports/incidents.blade.php"
 			],
 			[
-				"database",
-				"database/seeds/DatabaseSeeder.php"
-			],
-			[
 				"dashboa",
 				"app/Http/Controllers/DashboardController.php"
 			],
@@ -1806,10 +1463,6 @@
 				"config/app.php"
 			],
 			[
-				".giti",
-				".gitignore"
-			],
-			[
 				"data",
 				"config/database.php"
 			],
@@ -1820,10 +1473,6 @@
 			[
 				"docker-c",
 				"docker-compose.yml"
-			],
-			[
-				"index",
-				"resources/views/settings/index.blade.php"
 			],
 			[
 				"setting",
@@ -1870,10 +1519,6 @@
 				"app/Http/Kernel.php"
 			],
 			[
-				"incident",
-				"app/Http/Controllers/IncidentController.php"
-			],
-			[
 				"report",
 				"app/Http/Controllers/ReportController.php"
 			],
@@ -1888,10 +1533,6 @@
 			[
 				"7c8abf6ff685e57fdf4217b267d4b1cdc4d84180",
 				"storage/framework/views/7c8abf6ff685e57fdf4217b267d4b1cdc4d84180.php"
-			],
-			[
-				"show",
-				"resources/views/incidents/show.blade.php"
 			],
 			[
 				"navigation",
@@ -1950,10 +1591,6 @@
 				"app/Division.php"
 			],
 			[
-				"incidn",
-				"app/Incident.php"
-			],
-			[
 				"service",
 				"app/Providers/AppServiceProvider.php"
 			],
@@ -1980,38 +1617,6 @@
 			[
 				"sendspasswordresetemails",
 				"vendor/laravel/framework/src/Illuminate/Foundation/Auth/SendsPasswordResetEmails.php"
-			],
-			[
-				"forgot",
-				"app/Http/Controllers/Auth/ForgotPasswordController.php"
-			],
-			[
-				"login",
-				"resources/views/auth/login.blade.php"
-			],
-			[
-				"sends",
-				"vendor/laravel/framework/src/Illuminate/Foundation/Auth/SendsPasswordResetEmails.php"
-			],
-			[
-				"navig",
-				"resources/views/layouts/navigation.blade.php"
-			],
-			[
-				"layouts",
-				"resources/views/layouts/app.blade.php"
-			],
-			[
-				"resets",
-				"vendor/laravel/framework/src/Illuminate/Foundation/Auth/ResetsPasswords.php"
-			],
-			[
-				"illuminate/view/fa",
-				"vendor/laravel/framework/src/Illuminate/View/Factory.php"
-			],
-			[
-				"facades/v",
-				"vendor/laravel/framework/src/Illuminate/Support/Facades/View.php"
 			]
 		],
 		"width": 0.0
@@ -2024,7 +1629,7 @@
 		[
 			[
 				"",
-				"/Volumes/TravelStore/Sites/ssd-psaudio/psaudio.sublime-workspace"
+				"~/Sites/hub/database/seeds/pwt.sublime-workspace"
 			]
 		],
 		"width": 380.0
