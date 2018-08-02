@@ -94,7 +94,7 @@
 								@foreach ($incident->patron as $patron)
 									<li>
 										<a href="{{ route('patron', ['patron' => $patron->id]) }}">
-											{{$patron->get_list_name()}}
+											{{$patron->get_name('list')}}
 										</a>
 									</li>
 								@endforeach

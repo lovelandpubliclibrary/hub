@@ -87,7 +87,7 @@
 											<ul>
 												@foreach ($incident->patron as $patron)
 													<li>
-														{{ $patron->get_list_name() }}
+														{{ $patron->get_name('list') }}
 													</li>
 												@endforeach
 											</ul>

@@ -23,7 +23,7 @@
 		<div class="panel-heading col-xs-12 text-center repository-margin-bottom-1rem">
 			<div class="center-block">
 				<h2 class="panel-title">
-					Photo of {{ $patron->get_full_name() }}
+					Photo of {{ $patron->get_name('full') }}
 				</h2>
 
 				<div>

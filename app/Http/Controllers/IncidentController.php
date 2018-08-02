@@ -94,7 +94,7 @@ class IncidentController extends Controller
 
         // reform the patron collection to work with the view's select element
         $patrons = $patrons->sortBy('last_name')->mapWithKeys(function ($patron) {
-            $patron->list_name = $patron->get_list_name();
+            $patron->list_name = $patron->get_name('list');
             return $patron->list_name ? [$patron['id'] => $patron['list_name']] : [];
         });
 
@@ -193,7 +193,7 @@ class IncidentController extends Controller
             // collect the patrons associated with this incident
             $patrons = Patron::all();
             foreach ($patrons as $patron) {
-                $patron->list_name = $patron->get_list_name();
+                $patron->list_name = $patron->get_name('list');
             }
             $patrons = $patrons->pluck('list_name', 'id')->sort();
 

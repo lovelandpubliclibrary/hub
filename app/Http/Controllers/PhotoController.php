@@ -113,7 +113,7 @@ class PhotoController extends Controller
             ['link' => route('incidents'), 'text' => 'Incidents'],
             ['link' => route('incident', ['incident' => $photo->incident_id]), 'text' => $photo->incident->title],
             ['link' => route('photo', ['photo' => $photo->id]),
-                'text' => 'Photo of ' . $patron->get_full_name()],
+                'text' => 'Photo of ' . $patron->get_name('full')],
         ];
 
 		return view('photos.show', compact('photo', 'patron', 'breadcrumbs'));

@@ -33,8 +33,8 @@ class PatronController extends Controller
     	$patron->save();
 
     	// set the full name before parsing to JSON
-    	$patron->list_name = $patron->get_list_name();
-        $patron->full_name = $patron->get_full_name();
+    	$patron->list_name = $patron->get_name('list');
+        $patron->full_name = $patron->get_name('full');
 
 		// return a response to the AJAX request
     	return response()->json($patron, 200);
