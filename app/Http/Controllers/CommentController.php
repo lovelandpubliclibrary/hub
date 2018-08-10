@@ -15,7 +15,6 @@ class CommentController extends Controller
     }
 
     public function store(Request $request) {
-        dd($request);
     	// validate the request input
         $rules = [
             'comment' => 'required',
@@ -30,11 +29,11 @@ class CommentController extends Controller
         $comment->comment = $request->comment;
         $comment->user_id = $request->user;
 
-        isset($request->incident) {
+        if(isset($request->incident)) {
             $comment->incident_id = $request->incident;
         }
         
-        isset($request->patron) {
+        if(isset($request->patron)) {
             $comment->patron_id = $request->patron;
         }
 

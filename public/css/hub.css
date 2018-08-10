@@ -285,9 +285,9 @@ td > .glyphicon {
     border: 0;
 }
 
-#incidents .col-xs-12 {
+/*#incidents .col-xs-12 {
     margin-bottom: .5em;
-}
+}*/
 
 #incidents .dropdown-menu {
     max-height: 25em !important;
@@ -372,13 +372,15 @@ td > .glyphicon {
 }
 
 
-#patrons .list-group :not(.comments) {
+#patrons .patrons-involved.list-group {
     margin-bottom: 0;
+    border: 0;
+    padding: 0;
 }
 
-#patrons .list-group-item :not(.comments) {
-    border: 0;
+#patrons .patrons-involved .list-group-item {
     padding: 0 0 0 15px;
+    border: 0;
 }
 
 #patrons .list-group-item .comment-wrapper {
