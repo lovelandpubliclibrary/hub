@@ -64,3 +64,5 @@ Route::post('/photos/update/{photo}', 'PhotoController@update')->name('updatePho
 // Patrons
 Route::post('/patrons/create', 'PatronController@store')->name('storePatronAjax');
 Route::get('/patrons/{patron}', 'PatronController@show')->name('patron');
+Route::get('/patrons', 'PatronController@index')->name('patrons');
+Route::post('/patrons', 'PatronController@search');

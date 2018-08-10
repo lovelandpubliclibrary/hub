@@ -7,9 +7,15 @@
 	    				  'rows' => '5']) }}
   	</div>
 
-
 	{{ Form::hidden('user', Auth::id()) }}
-	{{ Form::hidden('incident', $incident->id) }}
+
+	@isset($incident)
+		{{ Form::hidden('incident', $incident->id) }}
+	@endisset
+
+	@isset($patron)
+		{{ Form::hidden('patron', $patron->id) }}
+	@endisset
 	
 	<div class="text-right">
 		{{ Form::button('Save Comment', [

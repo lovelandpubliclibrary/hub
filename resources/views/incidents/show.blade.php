@@ -74,32 +74,62 @@
 					</div>
 
 					<div class="col-xs-12">
-						<strong>Other staff members involved:</strong>
-						@if (count($staff = $incident->usersInvolved))
-							@foreach ($staff as $user)
-								{{-- add a comma after every location except the last one --}}
-								{{ $staff->last() != $user ? $user->name . ', ' : $user->name }}
-							@endforeach
-						@else
-							<em>None</em>
-						@endif
-					</div>
 
-					<div class="col-xs-12" style="float:left;">
-						<strong>Patrons Involved:</strong>
-							@if ($incident->patron->isEmpty())
-								<span>None</span>
-							@else
-								<ul class="patron-list">
-								@foreach ($incident->patron as $patron)
-									<li>
-										<a href="{{ route('patron', ['patron' => $patron->id]) }}">
-											{{$patron->get_name('list')}}
-										</a>
+						<strong>Other staff members involved:</strong>
+
+						<ul class="list-group">
+
+							@if (count($staff = $incident->usersInvolved))
+
+								@foreach ($staff as $user)
+
+									<li class="list-group-item">
+										{{-- add a comma after every location except the last one --}}
+										{{ $staff->last() == $user ? $user->name : $user->name . ', ' }}
 									</li>
+
 								@endforeach
-								</ul>
+
+							@else
+
+								<li class="list-group-item">
+									None
+								</li>
+
 							@endif
+						</ul>
+					</div>
+					
+
+					<div class="col-xs-12">
+
+						<strong>Patrons Involved:</strong>
+
+						<ul class="list-group">
+
+							@if (count($patrons = $incident->patron))
+								
+								@foreach ($patrons as $patron)
+									
+									<li class="list-group-item">
+
+										<a href="{{ route('patron', ['patron' => $patron->id]) }}">
+											{{ $patron->get_name('list') }}
+										</a>
+									
+									</li>
+
+								@endforeach
+
+							@else
+								
+								<li class="list-group-item">
+									None
+								</li>
+								
+							@endif
+
+						</ul>
 					</div>
 
 					@isset ($incident->card_number)
@@ -117,7 +147,8 @@
 					</div>
 
 					<div class="col-xs-12">
-						<blockquote class="blockquote bg-faded text-muted repository-margin-top-1rem">
+						<strong>Description:</strong>
+						<blockquote class="blockquote bg-faded text-muted">
 							{{ $incident->description }}
 							<footer class="blockquote-footer text-right">
 								<span class="glyphicon glyphicon-user"></span> {{ $incident->user->name }}

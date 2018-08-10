@@ -13,6 +13,18 @@ class PatronController extends Controller
     }
 
 
+    public function index() {
+        // set up the breadcrumbs for this action
+        $breadcrumbs = [
+            ['link' => route('home'), 'text' => 'Home'],
+            ['link' => route('patrons'), 'text' => 'Patrons'],
+        ];
+
+        $patrons = Patron::all();
+        return view('patrons.index', compact('patrons', 'breadcrumbs'));
+    }
+
+
     public function store(Request $request) {
         // validate the request
     	$rules = [
@@ -38,6 +50,24 @@ class PatronController extends Controller
 
 		// return a response to the AJAX request
     	return response()->json($patron, 200);
+    }
+
+
+    public function search() {
+        // copy functionality from IncidentController@search
+    }
+
+
+    public function show(Patron $patron) {
+        // set up the breadcrumbs for this action
+        $breadcrumbs = [
+            ['link' => route('home'), 'text' => 'Home'],
+            ['link' => route('patron', ['patron' => $patron->id]), 'text' => $patron->get_name('full')]
+        ];
+
+        $comments = $patron->comments;
+
+        return view('patrons.show', compact('breadcrumbs', 'patron', 'comments'));
     }
 
 }

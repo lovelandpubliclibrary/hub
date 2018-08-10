@@ -19,6 +19,7 @@ class CreatePatronsTable extends Migration
             $table->text('last_name')->nullable();
             $table->text('description');
             $table->text('card_number')->nullable();
+            $table->text('user_id')->nullable();
             $table->timestamps();
         });
     }

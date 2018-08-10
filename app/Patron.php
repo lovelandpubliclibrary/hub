@@ -22,6 +22,10 @@ class Patron extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function comments() {
+        return $this->hasMany('App\Comment');
+    }
+
 
     /**
      * Returns an appropriately formatted patron name.
@@ -41,29 +45,32 @@ class Patron extends Model
             switch($format) {
                 case 'list':
                     return "{$this->last_name}, {$this->first_name}";
-                    break;
 
                 case 'full':
                     return "{$this->first_name} {$this->last_name}";
-                    break;
 
                 case 'heading':
-                    if ($this->last_name === $replacement) {
+                 // dd([$this->last_name, $this->first_name, $replacement]);
+                    if ($this->last_name == $replacement) {
                         return "Patron #{$this->id}: {$this->first_name}";
-                        break;
+                    } else if ($this->first_name == $replacement) {
+                        return "Patron #{$this->id}: {$this->last_name}";
                     }
 
-                    return "Patron #{$this->id}: {$this->last_name}";
-                    break;
+                    return "{$this->first_name} {$this->last_name}";
 
                 default:
                     return $this->get_name('list', $replacement);
-                    break;
             }
         }
 
         // both first and last names are unknown, return patron number
         return "Patron #{$this->id}";
+    }
+
+
+    public function added_by() {
+        return $this->user ? $this->user->name : 'Unknown';
     }
 
 }

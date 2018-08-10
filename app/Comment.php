@@ -14,4 +14,8 @@ class Comment extends Model
     public function user() {
     	return $this->belongsTo('App\User');
     }
+
+    public function patron() {
+    	return $this->belongsTo('App\Patron');
+    }
 }

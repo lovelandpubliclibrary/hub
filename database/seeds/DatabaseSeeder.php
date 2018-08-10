@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
         $this->call(IncidentPhotoRelationshipSeeder::class);
         $this->call(IncidentPatronRelationshipSeeder::class);
         $this->call(IncidentLocationRelationshipSeeder::class);
+        $this->call(UserPatronRelationshipSeeder::class);
     }
 }
 
@@ -254,7 +255,9 @@ class CommentsTableSeeder extends Seeder {
 
 		// count the number of incidents and set a limit on the number of comments to generate
 		$incident_count = Incident::all()->count();
-		$comment_count = rand($incident_count * 3, $incident_count * 6);
+		$patron_count = Patron::all()->count();
+		$sum = $incident_count + $patron_count;
+		$comment_count = rand($sum * 4, $sum * 6);
 
 		$this->command->info('--> Creating ' . $comment_count . ' Comments... ');		// output progress
 
@@ -558,5 +561,22 @@ class IncidentLocationRelationshipSeeder extends Seeder {
 				if ($incident->id % 2 === 0) break;
 			}
 		}
+	}
+}
+
+
+class UserPatronRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		$this->command->info('--> Assigning Patrons to Staff Members... ');
+
+		$patrons = Patron::all();
+		$staff = User::all();
+
+		foreach ($patrons as $patron) {
+			$staff->shuffle()->first()->patrons()->save($patron);
+		}
+
 	}
 }
