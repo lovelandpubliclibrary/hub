@@ -22,3 +22,4 @@ Homestead.json
 alpine-repository.Dockerfile
 storage/app/patrons/
 hub.sublime-workspace
+info.php
