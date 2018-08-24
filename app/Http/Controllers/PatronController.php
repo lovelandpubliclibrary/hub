@@ -53,6 +53,11 @@ class PatronController extends Controller
     }
 
 
+    public function create() {
+        return view('patrons.create');
+    }
+
+
     public function search() {
         // copy functionality from IncidentController@search
     }

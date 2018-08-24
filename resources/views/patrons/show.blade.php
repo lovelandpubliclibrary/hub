@@ -55,6 +55,13 @@
 						{{ $patron->added_by() }}
 					</div>
 
+					@isset($patron->card_number)
+						<div class="col-xs-12">
+							<strong>Library Card Number:</strong>
+							{{ $patron->card_number }}
+						</div>
+					@endisset
+
 					<div class="col-xs-12">
 
 						<strong>Incidents this patron is involved in:</strong>

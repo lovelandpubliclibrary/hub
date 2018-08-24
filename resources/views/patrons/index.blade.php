@@ -88,8 +88,10 @@
 												@foreach ($patron->photo as $photo)
 													<div class="col-md-6 col-sm-12">
 														<div class="thumbnail">
-															<img src="{{ asset('storage/photos/' . $photo->filename) }}" 
+															<a href="{{ route('photo', ['photo' => $photo->id]) }}">
+																<img src="{{ asset('storage/photos/' . $photo->filename) }}" 
 																alt="Photo of {{ $patron->get_name('full') }}">
+															</a>
 														</div>
 													</div>
 												@endforeach
