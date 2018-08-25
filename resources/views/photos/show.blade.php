@@ -25,28 +25,11 @@
 				<h2 class="panel-title">
 					Photo of {{ $patron->get_name('full') }}
 				</h2>
-
-				<div>
-					from 
-					<a href="{{ route('incident', ['incident' => $photo->incident->id]) }}">
-						{{ $photo->incident->title }}
-					</a>
-					on {{ $photo->incident->date }}
-				</div>
 			</div>
-
-			{{-- Display the button to edit the incident if the user authored it or is an admin --}}
-			@if (Auth::id() == $photo->incident->user_id || Auth::user()->role->contains('role', 'Admin'))
-				<div class="text-center-xs text-right-sm repository-margin-top-1rem">
-					<a class="btn-sm btn-default link-default" href="/photos/edit/{{ $photo->id }}" title="Edit Incident">
-						<span class="glyphicon glyphicon-edit"></span> Edit Photo
-					</a>
-				</div>
-			@endif
 		</div><!-- .panel-heading -->
 
 		<div class="panel-body">
-			<img class="img-responsive center-block" src="{{ asset('images/patrons/' . $photo->filename) }}" alt="Patron Picture">
+			<img class="img-responsive center-block" src="{{ asset('storage/photos/' . $photo->filename) }}" alt="Photo #{{ $photo->id }}">
 			
 			@if ($photo->caption)
 				<div class="well well-sm text-center">

@@ -55,6 +55,7 @@ Route::post('/comments/edit/{comment]', 'CommentController@update')->name('updat
 Route::get('/comments/delete/{comment}', 'CommentController@delete')->name('deleteComment');
 
 // Photos
+Route::get('/photos', 'PhotoController@index')->name('photos');
 Route::get('/photos/{photo}', 'PhotoController@show')->name('photo');
 Route::post('/photos/create', 'PhotoController@store');
 Route::get('/photos/edit/{photo}', 'PhotoController@edit')->name('editPhoto');
