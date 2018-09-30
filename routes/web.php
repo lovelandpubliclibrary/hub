@@ -63,7 +63,7 @@ Route::get('/photos/delete/{photo}', 'PhotoController@delete')->name('deletePhot
 Route::post('/photos/update/{photo}', 'PhotoController@update')->name('updatePhoto');
 
 // Patrons
-Route::post('/patrons/create', 'PatronController@store')->name('storePatronAjax');
+Route::post('/patrons/create', 'PatronController@store')->name('storePatron');
 Route::get('/patrons/create', 'PatronController@create')->name('createPatron');
 Route::get('/patrons/{patron}', 'PatronController@show')->name('patron');
 Route::get('/patrons', 'PatronController@index')->name('patrons');

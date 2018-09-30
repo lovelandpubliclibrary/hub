@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Patron;
+use Session;
+use App\Http\Requests\StorePatron;
 
 class PatronController extends Controller
 {
@@ -25,31 +27,28 @@ class PatronController extends Controller
     }
 
 
-    public function store(Request $request) {
-        // validate the request
-    	$rules = [
-    		'first_name' => 'string|nullable',
-    		'last_name' => 'string|nullable',
-    		'description' => 'required',
-    		'card_number' => 'length:9|nullable',
-    	];
+    public function store(StorePatron $request) {
 
-    	$this->validate($request, $rules);
+        // create and save the new patron
+        $patron = new Patron;
+        $patron->first_name = $request->first_name ?: null;
+        $patron->last_name = $request->last_name ?: null;
+        $patron->description = $request->description;
+        $patron->card_number = $request->card_number ?: null;
+        $patron->save();
 
-    	$patron = new Patron;
-    	$patron->first_name = $request->first_name ?: null;
-    	$patron->last_name = $request->last_name ?: null;
-    	$patron->description = $request->description;
-    	$patron->card_number = $request->card_number ?: null;
-
-    	$patron->save();
-
-    	// set the full name before parsing to JSON
-    	$patron->list_name = $patron->get_name('list');
+        // set the full name before returning the object
+        $patron->list_name = $patron->get_name('list');
         $patron->full_name = $patron->get_name('full');
 
-		// return a response to the AJAX request
-    	return response()->json($patron, 200);
+        // return a response to the AJAX request
+        if ($request->ajax()) {
+            return response()->json($patron, 200);
+        }
+
+        // redirect to new patron page with a success message
+        Session::flash('success_message', "The patron was saved.");
+        return redirect()->route('patron', ['patron' => $patron->id]);
     }
 
 
@@ -58,8 +57,24 @@ class PatronController extends Controller
     }
 
 
-    public function search() {
-        // copy functionality from IncidentController@search
+    public function search(Request $request) {
+        // validate the form
+        $this->validate($request, ['search' => 'required']);
+
+        // search the database
+        $patrons = Patron::where('description', 'LIKE', '%' . $request->search . '%')->
+                               orWhere('first_name', 'LIKE', '%' . $request->search . '%')->
+                               orWhere('last_name', 'LIKE', '%' . $request->search . '%')->
+                               orWhere('card_number', 'LIKE', '%' . $request->search . '%')->
+                               orWhereHas('comments', function ($query) use ($request) {
+                                   $query->where('comment', 'LIKE', '%' . $request->search . '%');
+                               })->get();
+
+        // store the search string to pass back to the view
+        $search = $request->search;
+
+        // provide the index view with the search results and search string
+        return view('patrons.index', compact('patrons', 'search'));
     }
 
 
@@ -72,7 +87,15 @@ class PatronController extends Controller
 
         $comments = $patron->comments;
 
-        return view('patrons.show', compact('breadcrumbs', 'patron', 'comments'));
+        // define the source so the view can redirect to the proper location
+        // define the source so the view can redirect to the proper location
+        $source = [
+            'source' => 'patron',
+            'id' => $patron->id,
+        ];
+
+        return view('patrons.show', compact('breadcrumbs', 'patron', 
+                                            'comments', 'source'));
     }
 
 }

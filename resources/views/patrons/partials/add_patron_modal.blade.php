@@ -14,13 +14,8 @@
 			
 			<div class="modal-body">
 				<div id="addPatronFormWrapper">
-					@include('patrons.create')
+					@include('patrons.partials.add_patron_form')
 				</div>
-			</div>
-
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-				<button type="button" class="btn btn-primary" onclick="addPatron()">Save</button>
 			</div>
 
 		</div> {{-- .modal-content --}}
