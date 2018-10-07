@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Patron;
-use Session;
 use App\Http\Requests\StorePatron;
+use App\Incident;
+use App\Patron;
+use Illuminate\Http\Request;
+use Session;
 
 class PatronController extends Controller
 {
@@ -41,6 +42,13 @@ class PatronController extends Controller
         $patron->list_name = $patron->get_name('list');
         $patron->full_name = $patron->get_name('full');
 
+        // associate the patron with incident(s) if necessary
+        if ($incidents = $request->associatedIncidents) {
+            foreach ($incidents as $incident_id) {
+                $patron->incident()->attach($incident_id);
+            }
+        }
+
         // return a response to the AJAX request
         if ($request->ajax()) {
             return response()->json($patron, 200);
@@ -53,7 +61,8 @@ class PatronController extends Controller
 
 
     public function create() {
-        return view('patrons.create');
+        $incidents = Incident::orderBy('created_at', 'desc')->get();
+        return view('patrons.create', compact('incidents'));
     }
 
 

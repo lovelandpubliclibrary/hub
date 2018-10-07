@@ -21,6 +21,21 @@
   		{{ Form::text('card_number', null, ['class' => 'form-control']) }}
   	</div>
 
+	@if (url()->current() === route('createPatron'))
+	  	<div class="form-group">
+	  		<div>
+	  			{{ Form::label('associatedIncidents', 'Involved in the following Incidents:', ['class' => 'control-label']) }}
+	  		</div>
+		  		<select name="associatedIncidents[]" id="associatedIncidents" multiple="multiple" style="width: 100%;">
+		  			@foreach ($incidents as $incident)
+		  				<option value="{{ $incident->id }}" title="{{ $incident->description }}">
+		  					{{ $incident->title }}
+		  				</option>
+		  			@endforeach
+		  		</select>
+	  	</div>
+	@endif
+
 	{{ Form::hidden('user', Auth::id()) }}
 
 	<div class="text-right repository-margin-top-1rem">
