@@ -9,8 +9,8 @@
 
 	{{ Form::hidden('user', Auth::id()) }}
 
-	{{ Form::hidden('source', $source['source']) }}
-	{{ Form::hidden('source_id', $source['id']) }}
+	{{-- {{ Form::hidden('source', $source['source']) }} --}}
+	{{-- {{ Form::hidden('source_id', $source['id']) }} --}}
 
 	<div class="text-right">
 		{{ Form::button('Save Comment', [
