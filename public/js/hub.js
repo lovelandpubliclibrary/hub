@@ -55,7 +55,8 @@ $(document).ready(function() {
 				photo.append($(`<img src="${photo_json.url}" alt="${photo_json.filename}">`));
 				photo.append($('<button class="btn btn-sm btn-danger remove-photo-btn">Remove</button>'));
 				photo.append($(`<input type="hidden" name="photos[]" value=${photo_json.id}>`));
-				$('#incident .photo-thumbnail-wrapper').append(photo_column);
+				console.log(photo_column);
+				$('.photo-thumbnail-wrapper').append(photo_column);
 
 				// add the event handler to the remove button, which will undo all of this
 				photo.find('button.remove-photo-btn').click(function(event) {

@@ -53,8 +53,9 @@ class PhotoController extends Controller
         $photo->save();     // required in order to save relationships
         $photo->url = asset("/storage/photos/{$file_name}");
 
+logger($request->associatedPatrons);
         // associate patrons and confirm
-        if (isset($request->associatedPatrons)) {
+        if (!empty(array_filter($request->associatedPatrons))) {
             foreach ($request->associatedPatrons as $patron_id) {
                 $photo->patron()->attach(Patron::find($patron_id));
             }            
