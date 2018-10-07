@@ -1,37 +1,34 @@
-{{ Form::open(['action' => 'PhotoController@store', 'files' => true, 'id' => 'addPhotoForm']) }}
+@extends('layouts.app')
 
-	<div class="form-group required">
-		{{ Form::label('photo', 'Select file:', ['class' => 'control-label']) }}
-		{{ Form::file('photo', null, ['class' => 'form-control', 'required' => 'required']) }}
-	</div>
+@section('content')
+	<div id="photos">
 
-	<div class="form-group">
-		{{ Form::label('photoCaption', 'Caption:', ['class' => 'control-label']) }}
-		{{ Form::textarea('photoCaption', null, ['class' => 'form-control', 'rows' => 4]) }}
-	</div>
-	
-	<h4>This is a photo of:</h4>
+		@include('layouts.breadcrumbs')
 
-	<div class="form-group">
-		<label class="control-label">
-			{{-- the value of the radio buttons is set to 1 or 0 to be compatible with laravel validation --}}
-			{{ Form::radio('associatingPatrons', '0', true, ['id' => 'associatingPatrons']) }}
-			Just this incident (no patrons)
-		</label>
+		@if (count($errors) > 0)
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+		@endif
 
-		<div id="photo-patrons" class="form-group">
+		<div class="panel panel-default" id="photo">
+			<div class="panel-heading col-xs-12 text-center repository-margin-bottom-1rem">
+				<div class="col-xs-10 col-xs-offset-1">
+					<h2 class="panel-title">
+						Add a Photo
+					</h2>
+				</div>
+			</div><!-- .panel-heading -->
 
-			<label class="control-label">
-				{{ Form::radio('associatingPatrons', '1') }}
-				The following patron(s):
-			</label>
-	
-			<select name="associatedPatrons[]" id="associated-patrons" multiple="multiple"
-						style="width:68%;">
-				{{-- options for patrons added to the create incident form injected here --}}
-			</select>
+			<div class="panel-body">
+				@include('photos.partials.add_photo_form')
+			</div><!-- .panel-body -->
+		</div> <!-- .panel -->
 
-		</div>
-	</div>	{{-- .form-group --}}
-
-{{ Form::close() }}
+	</div> <!-- #photos -->
+  
+@endsection

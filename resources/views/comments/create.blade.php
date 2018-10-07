@@ -9,14 +9,9 @@
 
 	{{ Form::hidden('user', Auth::id()) }}
 
-	@isset($incident)
-		{{ Form::hidden('incident', $incident->id) }}
-	@endisset
+	{{ Form::hidden('source', $source['source']) }}
+	{{ Form::hidden('source_id', $source['id']) }}
 
-	@isset($patron)
-		{{ Form::hidden('patron', $patron->id) }}
-	@endisset
-	
 	<div class="text-right">
 		{{ Form::button('Save Comment', [
 						'class' => 'btn btn-default btn-success', 

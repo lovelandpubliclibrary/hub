@@ -56,8 +56,9 @@ Route::get('/comments/delete/{comment}', 'CommentController@delete')->name('dele
 
 // Photos
 Route::get('/photos', 'PhotoController@index')->name('photos');
-Route::get('/photos/{photo}', 'PhotoController@show')->name('photo');
+Route::get('/photos/create', 'PhotoController@create')->name('createPhoto');
 Route::post('/photos/create', 'PhotoController@store');
+Route::get('/photos/{photo}', 'PhotoController@show')->name('photo');
 Route::get('/photos/edit/{photo}', 'PhotoController@edit')->name('editPhoto');
 Route::get('/photos/delete/{photo}', 'PhotoController@delete')->name('deletePhoto');
 Route::post('/photos/update/{photo}', 'PhotoController@update')->name('updatePhoto');

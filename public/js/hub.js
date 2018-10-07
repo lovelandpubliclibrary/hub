@@ -46,6 +46,7 @@ function addPhoto() {
 			processData: false,
 			contentType: false,
 			success: function(response) {
+				console.log(response)
 				// reset the new photo form
 				form[0].reset();
 				modal_footer.html('').append(stashed_buttons);
@@ -84,15 +85,11 @@ function addPhoto() {
 
 
 function buildAssociatedPatronsDropdown(){
-	// start by hiding elements which may be unnecessary
-	$('#photo-patrons').hide();
-
 	// create a place to store the collected patron information
 	var patrons = [];
 
 	// collect the patrons from the create incident form
 	var selected_patrons = $('select[name="patrons[]"] option:selected');
-
 	// add the selected patrons to the placeholder array
 	selected_patrons.each(function() {
 		patrons.push({id:this.value, name:$(this).text()});
@@ -100,13 +97,13 @@ function buildAssociatedPatronsDropdown(){
 
 	// check if patrons have been identified on the create incident form
 	if (patrons.length) {
-		// make visible the dropdown of patrons that could be associated with this photo
-		$('#photo-patrons').show();
+		// add the patron to the associated-patrons dropdown
+		var associatedPatronsDropdown = $('#associatedPatrons');
+		associatedPatronsDropdown.find('option').remove();
 
 		// create and add an option to the dropdown for each patron
 		$.each(patrons, function(index, patron) {
-			// add the patron to the associated-patrons dropdown
-			var associated_patrons = $('#associated-patrons');
+			
 
 			// https://select2.org/programmatic-control/add-select-clear-items
 			var select2_data = {
@@ -115,12 +112,11 @@ function buildAssociatedPatronsDropdown(){
 			};
 
 			var option = new Option(select2_data.text, select2_data.id, false, false);
-			var associated_patrons = $('#associated-patrons');
-			if (associated_patrons.hasClass('select2-hidden-accessible')) {
-				associated_patrons.select2('destroy');
+			if (associatedPatronsDropdown.hasClass('select2-hidden-accessible')) {
+				associatedPatronsDropdown.select2('destroy');
 			}
-			associated_patrons.append(option).trigger('change');
-			associated_patrons.select2();
+			associatedPatronsDropdown.append(option).trigger('change');
+			associatedPatronsDropdown.select2();
 		});
 	}
 }
@@ -133,12 +129,109 @@ $(document).ready(function() {
 	/* Instantiate Select2 jQuery plugin for all select elements */
 	$('select').select2();
 
+	/* Submit the AddPhoto form via AJAX when displayed as a modal */
+	$('#addPhotoModal button[type="submit"]').click(function(event) {
+
+		// prevent default events from firing
+		event.preventDefault();
+		event.stopPropagation();
+
+		var save_button = $(this);
+		var save_button_original_text = save_button.html();
+		var errors = new Array;		// placeholder for error messages
+
+		// clear previous error messages
+		$('#addPhotoFormWrapper .alert').remove();
+
+		// collect the values of the new photo form
+		var form = $('#addPhotoForm');
+		var form_data = new FormData();
+		var file = form.find('input[type="file"]')[0].files[0];
+		form_data.append('photo', file);
+		if (form.find('textarea').val()) {
+			form_data.append('caption', form.find('textarea').val());
+		}
+
+		if (form.find('#associatedPatrons').val()) {
+		 	form_data.append('associatedPatrons[]', form.find('#associatedPatrons').val());
+		}
+
+		// provide feedback that the patron is being saved
+		if (save_button.length) {
+			save_button.html('Saving...');
+			save_button.prop('disabled', true);
+		}
+
+		// submit the request to PhotoController@store
+		$.ajax({
+			headers:{'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+			type:'POST',
+			data:form_data,
+			url:'/photos/create',
+			processData: false,
+			contentType: false,
+			success:function(photo_json) {
+				// build the photo DOM/content and append to .photo-thumbnail-wrapper
+				var photo_column = $('<div class="col-xs-3">').append('<div class="photo">');
+				var photo_container = photo_column.find('.photo')	// build the photo container
+				photo_container.append($('<div class="thumbnail">'));
+				var photo = photo_container.find('.thumbnail');
+				photo.append($(`<img src="${photo_json.url}" alt="${photo_json.filename}">`));
+				photo.append($('<button class="btn btn-sm btn-danger remove-photo-btn">Remove</button>'));
+				photo.append($(`<input type="hidden" name="photos[]" value=${photo_json.id}>`));
+				$('#incident .photo-thumbnail-wrapper').append(photo_column);
+
+				// add the event handler to the remove button, which will undo all of this
+				photo.find('button.remove-photo-btn').click(function(event) {
+					event.stopPropagation();
+					event.preventDefault();
+
+					// remove the thumbnail wrapper and it's contents
+					photo_column.remove();
+				});
+
+				// reset the new patron form
+				form.trigger('reset');
+
+				// close the modal
+				$('#addPhotoModal button[data-dismiss="modal"]:first').click();
+			},
+			error:function(response) {
+				console.log(response)
+				switch (response.status) {
+					case 422:    // validation errors
+						$.each(response.responseJSON, function() {
+							errors.push(this[0]);
+						});
+
+						break;
+					default:
+						errors.push(response.status)
+						break;
+				}
+			},
+			complete:function() {
+				if (errors.length) {
+					$.each(errors, function() {
+						var error = $.parseHTML(`<div class="alert alert-danger">${this}</div>`);
+						$('#addPhotoFormWrapper').prepend(error);
+					});
+				}
+
+				// reset the save button
+				save_button.html(save_button_original_text);
+				save_button.prop('disabled', false);
+			}
+		});
+	});
+
+
 	/* Submit the Add Patron form via Javascript when displayed as a modal */
 	$('#addPatronModal button[type="submit"]').click(function(event) {
 
 		// prevent default events from firing
-		event.preventDefault()
-		event.stopPropagation()
+		event.preventDefault();
+		event.stopPropagation();
 
 		var save_button = $(this);
 		var save_button_original_text = save_button.html();
@@ -188,41 +281,33 @@ $(document).ready(function() {
 					$(this).val('');
 				});
 
-				// reset the save button
-				save_button.html(save_button_original_text);
-				save_button.prop('disabled', false);
-
 				// close the modal
 				$('#addPatronModal button[data-dismiss="modal"]:first').click();
 			},
 			error:function(response) {
 				switch (response.status) {
-					// validation errors
-					case 422:
+					case 422:    // validation errors
 						$.each(response.responseJSON, function() {
-							var error = $.parseHTML(`<div class="alert alert-danger">${this[0]}</div>`);
-							$('#addPatronFormWrapper').prepend(error);
+							errors.push($.parseHTML(`<div class="alert alert-danger">${this[0]}</div>`));
 						});
 						break;
 					default:
 						errors.push('An unspecified error occurred.')
 						break;
 				}
-				save_button.html(save_button_original_text);
-				save_button.prop('disabled', false);
 			},
 		});
 
-		// if (errors.length) {
-		// 	$.each(errors, function() {
-		// 		var error = $.parseHTML(`<div class="alert alert-danger">${this}</div>`);
-		// 		$('#addPatronFormWrapper').prepend(error);
-		// 	});
+		if (errors.length) {
+			$.each(errors, function() {
+				var error = $.parseHTML(`<div class="alert alert-danger">${this}</div>`);
+				$('#addPatronFormWrapper').prepend(error);
+			});
+		}
 
-		// 	// reset the save button
-		// 	save_button.html(save_button_original_text);
-		// 	save_button.prop('disabled', false);
-		// }
+		// reset the save button
+		save_button.html(save_button_original_text);
+		save_button.prop('disabled', false);
 	});
 
 
@@ -240,24 +325,6 @@ $(document).ready(function() {
 
 		buildAssociatedPatronsDropdown();
 	})
-
-	/* Ensure the correct input values when associating patrons to photos */
-	// unselect all patrons when incident is selected
-	$('#associatingPatrons').click(function() {
-		$('#associated-patrons').val(null).trigger('change');
-	});
-
-	// update radio button to match patron selection
-	$('#associated-patrons').on('select2:select', function() {
-		$(this).siblings('label').find('input[type="radio"]').prop('checked', true);
-	});
-
-	// select incident-only when the selected last patron is removed
-	$('#associated-patrons').on('select2:unselect', function() {
-		if ($(this).find('option:selected').length == 0) {
-			$('#associatingPatrons').prop('checked', true);
-		}
-	});
 
 	// remove parent photo element for .remove-photo-btn buttons
 	$('.remove-photo-btn').click(function() {

@@ -27,7 +27,7 @@
 						<thead>
 							<tr>
 								<th class="text-nowrap hidden-xs">
-									Photo Number
+									Photo #
 								</th>
 
 								<th>

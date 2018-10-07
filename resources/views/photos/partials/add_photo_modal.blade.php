@@ -14,13 +14,8 @@
 			
 			<div class="modal-body">
 				<div id="addPhotoFormWrapper">
-					@include('photos.create')
+					@include('photos.partials.add_photo_form')
 				</div>
-			</div>
-
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-				<button type="button" class="btn btn-primary" onclick="addPhoto()">Save</button>
 			</div>
 
 		</div> {{-- .modal-content --}}

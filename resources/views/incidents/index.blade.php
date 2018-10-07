@@ -16,7 +16,7 @@
 
 			<div class="panel-body">
 				<div class="col-xs-12">
-					<a href="/incidents/create" class="btn btn-danger col-xs-12 col-sm-3 repository-margin-bottom-1rem">
+					<a href="{{ route('createIncident') }}" class="btn btn-danger col-xs-12 col-sm-3 repository-margin-bottom-1rem">
 						Report a New Incident
 					</a>
 

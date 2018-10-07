@@ -32,7 +32,7 @@
 			<img class="img-responsive center-block" src="{{ asset('storage/photos/' . $photo->filename) }}" alt="Photo #{{ $photo->id }}">
 			
 			@if ($photo->caption)
-				<div class="well well-sm text-center">
+				<div class="well well-sm text-center repository-margin-top-1rem">
 					{{ $photo->caption }}
 				</div>
 			@endif

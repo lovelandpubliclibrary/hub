@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Comment;
 use Session;
 use Auth;
+use App\Incident;
+use App\Patron;
 
 class CommentController extends Controller
 {
@@ -19,39 +21,48 @@ class CommentController extends Controller
         $rules = [
             'comment' => 'required',
             'user' => 'required',
-            'incident' => 'integer',
-            'patron' => 'integer'
+            'incident' => 'integer|nullable',
+            'patron' => 'integer|nullable',
+            'source' => 'string|required',
+            'source_id' => 'integer|required',
         ];
         $this->validate($request, $rules);
+
 
         // store it in a new instance of Incident
         $comment = new Comment;
         $comment->comment = $request->comment;
         $comment->user_id = $request->user;
 
-        if(isset($request->incident)) {
-            $comment->incident_id = $request->incident;
-        }
-        
-        if(isset($request->patron)) {
-            $comment->patron_id = $request->patron;
-        }
-
-        // save it to the database
+        // save so that we can attach relationships to the comment
         if ($comment->save()) {
+
+            $source = $request->source;
+            $source_id = $request->source_id;
+
+            switch ($source) {
+                case 'patron':
+                    $patron = Patron::find($source_id);
+                    $comment->patron()->associate($patron)->save();
+                    break;
+                case 'incident':
+                    $incident = Incident::find($source_id);
+                    $comment->incident()->associate($incident)->save();
+                    break;
+            }
+
             Session::flash('success_message', "Comment Saved.");
-            return redirect()->route('incident', ['incident' => $comment->incident_id]);
+            return redirect()->route($source, [$source => $source_id]);
         }
     }
 
 
-    public function edit(Comment $comment)
+    public function edit(Comment $comment, Request $request)
     {
         // set up the breadcrumbs for this action
         $breadcrumbs = [
             ['link' => route('home'), 'text' => 'Home'],
-            ['link' => route('incidents'), 'text' => 'Incidents'],
-            ['link' => route('incident', ['incident' => $comment->incident->id]), 'text' => $comment->incident->title],
+            ['link' => $request->url(), 'text' => 'Comments'],
         ];
 
         // make sure the user has permission to edit the comment
@@ -66,7 +77,7 @@ class CommentController extends Controller
                                               Auth::user()->find($comment->user_id)->name .
                                               ' can modify this comment.'];
             $incident = $comment->incident;
-            return view('incidents.show', compact('incident', 'errors', 'breadcrumbs'));
+            return view(' .show', compact('incident', 'errors', 'breadcrumbs'));
         }
     }
 
@@ -89,15 +100,33 @@ class CommentController extends Controller
         // save the updates to the database
         $comment->save();
 
+        // determine the where the comment appears
+        $source = [];
+        if ($incident = $comment->incident) {
+            $source['source'] = 'incident';
+            $source['id'] = $incident->id;
+        } else if ($patron = $comment->patron) {
+            $source['source'] = 'patron';
+            $source['id'] = $patron->id;
+        }
+
         Session::flash('success_message', "Comment Updated.");
-        return redirect()->route('incident', ['incident' => $comment->incident->id]);
+        return redirect()->route($source['source'], [$source['source'] => $source['id']]);
     }
 
 
     public function delete(Comment $comment) {
-        $incident_id = $comment->incident->id;
+        // determine where to redirect back to
+        $redirect = '/';
+        if ($patron = $comment->patron) {
+            $redirect = "/patrons/{$patron->id}";
+        } else if ($incident = $comment->incident) {
+            $redirect = "incidents/{$incident}";
+        }
+
         $comment->delete();
+
         Session::flash('success_message', 'Comment deleted.');
-        return redirect()->route('incident', ['incident' => $incident_id]);
+        return redirect($redirect);
     }
 }

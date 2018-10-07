@@ -71,7 +71,8 @@ class IncidentController extends Controller
             }
         }
 
-    	return view('incidents.show', compact('incident', 'comments', 'photos', 'unviewed_by', 'breadcrumbs'));
+    	return view('incidents.show', compact('incident', 'comments', 'photos', 
+                                              'unviewed_by', 'breadcrumbs'));
     }
 
 

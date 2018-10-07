@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use App\Photo;
 use App\Patron;
+use App\Incident;
 use Session;
+use App\Http\Requests\StorePhoto;
 
 class PhotoController extends Controller
 {
@@ -24,83 +27,70 @@ class PhotoController extends Controller
             ['link' => route('photos'), 'text' => 'Photos'],
         ];
 
-        $photos = Photo::all();
+        $photos = Photo::orderBy('created_at', 'desc')->get();
 
         return view('photos.index', compact('breadcrumbs', 'photos'));
     }
 
 
-    public function store(Request $request) {
-        $errors = [];       // placeholder for errors
-        // return response()->json($request);
-
-        // validate the request
-        $rules = [
-            'photo' => 'file|required',
-            'caption' => 'string|nullable',
-            'associatingPatrons' => 'boolean|nullable',
-            'associatedPatrons' =>'string|nullable',
-        ];
-
-        $this->validate($request, $rules);
-
-        // validate the uploaded photo
+    public function store(StorePhoto $request) {
+        // collect resources
         $file = $request->file('photo');
-        $accepted_image_formats = [     // https://laravel.com/docs/5.4/requests#retrieving-input
-            'jpeg',
-            'png',
-            'gif',
-        ];
+        $photo = new Photo;
+        $errors = [];
 
-        // ensure the file is valid
-        if ($file->isValid() && in_array(strtolower($file->extension()), $accepted_image_formats)) {
-            // collect or determine values we need to save the photo
-            $timestamp = time();
-            $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) .
-                            "_{$timestamp}.{$file->extension()}";
+        // collect and determine the values we need to save the photo
+        $timestamp = time();
+        $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) .
+                        "_{$timestamp}.{$file->extension()}";
 
-            // save to the filesystem and set visibility
-            $stored_path = $file->storeAs('photos', $file_name, 'public');
+        // save to the filesystem and set visibility
+        $stored_path = $file->storeAs('photos', $file_name, 'public');
 
-            if ($stored_path) {
-                // save to the database and confirm
-                $photo = new Photo;
-                $photo->filename = $file_name;
-                $photo->caption = $request->caption ?: null;
-                $photo->save();
-                $photo->url = asset("/storage/photos/{$file_name}");
+        // save to the database and confirm
+        $photo->filename = $file_name;
+        $photo->caption = $request->caption ?: null;
+        $photo->save();     // required in order to save relationships
+        $photo->url = asset("/storage/photos/{$file_name}");
 
-                if (!$photo->id) {  // will have an ID if saved successfully
-                    $errors[] = 'There was a problem saving to the database.';
-                }
-            } else {
-                $errors[] = 'There was a problem saving the file to the filesystem.';
-            }
-
-            // associate patrons
-            $associated_patrons = $request->associatedPatrons;
-            $patron_ids = $associated_patrons ? preg_split('/,/', $associated_patrons) : false;
-            if ($patron_ids) {
-                foreach ($patron_ids as $patron_id) {
-                    $photo->patron()->save(Patron::find($patron_id));
-                }
-
-                if (!count($photo->patron)) {
-                    $errors[] = 'There was a problem associating patrons to the photo.';
-                }
-            }
+        // associate patrons and confirm
+        if (isset($request->associatedPatrons)) {
+            foreach ($request->associatedPatrons as $patron_id) {
+                $photo->patron()->attach(Patron::find($patron_id));
+            }            
             
-        } else {
-            $errors[] = 'The selected photo is not valid.';
+            if (!count($photo->patron)) {
+                $errors[] = 'There was a problem associating patron(s) with this photo.';
+            }
         }
 
-        if (count($errors) === 0) {     // no errors
-            // return a response to the AJAX request
+        // associate incident and confirm
+        if (isset($request->associatedIncident)) {
+            $photo->incident()->save(Incident::find($request->associatedIncident));
+
+            if (!count($photo->incident)) {
+                $errors[] = 'There was a problem associating the incident with this photo.';
+            } 
+        }
+        
+        // something went wrong, return the errors
+        if (count($errors)) {
+            if ($request->ajax()) {
+                return response()->json($errors, 500);
+            }
+
+            // redirect browser back to form with error messages
+            return redirect()->back()->withErrors($errors);
+        }
+
+        // return response to ajax request
+        if ($request->ajax()) {
             return response()->json($photo, 200);
         }
 
-        // something went wrong, return the errors
-        return response()->json($errors, 200);
+        // redirect browser to new photo
+        Session::flash('success_message', "The photo was saved.");
+        return redirect()->route('photo', ['photo' => $photo->id]);
     }
     
 
@@ -164,5 +154,19 @@ class PhotoController extends Controller
 
         Session::flash('success_message', "Caption Updated.");
         return redirect()->route('photo', ['photo' => $photo->id]);
+    }
+
+
+    public function create() {
+        // create breadcrumbs
+        $breadcrumbs = [
+            ['link' => route('home'), 'text' => 'Home'],
+            ['link' => route('patrons'), 'text' => 'Patrons'],
+        ];
+
+        $patrons = Patron::all()->sortByDesc('created_at');     // most recent first
+        $incidents = Incident::all()->sortByDesc('created_at');
+
+        return view('photos.create', compact('breadcrumbs', 'patrons', 'incidents'));
     }
 }

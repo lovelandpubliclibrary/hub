@@ -33,6 +33,11 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('photos') }}">
+                            Photos
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('schedule') }}">
                             Scheduler
                         </a>

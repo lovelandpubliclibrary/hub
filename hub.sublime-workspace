@@ -4,8 +4,36 @@
 		"selected_items":
 		[
 			[
+				"json",
+				"json_decode"
+			],
+			[
+				"f",
+				"fun\tfunction …"
+			],
+			[
+				"Photo",
+				"PhotoController"
+			],
+			[
+				"margin",
+				"margin-bottom\tproperty"
+			],
+			[
+				"incident",
+				"incident_or_patron"
+			],
+			[
 				"list",
-				"list-style\tproperty"
+				"list-group-item"
+			],
+			[
+				"inline",
+				"inline-block\tdisplay"
+			],
+			[
+				"photos",
+				"photos"
 			],
 			[
 				"sel",
@@ -172,10 +200,6 @@
 				"repository-margin-top-1rem"
 			],
 			[
-				"incident",
-				"incident_id"
-			],
-			[
 				"li",
 				"line-height"
 			],
@@ -306,10 +330,6 @@
 			[
 				"role",
 				"role_count"
-			],
-			[
-				"margin",
-				"margin-bottom"
 			],
 			[
 				"reposito",
@@ -494,58 +514,132 @@
 			[
 				"strsp",
 				"str_split"
-			],
-			[
-				"str_",
-				"str_split"
-			],
-			[
-				"msg",
-				"msgNoPunc"
-			],
-			[
-				"preg",
-				"preg_replace"
-			],
-			[
-				"isn",
-				"is_null"
-			],
-			[
-				"str",
-				"strtolower"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "resources/views/incidents/edit.blade.php",
+			"file": "app/Http/Controllers/PatronController.php",
 			"settings":
 			{
-				"buffer_size": 3628,
+				"buffer_size": 3468,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "<?php\n\nnamespace App\\Http\\Controllers;\n\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Hash;\nuse App\\Incident;\nuse App\\Photo;\nuse App\\User;\nuse App\\Location;\nuse App\\Patron;\nuse Mail;\nuse App\\Mail\\IncidentCreated;\nuse App\\Mail\\IncidentUpdated;\nuse Auth;\nuse Session;\n\nclass IncidentController extends Controller\n{\n    // ensure user is authenticated in order to use this controller\n    public function __construct() {\n        $this->middleware('auth');\n    }\n\n    \n    public function index() {\n        // set up the breadcrumbs for this action\n        $breadcrumbs = [\n            ['link' => route('home'), 'text' => 'Home'],\n            ['link' => route('incidents'), 'text' => 'Incidents'],\n        ];\n\n        // retrieve the incidents which the user has already viewed\n        $user_viewed = Auth::user()->incidentsViewed;\n\n        // retrieve all the incidents by date, then time\n    \t$incidents = Incident::orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();\n    \treturn view('incidents.index', compact('incidents', 'user_viewed', 'breadcrumbs'));\n    }\n\n\n    public function show(Incident $incident) {\n        // set up the breadcrumbs for this action\n        $breadcrumbs = [\n            ['link' => route('home'), 'text' => 'Home'],\n            ['link' => route('incidents'), 'text' => 'Incidents'],\n            ['link' => route('incident', ['incident' => $incident->id]), 'text' => $incident->title]\n        ];\n\n        // load the comments for the incident\n        $comments = $incident->comment;\n\n        // load the photos for the incident\n        $photos = $incident->photo;\n\n        // record that the user viewed this incident\n        $user = Auth::user();\n        if (!$user->incidentsViewed->contains($incident)) {\n            Auth::user()->incidentsViewed()->save($incident);\n        }\n\n        // load the users who haven't viewed the incident\n        $unviewed_by = collect([]);\n        foreach ($incident->unviewedBy() as $user) {\n            foreach ($user->divisions as $division) {\n                if (Auth::user()->divisions->contains($division)) {\n                    if (!$unviewed_by->contains($user)) {\n                        $unviewed_by->push($user);\n                    }\n                }\n            }\n        }\n\n    \treturn view('incidents.show', compact('incident', 'comments', 'photos', 'unviewed_by', 'breadcrumbs'));\n    }\n\n\n    public function create() {\n        // set up the breadcrumbs for this action\n        $breadcrumbs = [\n            ['link' => route('home'), 'text' => 'Home'],\n            ['link' => route('incidents'), 'text' => 'Incidents'],\n            ['link' => route('createIncident'), 'text' => 'Report an Incident'],\n        ];\n\n        // collect all the locations\n        $locations = Location::orderBy('location', 'ASC')->pluck('location', 'id');\n\n        // collect all the staff\n        $staff = User::orderBy('name', 'ASC')->pluck('name', 'id');\n\n        // collect all the patrons\n        $patrons = Patron::all();\n\n        // reform the patron collection to work with the view's select element\n        $patrons = $patrons->sortBy('last_name')->mapWithKeys(function ($patron) {\n            $patron->list_name = $patron->get_list_name();\n            return $patron->list_name ? [$patron['id'] => $patron['list_name']] : [];\n        });\n\n    \treturn view('incidents.create', compact('breadcrumbs', 'locations', 'staff', 'patrons'));\n    }\n\n\n    public function store(Request $request) {\n        // validate the request input\n        $rules = [\n            'date' => 'required',\n            'time' => 'required',\n            'title' => 'required',\n            'description' => 'required',\n            'user' => 'required',\n            'locations' => 'required',\n        ];\n\n        $this->validate($request, $rules);\n        // dd($request);\n\n        // store it in a new instance of Incident\n        $incident = new Incident;\n        $incident->date = $request->date;\n        $incident->time = $request->time;\n        $incident->title = $request->title;\n        $incident->description = $request->description;\n        $incident->user_id = $request->user;\n\n\n        // save it to the database, which will give it an id,\n        // which is needed for relationships to be created\n        if ($incident->save()) {\n\n            // set the location(s) of the incident\n            foreach ($request->locations as $location_id) {\n                $incident->location()->save(Location::find($location_id));\n            }\n\n            // set the users (employees) involved in the incident\n            if (isset($request->usersInvolved)) {\n                foreach ($request->usersInvolved as $user_id) {\n                    $incident->usersInvolved()->save(User::find($user_id));\n                }\n            }\n\n            // set the patron(s) involved in the incident, if any\n            if (isset($request->patrons)) {\n                foreach ($request->patrons as $patron) {\n                    $incident->patron()->attach($patron);\n                }\n            }\n\n            // set the photos associated with the incident, if any\n            if (isset($request->photos)) {\n                foreach ($request->photos as $photo_id) {\n                    $photo = Photo::find(intval($photo_id));\n                    if ($photo) {\n                        $incident->photo()->save($photo);\n                    }\n                }\n            }\n\n            // email a notification to all staff\n            foreach (User::pluck('email') as $email) {\n                \\Mail::to($email)->send(new IncidentCreated($incident));\n            }\n\n            // redirect back the new incident with a success message\n            Session::flash('success_message', \"The incident was saved and an email notification was sent to the library staff.\");\n            return redirect()->route('incident', ['incident' => $incident->id]);\n        }\n    }\n\n\n    public function edit(Incident $incident) {\n        // set up the breadcrumbs for this action\n        $breadcrumbs = [\n            ['link' => route('home'), 'text' => 'Home'],\n            ['link' => route('incidents'), 'text' => 'Incidents'],\n            ['link' => route('incident', ['incident' => $incident->id]), 'text' => $incident->title],\n        ];\n\n        // make sure the user has permission to edit the incident\n        if (Auth::id() == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))\n        {\n            // collect the photos associated with this incident\n            $photos = $incident->photo;\n\n            // collect the locations\n            $locations = Location::orderBy('location', 'ASC')->pluck('location', 'id');\n\n            // collect all the staff member\n            $staff = User::orderBy('name', 'ASC')->pluck('name', 'id');\n\n            // collect the patrons associated with this incident\n            $patrons = Patron::all();\n            foreach ($patrons as $patron) {\n                $patron->list_name = $patron->get_list_name();\n            }\n            $patrons = $patrons->pluck('list_name', 'id')->sort();\n\n            return view('incidents.edit', compact('incident', 'patrons', 'photos', 'locations', 'staff', 'breadcrumbs'));\n        }\n\n        // return to the incident with an error message\n        $errors = ['Permission Denied' => 'Only ' .\n                                          Auth::user()->find($incident->user_id)->name .\n                                          ' or a supervisor can modify this incident. You may comment below.'];\n\n        return view('incidents.show', compact('incident', 'errors', 'breadcrumbs'));\n    }\n\n\n    public function update(Request $request) {\n        // validate the form\n        $rules = [\n            'date' => 'required',\n            'title' => 'required',\n            'description' => 'required',\n            'user' => 'required',\n            'locations' => 'required',\n        ];\n        $this->validate($request, $rules);\n\n        // retrieve the incident from the database\n        $incident = Incident::find($request->incident);\n\n        // retrive the parts of the request we need for the incident\n        $updates = $request->only(\n            'date',\n            'time',\n            'locations',\n            'staffInvolved',\n            'patronsInvolved',\n            'photos',\n            'title',\n            'description'\n        );\n        \n        // set each attribute and save to the database\n        foreach ($updates as $key => $value) {\n            switch ($key) {\n                case 'locations':\n                    $incident->location()->sync($updates['locations']);\n                    break;\n                case 'staffInvolved':\n                    $incident->usersInvolved()->sync($updates['staffInvolved']);\n                    break;\n                default:\n                    $incident->$key = $value;\n                    break;                \n            }  \n        }\n\n        // record the user who performed the update\n        $incident->updated_by = Auth::user()->id;\n\n        // save the updates to the database\n        $incident->save();\n\n        // email a notification to the incident creator if someone else modified the incident\n        if ($request->user != $incident->user_id) {\n            Mail::to($incident->user->email)\n                  ->send(new IncidentUpdated($incident));\n        }\n\n        Session::flash('success_message', \"Incident Updated - \\\"$incident->title\\\"\");\n        return redirect()->route('incident', ['incident' => $incident->id]);\n    }\n\n\n    public function search(Request $request) {\n        // validate the form\n        $this->validate($request, ['search' => 'required']);\n\n        // search the database\n        $incidents = Incident::where('description',   'LIKE', '%' . $request->search . '%')->\n                               orWhere('patron_name', 'LIKE', '%' . $request->search . '%')->\n                               orWhere('title',       'LIKE', '%' . $request->search . '%')->\n                               orWhereHas('comment', function ($query) use ($request) {\n                                   $query->where('comment', 'LIKE', '%' . $request->search . '%');\n                               })->get();\n\n        // store the search string to pass back to the view\n        $search = $request->search;\n\n        // retrieve the incidents which the user has already viewed\n        $user_viewed = Auth::user()->incidentsViewed;\n\n        // provide the index view with the search results and search string\n        return view('incidents.index', compact('incidents', 'search', 'user_viewed'));\n    }\n\n    public function syncPatron(Request $request, $incident_id) {\n        // validate the form\n        $this->validate($request, ['patron' => 'required|numeric']);\n\n        $patron_id = $request->patron;\n\n        // check if existing or new patron\n        if ($patron_id) {\n            return Incident::find($incident_id)->patron()->attach(Patron::find($patron_id));\n        }\n\n        // pass the request on to the patron controller create() method\n        return redirect()->route('patron', ['incident' => $incident_id]);\n    }\n}\n",
+			"contents": "<?php\n\nnamespace App\\Http\\Controllers;\n\nuse App\\Patron;\nuse Illuminate\\Http\\Request;\n\nclass PatronApiController extends Controller\n{\n    /**\n     * Display a listing of the resource.\n     *\n     * @return \\Illuminate\\Http\\Response\n     */\n    public function index()\n    {\n        //\n    }\n\n    /**\n     * Show the form for creating a new resource.\n     *\n     * @return \\Illuminate\\Http\\Response\n     */\n    public function create()\n    {\n        //\n    }\n\n    /**\n     * Store a newly created patron in the database.\n     *\n     * @param  \\Illuminate\\Http\\Request  $request\n     * @return \\Illuminate\\Http\\Response\n     */\n    public function store(Request $request)\n    {\n        // validate the request\n        if (!$request->isJson()) return response()->json('Request is not JSON' , 415)\n        $rules = [\n            'first_name' => 'string|nullable',\n            'last_name' => 'string|nullable',\n            'description' => 'required',\n            'card_number' => 'size:9|nullable',\n        ];\n\n        $this->validate($request, $rules);\n\n        $patron = new Patron;\n        $patron->first_name = $request->first_name ?: null;\n        $patron->last_name = $request->last_name ?: null;\n        $patron->description = $request->description;\n        $patron->card_number = $request->card_number ?: null;\n\n        $patron->save();\n\n        // set the full name before parsing to JSON\n        $patron->list_name = $patron->get_name('list');\n        $patron->full_name = $patron->get_name('full');\n\n        // redirect back the new patron with a success message\n        Session::flash('success_message', \"The patron was saved.\");\n        return redirect()->route('patron', ['patron' => $patron->id]);\n\n        // return a response to the AJAX request\n        return response()->json($patron, 200);\n    }\n\n    /**\n     * Display the specified resource.\n     *\n     * @param  \\App\\Patron  $patron\n     * @return \\Illuminate\\Http\\Response\n     */\n    public function show(Patron $patron)\n    {\n        //\n    }\n\n    /**\n     * Show the form for editing the specified resource.\n     *\n     * @param  \\App\\Patron  $patron\n     * @return \\Illuminate\\Http\\Response\n     */\n    public function edit(Patron $patron)\n    {\n        //\n    }\n\n    /**\n     * Update the specified resource in storage.\n     *\n     * @param  \\Illuminate\\Http\\Request  $request\n     * @param  \\App\\Patron  $patron\n     * @return \\Illuminate\\Http\\Response\n     */\n    public function update(Request $request, Patron $patron)\n    {\n        //\n    }\n\n    /**\n     * Remove the specified resource from storage.\n     *\n     * @param  \\App\\Patron  $patron\n     * @return \\Illuminate\\Http\\Response\n     */\n    public function destroy(Patron $patron)\n    {\n        //\n    }\n}\n",
+			"file": "app/Http/Controllers/PatronApiController.php",
+			"file_size": 2741,
+			"file_write_time": 131818063869633757,
+			"settings":
+			{
+				"buffer_size": 2742,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "vendor/laravel/framework/src/Illuminate/Http/Request.php",
+			"settings":
+			{
+				"buffer_size": 13265,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "app/Http/Controllers/IncidentController.php",
-			"file_size": 11174,
-			"file_write_time": 131755634143486737,
 			"settings":
 			{
-				"buffer_size": 11139,
+				"buffer_size": 11596,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/Incident.php",
+			"file": "resources/views/incidents/index.blade.php",
 			"settings":
 			{
-				"buffer_size": 1286,
+				"buffer_size": 4417,
 				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "resources/views/incidents/create.blade.php",
+			"settings":
+			{
+				"buffer_size": 3090,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "resources/views/patrons/partials/add_patron_form.blade.php",
+			"settings":
+			{
+				"buffer_size": 1250,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/js/hub.js",
+			"settings":
+			{
+				"buffer_size": 9037,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/Http/Controllers/DivisionController.php",
+			"settings":
+			{
+				"buffer_size": 119,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "database/seeds/DatabaseSeeder.php",
+			"settings":
+			{
+				"buffer_size": 15278,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "database/factories/PatronFactory.php",
+			"settings":
+			{
+				"buffer_size": 319,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "resources/views/patrons/create.blade.php",
+			"settings":
+			{
+				"buffer_size": 742,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "resources/views/photos/partials/add_photo_form.blade.php",
+			"settings":
+			{
+				"buffer_size": 1267,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "resources/views/photos/create.blade.php",
+			"settings":
+			{
+				"buffer_size": 1266,
 				"line_ending": "Unix"
 			}
 		}
@@ -562,20 +656,52 @@
 		"selected_items":
 		[
 			[
-				"inst",
-				"Package Control: Install Package"
-			],
-			[
 				"ui",
 				"UI: Select Color Scheme"
 			],
 			[
-				"instll",
+				"theme",
+				"UI: Select Theme"
+			],
+			[
+				"instal",
 				"Package Control: Install Package"
 			],
 			[
-				"theme",
-				"UI: Select Theme"
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"color",
+				"UI: Select Color Scheme"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"install c",
+				"Package Control: Install Package"
+			],
+			[
+				"UI",
+				"UI: Select Color Scheme"
+			],
+			[
+				"git",
+				"Preferences: GitGutter Settings"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"instll",
+				"Package Control: Install Package"
 			],
 			[
 				"them",
@@ -583,10 +709,6 @@
 			],
 			[
 				"install",
-				"Package Control: Install Package"
-			],
-			[
-				"instal",
 				"Package Control: Install Package"
 			],
 			[
@@ -600,10 +722,6 @@
 			[
 				"in",
 				"Package Control: Install Package"
-			],
-			[
-				"color",
-				"Color Helper: Show Color Picker"
 			],
 			[
 				"laravel",
@@ -632,10 +750,6 @@
 			[
 				"material",
 				"Material Theme: Activate theme"
-			],
-			[
-				"git",
-				"Preferences: GitGutter Settings"
 			],
 			[
 				"hyp",
@@ -676,68 +790,109 @@
 	"expanded_folders":
 	[
 		"/Users/kevin/Sites/hub",
-		"/Users/kevin/Sites/hub/config",
-		"/Users/kevin/Sites/hub/public",
-		"/Users/kevin/Sites/hub/public/images",
-		"/Users/kevin/Sites/hub/storage",
-		"/Users/kevin/Sites/hub/storage/app",
-		"/Users/kevin/Sites/hub/storage/app/public",
-		"/Users/kevin/Sites/hub/storage/app/public/photos"
+		"/Users/kevin/Sites/hub/app",
+		"/Users/kevin/Sites/hub/app/Http",
+		"/Users/kevin/Sites/hub/app/Http/Controllers",
+		"/Users/kevin/Sites/hub/resources",
+		"/Users/kevin/Sites/hub/resources/views",
+		"/Users/kevin/Sites/hub/resources/views/incidents",
+		"/Users/kevin/Sites/hub/resources/views/patrons",
+		"/Users/kevin/Sites/hub/resources/views/patrons/partials"
 	],
 	"file_history":
 	[
+		"/Users/kevin/Sites/hub/vendor/laravel/framework/src/Illuminate/Http/Concerns/InteractsWithContentTypes.php",
+		"/Users/kevin/Sites/hub/resources/views/patrons/partials/add_patron_modal.blade.php",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/PatronApiController.php",
+		"/Users/kevin/Sites/hub/resources/views/patrons/show.blade.php",
 		"/Users/kevin/Sites/hub/app/Patron.php",
-		"/Users/kevin/Sites/hub/storage/framework/views/2921d9363bc0be37395eda304f5a7a431e937f7b.php",
-		"/Users/kevin/Sites/hub/public/js/hub.js",
-		"/Users/kevin/Sites/hub/public/js/app.js",
-		"/Users/kevin/Sites/hub/app/Http/Controllers/PatronController.php",
+		"/Users/kevin/Sites/hub/resources/views/comments/create.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/home.blade.php",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/DashboardController.php",
 		"/Users/kevin/Sites/hub/routes/web.php",
-		"/Users/kevin/Sites/hub/resources/views/incidents/index.blade.php",
-		"/Users/kevin/Sites/hub/public/css/hub.css",
+		"/Users/kevin/Sites/hub/app/Comment.php",
+		"/Users/kevin/Sites/hub/resources/views/layouts/breadcrumbs.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/layouts/app.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/comments/edit.blade.php",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/CommentController.php",
+		"/Users/kevin/Sites/hub/storage/framework/views/1059abf69d0b67e4115ea93189870e653acefd2b.php",
 		"/Users/kevin/Sites/hub/resources/views/incidents/show.blade.php",
+		"/Users/kevin/Sites/hub/database/seeds/DatabaseSeeder.php",
+		"/Users/kevin/Sites/hub/database/factories/CommentFactory.php",
+		"/Users/kevin/Sites/hub/resources/views/patrons/index.blade.php",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/PhotoController.php",
+		"/Users/kevin/Sites/hub/resources/views/photos/index.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/photos/show.blade.php",
+		"/Users/kevin/Sites/hub/routes/api.php",
+		"/Users/kevin/Sites/hub/resources/views/layouts/navigation.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/photos/partials/add_photo_form.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/photos/create.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/patrons/create.blade.php",
+		"/Users/kevin/Sites/hub/public/js/hub.js",
+		"/Users/kevin/Sites/hub/docker-compose.yml",
+		"/Users/kevin/Sites/hub/Dockerfile",
+		"/Users/kevin/Sites/hub/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+		"/Users/kevin/Sites/hub/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+		"/Users/kevin/Sites/hub/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php",
+		"/Users/kevin/Sites/hub/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php",
+		"/Users/kevin/Sites/hub/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php",
+		"/Users/kevin/Sites/hub/vendor/symfony/routing/Route.php",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/PatronController.php",
+		"/Users/kevin/Sites/hub/vendor/nikic/php-parser/lib/PhpParser/Builder.php",
+		"/Users/kevin/Sites/hub/vendor/league/flysystem/src/Handler.php",
+		"/Users/kevin/Sites/hub/app/Exceptions/Handler.php",
+		"/Users/kevin/Sites/hub/storage/framework/views/6a91f1cb2dc698b5dfe31c32d9aed6bc3d537702.php",
+		"/Users/kevin/Sites/hub/storage/framework/views/cd89636fbcfc5250b58ec799de21c91033ddb58d.php",
+		"/Users/kevin/Sites/hub/resources/views/incidents/create.blade.php",
+		"/Users/kevin/Sites/hub/.gitignore",
+		"/Users/kevin/Sites/hub/info.php",
+		"/Users/kevin/Sites/hub/.env",
+		"/Users/kevin/Sites/hub/.dockerignore",
+		"/Users/kevin/Sites/hub/docker/php.ini",
+		"/Users/kevin/Sites/hub/docker/hub.dockerfile",
+		"/Users/kevin/Sites/hub/hub.sublime-project",
+		"/Users/kevin/Sites/hub/resources/views/comments/index.blade.php",
+		"/Users/kevin/Sites/hub/app/Http/Controllers/IncidentController.php",
+		"/Users/kevin/Sites/hub/app/User.php",
+		"/Users/kevin/Sites/hub/public/css/hub.css",
+		"/Users/kevin/Sites/hub/node_modules/replace-comments-x/badges.html",
+		"/Users/kevin/Sites/hub/database/migrations/2017_07_26_150924_create_comments_table.php",
+		"/Users/kevin/Sites/hub/resources/views/incidents/index.blade.php",
+		"/Users/kevin/Sites/hub/database/migrations/2018_03_18_184747_create_patrons_table.php",
+		"/Users/kevin/Sites/hub/storage/framework/views/21012abe31db091802ebeddb5e7f39b3bb0105d4.php",
+		"/Users/kevin/Sites/hub/resources/views/photos/partials/show_add_photo.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/incidents/partials/select_add_patron.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/incidents/edit.blade.php",
+		"/Users/kevin/Sites/hub/database/factories/PhotoFactory.php",
+		"/Users/kevin/Sites/hub/app/Incident.php",
+		"/Users/kevin/Sites/hub/database/migrations/2018_07_24_072409_create_incident_photo_table.php",
+		"/Users/kevin/Sites/hub/database/migrations/2018_03_18_194313_create_patron_photo_table.php",
+		"/Users/kevin/Sites/hub/app/Photo.php",
+		"/Users/kevin/Sites/hub/database/factories/IncidentFactory.php",
+		"/Users/kevin/Sites/hub/database/migrations/2017_08_01_015214_create_photos_table.php",
+		"/Users/kevin/Sites/hub/database/migrations/2017_06_27_204203_create_incidents_table.php",
+		"/Users/kevin/Sites/hub/node_modules/babel-traverse/lib/hub.js",
+		"/Users/kevin/Sites/hub/app/Location.php",
+		"/Users/kevin/Sites/hub/node_modules/lodash/isNative.js",
+		"/Users/kevin/Sites/hub/resources/views/photos/partials/add_photo_modal.blade.php",
+		"/Users/kevin/Sites/hub/resources/views/incidents/partials/show_add_photo.blade.php",
+		"/Users/kevin/Sites/hub/storage/framework/views/2921d9363bc0be37395eda304f5a7a431e937f7b.php",
+		"/Users/kevin/Sites/hub/public/js/app.js",
 		"/Users/kevin/Sites/hub/storage/app/public/photos/13d1eb6b41b6c57e6155cffb14ea9192.jpg",
 		"/Users/kevin/Sites/hub/config/filesystems.php",
-		"/Users/kevin/Sites/hub/app/Http/Controllers/PhotoController.php",
-		"/Users/kevin/Sites/hub/database/factories/PhotoFactory.php",
-		"/Users/kevin/Sites/hub/database/seeds/DatabaseSeeder.php",
 		"/Users/kevin/Sites/hub/storage/framework/views/08012e73876b6c5fd51775885c3f93c7a98a3108.php",
-		"/Users/kevin/Sites/hub/app/Http/Controllers/IncidentController.php",
-		"/Users/kevin/Sites/hub/resources/views/incidents/create.blade.php",
 		"/Users/kevin/Sites/hub/public/index.php",
-		"/Users/kevin/Sites/hub/app/User.php",
-		"/Users/kevin/Sites/hub/app/Incident.php",
-		"/Users/kevin/Sites/hub/app/Comment.php",
-		"/Users/kevin/Sites/hub/app/Photo.php",
 		"/Users/kevin/Sites/hub/database/migrations/2018_07_06_170648_create_incident_photo_table.php",
-		"/Users/kevin/Sites/hub/resources/views/home.blade.php",
-		"/Users/kevin/Sites/hub/resources/views/layouts/app.blade.php",
-		"/Users/kevin/Sites/hub/.gitignore",
 		"/Users/kevin/Sites/hub/config/mail.php",
-		"/Users/kevin/Sites/hub/.env",
-		"/Users/kevin/Sites/hub/resources/views/patrons/create.blade.php",
-		"/Users/kevin/Sites/hub/resources/views/photos/create.blade.php",
 		"/Users/kevin/Sites/hub/app/Providers/AppServiceProvider.php",
-		"/Users/kevin/Sites/hub/docker-compose.yml",
 		"/Users/kevin/Sites/hub/public/css/repository.css",
 		"/Users/kevin/Sites/hub/composer.json",
 		"/Users/kevin/Sites/hub/storage/framework/views/1ab587a0bfec8f573c2290a7e5da4a782b4e3e63.php",
-		"/Users/kevin/Sites/hub/database/migrations/2018_03_18_184747_create_patrons_table.php",
 		"/Users/kevin/Sites/hub/database/factories/PatronFactory.php",
-		"/Users/kevin/Sites/hub/app/Http/Controllers/CommentController.php",
-		"/Users/kevin/Sites/hub/database/migrations/2017_06_27_204203_create_incidents_table.php",
-		"/Users/kevin/Sites/hub/resources/views/comments/create.blade.php",
-		"/Users/kevin/Sites/hub/vendor/symfony/routing/Route.php",
 		"/Users/kevin/Sites/hub/vendor/laravel/framework/src/Illuminate/Auth/RequestGuard.php",
-		"/Users/kevin/Sites/hub/database/factories/IncidentFactory.php",
-		"/Users/kevin/Sites/hub/resources/views/photos/show.blade.php",
 		"/Users/kevin/Sites/hub/storage/framework/views/7c8abf6ff685e57fdf4217b267d4b1cdc4d84180.php",
 		"/Users/kevin/Sites/hub/database/migrations/2018_03_23_183249_create_incident_patron_table.php",
-		"/Users/kevin/Sites/hub/database/migrations/2018_03_18_194313_create_patron_photo_table.php",
-		"/Users/kevin/Sites/hub/database/migrations/2017_08_01_015214_create_photos_table.php",
 		"/Users/kevin/Sites/hub/app/Division.php",
-		"/Users/kevin/Sites/hub/database/factories/CommentFactory.php",
-		"/Users/kevin/Sites/hub/database/migrations/2017_07_26_150924_create_comments_table.php",
-		"/Users/kevin/Sites/hub/app/Http/Controllers/DashboardController.php",
 		"/Users/kevin/Sites/hub/resources/views/reports/index.blade.php",
 		"/Users/kevin/Sites/hub/resources/views/auth/login.blade.php",
 		"/Users/kevin/Sites/hub/app/Http/Controllers/ReportController.php",
@@ -767,63 +922,27 @@
 		"/Users/kevin/Sites/hub/vendor/fzaninotto/faker/src/Faker/Provider/ro_MD/Text.php",
 		"/Users/kevin/Sites/hub/config/database.php",
 		"/Users/kevin/Sites/hub/artisan",
-		"/Users/kevin/Sites/hub/Dockerfile",
 		"/private/var/folders/q3/xmsfh3wn4ksb8ls_xs314tbr0000gq/T/fz3temp-2/cart.php",
 		"/private/var/folders/q3/xmsfh3wn4ksb8ls_xs314tbr0000gq/T/fz3temp-2/admin-new-order.php",
 		"/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/graphics/IOGraphicsTypes.h",
 		"/System/Library/Frameworks/Ruby.framework/Versions/2.0/Headers/ruby/config.h",
 		"/Users/kevin/Sites/psaudio.com/xmlrpc.php",
 		"/Users/kevin/Sites/psaudio.com/wp-config-sample.php",
-		"/Users/kevin/Sites/psaudio.com/phpinfo.php",
-		"/Users/kevin/Sites/psaudio.com/wp-settings.php",
-		"/Users/kevin/Sites/repository/resources/views/comments/index.blade.php",
-		"/Users/kevin/Sites/repository/resources/views/layouts/breadcrumbs.blade.php",
-		"/Users/kevin/Sites/repository/app/User.php",
-		"/Users/kevin/Sites/repository/app/Providers/AppServiceProvider.php",
-		"/Users/kevin/Sites/repository/resources/views/layouts/navigation.blade.php",
-		"/Users/kevin/Sites/repository/app/Http/Middleware/AdminsOnly.php",
-		"/Users/kevin/Sites/repository/storage/framework/views/3e7dc927c93447813fe0a219486561be5d417f7a.php",
-		"/Users/kevin/Sites/repository/resources/views/layouts/app.blade.php",
-		"/Users/kevin/Sites/repository/app/Http/Kernel.php",
-		"/Users/kevin/Sites/repository/app/Http/Controllers/ReportController.php",
-		"/Users/kevin/Sites/repository/app/Http/Controllers/IncidentController.php",
-		"/Users/kevin/Sites/repository/resources/views/reports/index.blade.php",
-		"/Users/kevin/Sites/repository/app/Http/Controllers/DashboardController.php",
-		"/Users/kevin/Sites/repository/storage/framework/views/41475bf2c59e19fd6f1e266298f6a52cc4701cff.php",
-		"/Users/kevin/Sites/repository/resources/views/incidents/index.blade.php",
-		"/Users/kevin/Sites/repository/resources/views/incidents/show.blade.php",
-		"/Users/kevin/Sites/repository/app/Http/Middleware/SupervisorsOnly.php",
-		"/Users/kevin/Sites/repository/storage/framework/views/7c8abf6ff685e57fdf4217b267d4b1cdc4d84180.php",
-		"/Users/kevin/Sites/repository/storage/framework/views/085550feb21499fa352c76785e10ac7175b201d2.php",
-		"/Users/kevin/Sites/repository/routes/web.php",
-		"/Users/kevin/Sites/repository/database/seeds/DatabaseSeeder.php",
-		"/Users/kevin/Sites/repository/database/factories/UserFactory.php",
-		"/Users/kevin/Sites/repository/database/migrations/2014_10_12_000000_create_users_table.php",
-		"/Users/kevin/Sites/repository/app/Incident.php",
-		"/Users/kevin/Sites/repository/resources/views/reports/incidents.blade.php",
-		"/Users/kevin/Sites/repository/app/Mail/IncidentCreated.php",
-		"/Users/kevin/Sites/repository/.env",
-		"/Users/kevin/Sites/repository/.env.example",
-		"/Users/kevin/Sites/repository/resources/views/auth/login.blade.php",
-		"/Users/kevin/Sites/repository/resources/views/home.blade.php",
-		"/Users/kevin/Sites/repository/app/Division.php",
-		"/Users/kevin/Sites/repository/docker-compose.yml",
-		"/Users/kevin/Sites/repository/php.ini",
-		"/Users/kevin/Sites/repository/resources/views/dashboard.blade.php",
-		"/Users/kevin/Sites/repository/app/Http/Controllers/Auth/ResetPasswordController.php",
-		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
-		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Foundation/Auth/ResetsPasswords.php",
-		"/Users/kevin/Sites/repository/vendor/laravel/framework/src/Illuminate/Foundation/Auth/SendsPasswordResetEmails.php"
+		"/Users/kevin/Sites/psaudio.com/phpinfo.php"
 	],
 	"find":
 	{
-		"height": 33.0
+		"height": 43.0
 	},
 	"find_in_files":
 	{
 		"height": 158.0,
 		"where_history":
 		[
+			"",
+			"<current file>",
+			"resources/, public/js/hub.js, app/Http/Controllers/",
+			"resources/, public/js/hub.js",
 			"",
 			"<selection>",
 			"<open files>",
@@ -837,9 +956,67 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": true,
+		"case_sensitive": false,
 		"find_history":
 		[
+			"isJson(",
+			"isJson",
+			"json(",
+			"json",
+			"create(",
+			"patron",
+			"addPatron()",
+			"addPatron",
+			"addPatron(",
+			"addPatron",
+			"modal_footer",
+			")));",
+			"{\n",
+			"@include ('comments.create')",
+			"comment",
+			"null",
+			"incident",
+			"required",
+			"andler->prepareException(",
+			"Handler->prepareException(",
+			"patrons",
+			"list-group",
+			"comment",
+			"added_by",
+			"added",
+			"addedBy",
+			"patron",
+			"col^",
+			"commentstables",
+			"count(",
+			"dd",
+			"thumbnail",
+			"patrons",
+			"->get_heading_name(",
+			"->get_full_name(",
+			"->get_list_name(",
+			"route(",
+			"show.blade",
+			"route(",
+			"patron",
+			"incidentsta",
+			"Auth::",
+			"User::",
+			"PatronPhotoRelationshipSeeder",
+			"photostable",
+			"photo",
+			"function",
+			"save(",
+			"show",
+			"div",
+			"existingPatrons",
+			"store",
+			"save(",
+			"togglePhotoModal",
+			"remove-photo",
+			"incident-photo",
+			"incident-photo-thumbnail-wrapper",
+			"incident",
 			"select2",
 			"patrons",
 			"asset(",
@@ -909,20 +1086,7 @@
 			"patron",
 			"incident",
 			"$incident->date",
-			"get_name()",
-			"patron",
-			"photostable",
-			"$patron->photos",
-			"$photo->patrons",
-			"$photo->patron",
-			"$patron->photo",
-			"$photo->incident",
-			"patronstab",
-			"photo of",
-			"photo of ",
-			"Comment",
-			"comment",
-			"caught_up_count"
+			"get_name()"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -930,6 +1094,11 @@
 		"regex": false,
 		"replace_history":
 		[
+			"photos",
+			"->get_name('heading'",
+			"->get_name('full'",
+			"->get_name('list'",
+			"toggleAddPhotoModal",
 			"",
 			"addPhoto",
 			"addPatronFormWrapper",
@@ -949,54 +1118,24 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 8,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "resources/views/incidents/edit.blade.php",
+					"file": "app/Http/Controllers/PatronController.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3628,
+						"buffer_size": 3468,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2908,
-								2908
-							]
-						],
-						"settings":
-						{
-							"git_gutter_is_enabled": true,
-							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1382.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "app/Http/Controllers/IncidentController.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11139,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8313,
-								8313
+								1718,
+								1643
 							]
 						],
 						"settings":
@@ -1007,27 +1146,269 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5109.0,
+						"translation.y": 1061.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "app/Incident.php",
+					"buffer": 1,
+					"file": "app/Http/Controllers/PatronApiController.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1286,
+						"buffer_size": 2742,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1283,
-								1283
+								786,
+								786
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 780.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "vendor/laravel/framework/src/Illuminate/Http/Request.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13265,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 167.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "app/Http/Controllers/IncidentController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11596,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2647,
+								2654
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2208.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "resources/views/incidents/index.blade.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4417,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								467,
+								467
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 10.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "resources/views/incidents/create.blade.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3090,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2964,
+								2948
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1452.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "resources/views/patrons/partials/add_patron_form.blade.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1250,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								183,
+								183
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "public/js/hub.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9037,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5310,
+								5310
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3327.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "app/Http/Controllers/DivisionController.php",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 119,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								116,
+								116
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/PHP/PHP.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "database/seeds/DatabaseSeeder.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15278,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6005,
+								6011
 							]
 						],
 						"settings":
@@ -1037,10 +1418,129 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 242.0,
+						"translation.y": 6366.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "database/factories/PatronFactory.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 319,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								319,
+								319
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/PHP/PHP.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "resources/views/patrons/create.blade.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 742,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								628,
+								628
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 147.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "resources/views/photos/partials/add_photo_form.blade.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1267,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								50,
+								50
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "resources/views/photos/create.blade.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1266,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1266,
+								0
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Laravel Blade Highlighter/blade.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
 					"type": "text"
 				}
 			]
@@ -1093,6 +1593,10 @@
 	{
 		"height": 100.0
 	},
+	"output.xdebug":
+	{
+		"height": 0.0
+	},
 	"pinned_build_system": "Packages/Markdown Preview/Markdown.sublime-build",
 	"project": "hub.sublime-project",
 	"replace":
@@ -1107,28 +1611,504 @@
 		"selected_items":
 		[
 			[
-				"patron",
-				"app/Patron.php"
+				"interacttype",
+				"vendor/laravel/framework/src/Illuminate/Http/Concerns/InteractsWithContentTypes.php"
+			],
+			[
+				"illuminate/request",
+				"vendor/laravel/framework/src/Illuminate/Http/Request.php"
 			],
 			[
 				"hub.js",
 				"public/js/hub.js"
 			],
 			[
-				"app.js",
-				"public/js/app.js"
+				"addpatronfo",
+				"resources/views/patrons/partials/add_patron_form.blade.php"
+			],
+			[
+				"addpatronmod",
+				"resources/views/patrons/partials/add_patron_modal.blade.php"
+			],
+			[
+				"incident/create",
+				"resources/views/incidents/create.blade.php"
+			],
+			[
+				"incidentcon",
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"patronap",
+				"app/Http/Controllers/PatronApiController.php"
+			],
+			[
+				"patroncon",
+				"app/Http/Controllers/PatronController.php"
+			],
+			[
+				"add_patr",
+				"resources/views/patrons/partials/add_patron_form.blade.php"
+			],
+			[
+				"patronf",
+				"database/factories/PatronFactory.php"
+			],
+			[
+				"databases",
+				"database/seeds/DatabaseSeeder.php"
+			],
+			[
+				"add_patron_modal",
+				"resources/views/patrons/partials/add_patron_modal.blade.php"
+			],
+			[
+				"1059abf69d0b67e4115ea93189870e653acefd2b",
+				"storage/framework/views/1059abf69d0b67e4115ea93189870e653acefd2b.php"
+			],
+			[
+				"web.php",
+				"routes/web.php"
+			],
+			[
+				"incidents/create",
+				"resources/views/incidents/create.blade.php"
+			],
+			[
+				"incident/cre",
+				"resources/views/incidents/create.blade.php"
+			],
+			[
+				"web",
+				"routes/web.php"
+			],
+			[
+				"inci/index",
+				"resources/views/incidents/index.blade.php"
+			],
+			[
+				"commentc",
+				"app/Http/Controllers/CommentController.php"
+			],
+			[
+				"layouts/app",
+				"resources/views/layouts/app.blade.php"
+			],
+			[
+				"view/home",
+				"resources/views/home.blade.php"
+			],
+			[
+				"view/layou/ap",
+				"resources/views/layouts/app.blade.php"
+			],
+			[
+				"views/home",
+				"resources/views/home.blade.php"
+			],
+			[
+				"dashboard",
+				"app/Http/Controllers/DashboardController.php"
+			],
+			[
+				"home.",
+				"resources/views/home.blade.php"
+			],
+			[
+				"comment/edit",
+				"resources/views/comments/edit.blade.php"
+			],
+			[
+				"layou/br",
+				"resources/views/layouts/breadcrumbs.blade.php"
+			],
+			[
+				"comment",
+				"app/Comment.php"
+			],
+			[
+				"patronc",
+				"app/Http/Controllers/PatronController.php"
+			],
+			[
+				"layouts/a",
+				"resources/views/layouts/app.blade.php"
+			],
+			[
+				"commentcon",
+				"app/Http/Controllers/CommentController.php"
+			],
+			[
+				"incident/show",
+				"resources/views/incidents/show.blade.php"
 			],
 			[
 				"inciden",
-				"app/Incident.php"
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"incid/show",
+				"resources/views/incidents/show.blade.php"
+			],
+			[
+				"patron/show",
+				"resources/views/patrons/show.blade.php"
+			],
+			[
+				"comments/cr",
+				"resources/views/comments/create.blade.php"
+			],
+			[
+				"patron/sho",
+				"resources/views/patrons/show.blade.php"
+			],
+			[
+				"comments/cre",
+				"resources/views/comments/create.blade.php"
+			],
+			[
+				"patrons/show",
+				"resources/views/patrons/show.blade.php"
+			],
+			[
+				"comment/ed",
+				"resources/views/comments/edit.blade.php"
+			],
+			[
+				"commentf",
+				"database/factories/CommentFactory.php"
+			],
+			[
+				"database",
+				"database/seeds/DatabaseSeeder.php"
+			],
+			[
+				"web.p",
+				"routes/web.php"
+			],
+			[
+				"patron",
+				"app/Patron.php"
+			],
+			[
+				"patrons/ind",
+				"resources/views/patrons/index.blade.php"
 			],
 			[
 				"incident",
 				"app/Http/Controllers/IncidentController.php"
 			],
 			[
-				"patroncon",
-				"app/Http/Controllers/PatronController.php"
+				"docker",
+				"Dockerfile"
+			],
+			[
+				"docker-",
+				"docker-compose.yml"
+			],
+			[
+				"photos/cre",
+				"resources/views/photos/create.blade.php"
+			],
+			[
+				"Photoc",
+				"app/Http/Controllers/PhotoController.php"
+			],
+			[
+				"photo/show",
+				"resources/views/photos/show.blade.php"
+			],
+			[
+				"photo/inde",
+				"resources/views/photos/index.blade.php"
+			],
+			[
+				"photocon",
+				"app/Http/Controllers/PhotoController.php"
+			],
+			[
+				"api.php",
+				"routes/api.php"
+			],
+			[
+				"patron/create",
+				"resources/views/patrons/create.blade.php"
+			],
+			[
+				"phot/cre",
+				"resources/views/photos/create.blade.php"
+			],
+			[
+				"patr/cre",
+				"resources/views/patrons/create.blade.php"
+			],
+			[
+				"patron/crea",
+				"resources/views/patrons/create.blade.php"
+			],
+			[
+				"Handler",
+				"vendor/league/flysystem/src/Handler.php"
+			],
+			[
+				"handler.",
+				"app/Exceptions/Handler.php"
+			],
+			[
+				"photo/c",
+				"resources/views/photos/create.blade.php"
+			],
+			[
+				"pho/in",
+				"resources/views/photos/index.blade.php"
+			],
+			[
+				"patron/in",
+				"resources/views/patrons/index.blade.php"
+			],
+			[
+				"patron/inde",
+				"resources/views/patrons/index.blade.php"
+			],
+			[
+				"Docker",
+				"Dockerfile"
+			],
+			[
+				"dockeri",
+				".dockerignore"
+			],
+			[
+				".git",
+				".gitignore"
+			],
+			[
+				"proj",
+				"hub.sublime-project"
+			],
+			[
+				".env",
+				".env"
+			],
+			[
+				"inciden/creat",
+				"resources/views/incidents/create.blade.php"
+			],
+			[
+				"photo/cre",
+				"resources/views/photos/create.blade.php"
+			],
+			[
+				"comments/create",
+				"resources/views/comments/create.blade.php"
+			],
+			[
+				"comment/ind",
+				"resources/views/comments/index.blade.php"
+			],
+			[
+				"patron/s",
+				"resources/views/patrons/show.blade.php"
+			],
+			[
+				"hub.css",
+				"public/css/hub.css"
+			],
+			[
+				"comments/in",
+				"resources/views/comments/index.blade.php"
+			],
+			[
+				"comment/cre",
+				"resources/views/comments/create.blade.php"
+			],
+			[
+				"com/index.bl",
+				"resources/views/comments/index.blade.php"
+			],
+			[
+				"inc/show.",
+				"resources/views/incidents/show.blade.php"
+			],
+			[
+				"incidecon",
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"commentfa",
+				"database/factories/CommentFactory.php"
+			],
+			[
+				"Databases",
+				"database/seeds/DatabaseSeeder.php"
+			],
+			[
+				"Commenttabl",
+				"database/migrations/2017_07_26_150924_create_comments_table.php"
+			],
+			[
+				"Comment",
+				"app/Comment.php"
+			],
+			[
+				"CommentCon",
+				"app/Http/Controllers/CommentController.php"
+			],
+			[
+				"inci/in",
+				"resources/views/incidents/index.blade.php"
+			],
+			[
+				"patr/index",
+				"resources/views/patrons/index.blade.php"
+			],
+			[
+				"inc/sho",
+				"resources/views/incidents/show.blade.php"
+			],
+			[
+				"user",
+				"app/User.php"
+			],
+			[
+				"databas",
+				"database/seeds/DatabaseSeeder.php"
+			],
+			[
+				"createpatron",
+				"database/migrations/2018_03_18_184747_create_patrons_table.php"
+			],
+			[
+				"show.",
+				"resources/views/patrons/show.blade.php"
+			],
+			[
+				"patro",
+				"app/Patron.php"
+			],
+			[
+				"21012abe31db091802ebeddb5e7f39b3bb0105d4",
+				"storage/framework/views/21012abe31db091802ebeddb5e7f39b3bb0105d4.php"
+			],
+			[
+				"patr",
+				"app/Patron.php"
+			],
+			[
+				"inc/show",
+				"resources/views/incidents/show.blade.php"
+			],
+			[
+				"create_patron",
+				"database/migrations/2018_03_18_184747_create_patrons_table.php"
+			],
+			[
+				"app/patr",
+				"app/Patron.php"
+			],
+			[
+				"incid/in",
+				"resources/views/incidents/index.blade.php"
+			],
+			[
+				"Incidentc",
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"web.",
+				"routes/web.php"
+			],
+			[
+				"nav",
+				"resources/views/layouts/navigation.blade.php"
+			],
+			[
+				"incideC",
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"incidef",
+				"database/factories/IncidentFactory.php"
+			],
+			[
+				"inc/in",
+				"resources/views/incidents/index.blade.php"
+			],
+			[
+				"photof",
+				"database/factories/PhotoFactory.php"
+			],
+			[
+				"create_inc",
+				"database/migrations/2017_06_27_204203_create_incidents_table.php"
+			],
+			[
+				"create_photo",
+				"database/migrations/2017_08_01_015214_create_photos_table.php"
+			],
+			[
+				"photo",
+				"app/Photo.php"
+			],
+			[
+				"inci",
+				"app/Incident.php"
+			],
+			[
+				"select_a",
+				"resources/views/incidents/partials/select_add_patron.blade.php"
+			],
+			[
+				"incCo",
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"photo.",
+				"app/Photo.php"
+			],
+			[
+				"location",
+				"app/Location.php"
+			],
+			[
+				"in",
+				"node_modules/lodash/isNative.js"
+			],
+			[
+				"incid",
+				"app/Incident.php"
+			],
+			[
+				"incide",
+				"app/Incident.php"
+			],
+			[
+				"inc/edi",
+				"resources/views/incidents/edit.blade.php"
+			],
+			[
+				"select_add",
+				"resources/views/incidents/partials/select_add_patron.blade.php"
+			],
+			[
+				"inc/cr",
+				"resources/views/incidents/create.blade.php"
+			],
+			[
+				"incidenc",
+				"app/Http/Controllers/IncidentController.php"
+			],
+			[
+				"inc/creat",
+				"resources/views/incidents/create.blade.php"
+			],
+			[
+				".giti",
+				".gitignore"
+			],
+			[
+				"app.js",
+				"public/js/app.js"
 			],
 			[
 				"incid/edit",
@@ -1139,484 +2119,8 @@
 				"resources/views/incidents/index.blade.php"
 			],
 			[
-				"hub.css",
-				"public/css/hub.css"
-			],
-			[
-				"web.",
-				"routes/web.php"
-			],
-			[
 				"show",
 				"resources/views/incidents/show.blade.php"
-			],
-			[
-				"DatabaseSeeder.php",
-				"database/seeds/DatabaseSeeder.php"
-			],
-			[
-				"PhotoFactory.php",
-				"database/factories/PhotoFactory.php"
-			],
-			[
-				"photof",
-				"database/factories/PhotoFactory.php"
-			],
-			[
-				"database",
-				"database/seeds/DatabaseSeeder.php"
-			],
-			[
-				"file",
-				"config/filesystems.php"
-			],
-			[
-				"photocon",
-				"app/Http/Controllers/PhotoController.php"
-			],
-			[
-				"filesy",
-				"config/filesystems.php"
-			],
-			[
-				"incid/cre",
-				"resources/views/incidents/create.blade.php"
-			],
-			[
-				"inc/show",
-				"resources/views/incidents/show.blade.php"
-			],
-			[
-				"index",
-				"public/index.php"
-			],
-			[
-				"incidn",
-				"app/Http/Controllers/IncidentController.php"
-			],
-			[
-				"comment",
-				"app/Comment.php"
-			],
-			[
-				"inci",
-				"app/Incident.php"
-			],
-			[
-				"photo",
-				"app/Photo.php"
-			],
-			[
-				"Inciden",
-				"app/Incident.php"
-			],
-			[
-				".giti",
-				".gitignore"
-			],
-			[
-				"databas",
-				"database/seeds/DatabaseSeeder.php"
-			],
-			[
-				"photoc",
-				"app/Http/Controllers/PhotoController.php"
-			],
-			[
-				".env",
-				".env"
-			],
-			[
-				"mail.",
-				"config/mail.php"
-			],
-			[
-				"create.",
-				"resources/views/incidents/create.blade.php"
-			],
-			[
-				"create.bl",
-				"resources/views/incidents/create.blade.php"
-			],
-			[
-				".gitig",
-				".gitignore"
-			],
-			[
-				"databs",
-				"database/seeds/DatabaseSeeder.php"
-			],
-			[
-				"docker",
-				"docker-compose.yml"
-			],
-			[
-				"layout",
-				"resources/views/layouts/app.blade.php"
-			],
-			[
-				"web",
-				"routes/web.php"
-			],
-			[
-				"patron/c",
-				"resources/views/patrons/create.blade.php"
-			],
-			[
-				"patrons/cre",
-				"resources/views/patrons/create.blade.php"
-			],
-			[
-				"compo",
-				"composer.json"
-			],
-			[
-				"1ab587a0bfec8f573c2290a7e5da4a782b4e3e63",
-				"storage/framework/views/1ab587a0bfec8f573c2290a7e5da4a782b4e3e63.php"
-			],
-			[
-				"repo",
-				"public/css/repository.css"
-			],
-			[
-				"patronf",
-				"database/factories/PatronFactory.php"
-			],
-			[
-				"app.bla",
-				"resources/views/layouts/app.blade.php"
-			],
-			[
-				"commentc",
-				"app/Http/Controllers/CommentController.php"
-			],
-			[
-				"incide",
-				"app/Incident.php"
-			],
-			[
-				"patr",
-				"app/Patron.php"
-			],
-			[
-				"createpatrons",
-				"database/migrations/2018_03_18_184747_create_patrons_table.php"
-			],
-			[
-				"route",
-				"vendor/symfony/routing/Route.php"
-			],
-			[
-				"incidentc",
-				"app/Http/Controllers/IncidentController.php"
-			],
-			[
-				"incid",
-				"app/Incident.php"
-			],
-			[
-				"datasee",
-				"database/seeds/DatabaseSeeder.php"
-			],
-			[
-				"creaincid",
-				"database/migrations/2017_06_27_204203_create_incidents_table.php"
-			],
-			[
-				"inc/cre",
-				"resources/views/incidents/create.blade.php"
-			],
-			[
-				"incco",
-				"app/Http/Controllers/IncidentController.php"
-			],
-			[
-				"incidecont",
-				"app/Http/Controllers/IncidentController.php"
-			],
-			[
-				"incf",
-				"database/factories/IncidentFactory.php"
-			],
-			[
-				"repos",
-				"public/css/repository.css"
-			],
-			[
-				"photo/show",
-				"resources/views/photos/show.blade.php"
-			],
-			[
-				"createincid",
-				"database/migrations/2017_06_27_204203_create_incidents_table.php"
-			],
-			[
-				"7c8abf6ff685e57fdf4217b267d4b1cdc4d84180.",
-				"storage/framework/views/7c8abf6ff685e57fdf4217b267d4b1cdc4d84180.php"
-			],
-			[
-				"inc/sho",
-				"resources/views/incidents/show.blade.php"
-			],
-			[
-				"create_in",
-				"database/migrations/2017_06_27_204203_create_incidents_table.php"
-			],
-			[
-				"incidentf",
-				"database/factories/IncidentFactory.php"
-			],
-			[
-				"rep",
-				"public/css/repository.css"
-			],
-			[
-				"incid/ind",
-				"resources/views/incidents/index.blade.php"
-			],
-			[
-				"views/pho",
-				"resources/views/photos/show.blade.php"
-			],
-			[
-				"user",
-				"app/User.php"
-			],
-			[
-				"division",
-				"app/Division.php"
-			],
-			[
-				"blad.p",
-				"resources/views/auth/login.blade.php"
-			],
-			[
-				"reportc",
-				"app/Http/Controllers/ReportController.php"
-			],
-			[
-				"repo/",
-				"resources/views/reports/incidents.blade.php"
-			],
-			[
-				"app.css",
-				"public/css/app.css"
-			],
-			[
-				"seeder",
-				"database/seeds/DatabaseSeeder.php"
-			],
-			[
-				"appser",
-				"app/Providers/AppServiceProvider.php"
-			],
-			[
-				".git",
-				".gitignore"
-			],
-			[
-				"content-pod",
-				"wp-content/themes/superstore_child/content-podcast.php"
-			],
-			[
-				"dbcnx",
-				"wp-content/plugins/ps-find-dealer/dbcnx.php"
-			],
-			[
-				"apps",
-				"app/Providers/AppServiceProvider.php"
-			],
-			[
-				"reports/in",
-				"resources/views/reports/incidents.blade.php"
-			],
-			[
-				"dashboa",
-				"app/Http/Controllers/DashboardController.php"
-			],
-			[
-				"app/user",
-				"app/User.php"
-			],
-			[
-				"front-page",
-				"wp-content/themes/superstore_child/front-page.php"
-			],
-			[
-				"functions",
-				"wp-content/themes/superstore_child/functions.php"
-			],
-			[
-				"footer",
-				"wp-content/themes/superstore_child/footer.php"
-			],
-			[
-				"dashr",
-				"app/Http/Controllers/DashboardController.php"
-			],
-			[
-				"dashb",
-				"app/Http/Controllers/DashboardController.php"
-			],
-			[
-				"conf/app",
-				"config/app.php"
-			],
-			[
-				"data",
-				"config/database.php"
-			],
-			[
-				"dockerf",
-				"Dockerfile"
-			],
-			[
-				"docker-c",
-				"docker-compose.yml"
-			],
-			[
-				"setting",
-				"app/Http/Controllers/SettingController.php"
-			],
-			[
-				"pluggabl",
-				"wp-includes/pluggable.php"
-			],
-			[
-				"index.blade",
-				"resources/views/incidents/index.blade.php"
-			],
-			[
-				"index.",
-				"resources/views/comments/index.blade.php"
-			],
-			[
-				"brea",
-				"resources/views/layouts/breadcrumbs.blade.php"
-			],
-			[
-				"admin",
-				"app/Http/Middleware/AdminsOnly.php"
-			],
-			[
-				"appserv",
-				"app/Providers/AppServiceProvider.php"
-			],
-			[
-				"3e7dc927c93447813fe0a219486561be5d417f7a",
-				"storage/framework/views/3e7dc927c93447813fe0a219486561be5d417f7a.php"
-			],
-			[
-				"layouts.na",
-				"resources/views/layouts/navigation.blade.php"
-			],
-			[
-				"app.",
-				"resources/views/layouts/app.blade.php"
-			],
-			[
-				"app/http/",
-				"app/Http/Kernel.php"
-			],
-			[
-				"report",
-				"app/Http/Controllers/ReportController.php"
-			],
-			[
-				"41475bf2c59e19fd6f1e266298f6a52cc4701cff",
-				"storage/framework/views/41475bf2c59e19fd6f1e266298f6a52cc4701cff.php"
-			],
-			[
-				"dash",
-				"app/Http/Controllers/DashboardController.php"
-			],
-			[
-				"7c8abf6ff685e57fdf4217b267d4b1cdc4d84180",
-				"storage/framework/views/7c8abf6ff685e57fdf4217b267d4b1cdc4d84180.php"
-			],
-			[
-				"navigation",
-				"resources/views/layouts/navigation.blade.php"
-			],
-			[
-				"085550feb21499fa352c76785e10ac7175b201d2",
-				"storage/framework/views/085550feb21499fa352c76785e10ac7175b201d2.php"
-			],
-			[
-				"super",
-				"app/Http/Middleware/SupervisorsOnly.php"
-			],
-			[
-				"ind",
-				"resources/views/reports/index.blade.php"
-			],
-			[
-				"userf",
-				"database/factories/UserFactory.php"
-			],
-			[
-				"datab",
-				"database/seeds/DatabaseSeeder.php"
-			],
-			[
-				"create_users",
-				"database/migrations/2014_10_12_000000_create_users_table.php"
-			],
-			[
-				"app/http/k",
-				"app/Http/Kernel.php"
-			],
-			[
-				"app.bl",
-				"resources/views/layouts/app.blade.php"
-			],
-			[
-				"incidents",
-				"resources/views/reports/incidents.blade.php"
-			],
-			[
-				"41475bf2c59e19fd6f1e266298f6a52cc4701cff.php",
-				"storage/framework/views/41475bf2c59e19fd6f1e266298f6a52cc4701cff.php"
-			],
-			[
-				"home",
-				"resources/views/home.blade.php"
-			],
-			[
-				"",
-				".env"
-			],
-			[
-				"divisi",
-				"app/Division.php"
-			],
-			[
-				"service",
-				"app/Providers/AppServiceProvider.php"
-			],
-			[
-				"databases",
-				"database/seeds/DatabaseSeeder.php"
-			],
-			[
-				"navi",
-				"resources/views/layouts/navigation.blade.php"
-			],
-			[
-				"dashboar",
-				"resources/views/dashboard.blade.php"
-			],
-			[
-				"app/http/controllers/auth/resetpasswordcontroller.php",
-				"app/Http/Controllers/Auth/ResetPasswordController.php"
-			],
-			[
-				"na",
-				"resources/views/layouts/navigation.blade.php"
-			],
-			[
-				"sendspasswordresetemails",
-				"vendor/laravel/framework/src/Illuminate/Foundation/Auth/SendsPasswordResetEmails.php"
 			]
 		],
 		"width": 0.0
@@ -1629,7 +2133,7 @@
 		[
 			[
 				"",
-				"~/Sites/hub/database/seeds/pwt.sublime-workspace"
+				"~/Sites/psaudio.com/psaudio.sublime-workspace"
 			]
 		],
 		"width": 380.0
@@ -1648,14 +2152,89 @@
 	{
 		"xdebug":
 		{
-			"hide_conflict": false
+			"hide_conflict": false,
+			"restore_index":
+			{
+				"48":
+				{
+					"group": 0,
+					"index": 0
+				},
+				"49":
+				{
+					"group": 0,
+					"index": 1
+				},
+				"50":
+				{
+					"group": 0,
+					"index": 2
+				},
+				"52":
+				{
+					"group": 0,
+					"index": 8
+				},
+				"53":
+				{
+					"group": 0,
+					"index": 9
+				},
+				"54":
+				{
+					"group": 0,
+					"index": 3
+				},
+				"62":
+				{
+					"group": 0,
+					"index": 4
+				},
+				"64":
+				{
+					"group": 0,
+					"index": 5
+				},
+				"67":
+				{
+					"group": 0,
+					"index": 6
+				},
+				"75":
+				{
+					"group": 0,
+					"index": 7
+				}
+			},
+			"restore_layout":
+			{
+				"cells":
+				[
+					[
+						0,
+						0,
+						1,
+						1
+					]
+				],
+				"cols":
+				[
+					0.0,
+					1.0
+				],
+				"rows":
+				[
+					0.0,
+					1.0
+				]
+			}
 		}
 	},
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 223.0,
+	"side_bar_width": 271.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
