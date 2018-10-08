@@ -198,7 +198,9 @@ class IncidentController extends Controller
             }
             $patrons = $patrons->pluck('list_name', 'id')->sort();
 
-            return view('incidents.edit', compact('incident', 'patrons', 'photos', 'locations', 'staff', 'breadcrumbs'));
+            return view('incidents.edit', compact(
+                'incident', 'patrons', 'photos', 'locations', 'staff', 'breadcrumbs'
+            ));
         }
 
         // return to the incident with an error message

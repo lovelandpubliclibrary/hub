@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePatron;
 use App\Incident;
 use App\Patron;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 class PatronController extends Controller
@@ -23,13 +25,12 @@ class PatronController extends Controller
             ['link' => route('patrons'), 'text' => 'Patrons'],
         ];
 
-        $patrons = Patron::all();
+        $patrons = Patron::orderBy('created_at', 'desc')->get();
         return view('patrons.index', compact('patrons', 'breadcrumbs'));
     }
 
 
     public function store(StorePatron $request) {
-
         // create and save the new patron
         $patron = new Patron;
         $patron->first_name = $request->first_name ?: null;
@@ -38,16 +39,20 @@ class PatronController extends Controller
         $patron->card_number = $request->card_number ?: null;
         $patron->save();
 
-        // set the full name before returning the object
-        $patron->list_name = $patron->get_name('list');
-        $patron->full_name = $patron->get_name('full');
-
         // associate the patron with incident(s) if necessary
         if ($incidents = $request->associatedIncidents) {
             foreach ($incidents as $incident_id) {
                 $patron->incident()->attach($incident_id);
             }
         }
+
+        // associate the patron with the user
+        $patron->user()->associate(User::find($request->user));
+        $patron->save();
+
+        // set the full name before returning the object
+        $patron->list_name = $patron->get_name('list');
+        $patron->full_name = $patron->get_name('full');
 
         // return a response to the AJAX request
         if ($request->ajax()) {
@@ -62,7 +67,7 @@ class PatronController extends Controller
 
     public function create() {
         $incidents = Incident::orderBy('created_at', 'desc')->get();
-        return view('patrons.create', compact('incidents'));
+        return view('patrons.create', compact('incidents', 'form_action'));
     }
 
 
@@ -105,6 +110,57 @@ class PatronController extends Controller
 
         return view('patrons.show', compact('breadcrumbs', 'patron', 
                                             'comments', 'source'));
+    }
+
+
+
+    public function edit(Patron $patron) {
+        // set up the breadcrumbs for this action
+        $breadcrumbs = [
+            ['link' => route('home'), 'text' => 'Home'],
+            ['link' => route('patrons'), 'text' => 'Patrons'],
+            ['link' => route('patron', ['patron' => $patron->id]), 'text' => $patron->id],
+        ];
+
+        // set the full name before returning the object
+        $patron->list_name = $patron->get_name('list');
+        $patron->full_name = $patron->get_name('full');
+
+        // make sure the user has permission to edit the patron
+        if (Auth::id() == $patron->user_id || Auth::user()->role->contains('role', 'Admin'))
+        {
+            // collect the photos associated with this patron
+            $photos = $patron->photo;
+
+            return view('patrons.edit', compact('patron', 'photos', 'breadcrumbs'));
+        }
+    }
+
+
+    public function update(StorePatron $request) {
+        // retrieve the patron from the database
+        $patron = Patron::find($request->route()->patron);
+        
+        // retrieve the parts of the request we need for the patron
+        $updates = $request->except('_token');
+        
+        // set each attribute
+        foreach ($updates as $property => $value) {
+            switch($property) {
+                case 'user':
+                    $patron->user()->associate(User::find($request->user));
+                    break;
+                default:
+                    $patron->$property = $value;
+                    break;
+            }
+        }
+
+        // save the updates to the database
+        $patron->save();
+
+        Session::flash('success_message', "Patron Updated - \"$patron->full_name\"");
+        return redirect()->route('patron', ['patron' => $patron->id]);
     }
 
 }

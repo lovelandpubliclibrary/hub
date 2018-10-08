@@ -30,8 +30,9 @@ class StorePatron extends FormRequest
         return [
             'first_name' => 'string|nullable',
             'last_name' => 'string|nullable',
-            'description' => 'required',
+            'description' => 'string|required',
             'card_number' => 'digits:9|nullable',
+            'user' => 'numeric|required',
         ];
     }
 }

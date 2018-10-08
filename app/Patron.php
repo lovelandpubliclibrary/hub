@@ -44,20 +44,16 @@ class Patron extends Model
 
             switch($format) {
                 case 'list':
-                    return "{$this->last_name}, {$this->first_name}";
+                    $this->list_name = "Patron #{$this->id}: {$this->last_name}, {$this->first_name}";
+                    $this->first_name = $this->first_name === $replacement ? NULL : $this->first_name;
+                    $this->last_name = $this->last_name === $replacement ? NULL : $this->last_name;
+                    return $this->list_name;
 
                 case 'full':
-                    return "{$this->first_name} {$this->last_name}";
-
-                case 'heading':
-                 // dd([$this->last_name, $this->first_name, $replacement]);
-                    if ($this->last_name == $replacement) {
-                        return "Patron #{$this->id}: {$this->first_name}";
-                    } else if ($this->first_name == $replacement) {
-                        return "Patron #{$this->id}: {$this->last_name}";
-                    }
-
-                    return "{$this->first_name} {$this->last_name}";
+                    $this->full_name = "Patron #{$this->id}: {$this->first_name} {$this->last_name}";
+                    $this->first_name = $this->first_name === $replacement ? NULL : $this->first_name;
+                    $this->last_name = $this->last_name === $replacement ? NULL : $this->last_name;
+                    return $this->full_name;
 
                 default:
                     return $this->get_name('list', $replacement);

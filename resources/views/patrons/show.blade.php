@@ -3,7 +3,7 @@
 @section('content')
 	<div id="patrons">
 		@include('layouts.breadcrumbs')
-
+{{-- {{dd($patron)}} --}}
 		@if(Session::has('success_message'))
 			<div class="alert alert-success">
 				{{ Session::get('success_message') }}
@@ -25,9 +25,18 @@
 			<div class="panel-heading col-xs-12 text-center repository-margin-bottom-1rem">
 				<div class="col-xs-12 repository-margin-bottom-1rem">
 					<h2 class="panel-title">
-						{{ $patron->get_name('heading') }}
+						{{ $patron->get_name() }}
 					</h2>
 				</div>
+
+				{{-- Display the button to edit the incident if the user authored it or is an admin --}}
+				@if (Auth::id() == $patron->user_id || Auth::user()->role->contains('role', 'Admin'))
+					<div class="text-center-xs text-right-sm repository-margin-top-1rem">
+						<a class="btn-sm btn-default link-default" href="/patrons/edit/{{ $patron->id }}" title="Edit Patron">
+							<span class="glyphicon glyphicon-edit"></span> Edit Patron
+						</a>
+					</div>
+				@endif
 
 			</div><!-- .panel-heading -->
 

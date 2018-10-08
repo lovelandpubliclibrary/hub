@@ -18,7 +18,7 @@
 			Edit an Incident
 		</div>
 
-		{{ Form::open(['action' => 'IncidentController@update', 'files' => true]) }}
+		{{ Form::open(['action' => ['IncidentController@update', $incident->id], 'files' => true]) }}
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="form-group required">
