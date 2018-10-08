@@ -18,7 +18,7 @@
 			Edit an Incident
 		</div>
 
-		{{ Form::open(['action' => 'IncidentController@update', 'files' => true]) }}
+		{{ Form::open(['action' => ['IncidentController@update', $incident->id], 'files' => true]) }}
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="form-group required">
@@ -44,6 +44,11 @@
 					    												'multiple' => 'multiple']) }}
 				  	</div>
 
+				  	<div class="form-group required">
+						{{ Form::label('description', 'Describe the Incident:') }}
+						{{ Form::textarea('description', $incident->description, ['class' => 'form-control', 'rows' => '6']) }}
+					</div>
+
 				  	<div class="form-group">
 					    {{ Form::label('staffInvolved', 'Other staff members involved:', ['class' => 'control-label']) }}
 					    {{ Form::select('staffInvolved[]', $staff, $incident->usersInvolved->pluck('id'), ['class' => 'selectpicker form-control',
@@ -51,41 +56,11 @@
 					    												'multiple' => 'multiple']) }}
 				  	</div>
 
-					<div class="form-group">
-						{{ Form::label('patron_name', 'Patron Name:') }}
-						{{ Form::text('patron_name', $incident->patron_name, ['class' => 'form-control']) }}
-					</div>
+					{{-- this partial includes the .form-group wrapper --}}
+					@include('incidents.partials.select_add_patron')
 
-					<div class="form-group">
-						{{ Form::label('card_number', 'Patron Library Card Number:') }}
-						{{ Form::text('card_number', $incident->card_number, ['class' => 'form-control']) }}
-					</div>
-
-					<div class="form-group">
-						{{ Form::label('patron_description', 'Patron Description:') }}
-						{{ Form::text('patron_description', $incident->patron_description, ['class' => 'form-control']) }}
-					</div>
-
-					<div class="form-group required">
-						{{ Form::label('description', 'Describe the Incident:') }}
-						{{ Form::textarea('description', $incident->description, ['class' => 'form-control', 'rows' => '6']) }}
-					</div>
-
-					<div class="form-group">
-						@if (isset($photos))
-							@foreach ($photos as $photo)
-								<div class="col-xs-12 col-sm-5 col-md-4 text-center">
-									<a href="{{ route('editPhoto', ['photo' => $photo->id]) }}">
-										<img class="img-responsive thumbnail" src="{{ asset('images/patrons/' . $photo->filename) }}" alt="Patron Picture">
-									</a>
-								</div>
-							@endforeach
-						@endif
-						<div class="col-xs-12">
-							{{ Form::label('patron_photo', 'Upload a Picture:') }}
-							{{ Form::file('patron_photo', ['class' => 'form-control-file', 'aria-describedby' => 'patron_photo']) }}
-						</div>
-					</div>
+					{{-- this partial includes the .form-group wrapper --}}
+					@include('photos.partials.show_add_photo')
 
 					<div class="panel-footer col-xs-12 text-right repository-margin-top-1rem">
 						{{ Form::hidden('user', Auth::id()) }}
@@ -96,5 +71,10 @@
 				</div><!-- .panel-body -->
 			</div><!-- .panel -->
 		{{ Form::close() }}
+
+		{{-- include hidden modal forms --}}
+		@include('patrons.partials.add_patron_modal')
+		@include('photos.partials.add_photo_modal')
+
 	</div> <!-- #incidents -->
 @endsection

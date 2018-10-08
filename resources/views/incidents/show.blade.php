@@ -44,7 +44,7 @@
 					@isset($photos)
 						@foreach ($photos as $photo)
 							<a href="{{ route('photo', ['photo' => $photo->id]) }}" class="col-xs-12 col-sm-6 col-md-4">
-								<img class="img-responsive thumbnail" src="{{ asset('images/patrons/' . $photo->filename) }}" alt="Patron Picture">
+								<img class="img-responsive thumbnail" src="{{ asset('storage/photos/' . $photo->filename) }}" alt="Patron Picture">
 							</a>
 						@endforeach
 					@endisset
@@ -74,32 +74,63 @@
 					</div>
 
 					<div class="col-xs-12">
+
 						<strong>Other staff members involved:</strong>
-						@if (count($staff = $incident->usersInvolved))
-							@foreach ($staff as $user)
-								{{-- add a comma after every location except the last one --}}
-								{{ $staff->last() != $user ? $user->name . ', ' : $user->name }}
-							@endforeach
-						@else
-							<em>None</em>
-						@endif
+
+						<ul class="list-group">
+
+							@if (count($staff = $incident->usersInvolved))
+
+								@foreach ($staff as $user)
+
+									<li class="list-group-item">
+										{{-- add a comma after every location except the last one --}}
+										{{ $staff->last() == $user ? $user->name : $user->name . ', ' }}
+									</li>
+
+								@endforeach
+
+							@else
+
+								<li class="list-group-item">
+									None
+								</li>
+
+							@endif
+						</ul>
 					</div>
+					
 
 					<div class="col-xs-12">
-						<strong>Patron Name:</strong>
-						@isset($incident->patron_name)
-							{{ $incident->patron_name }}
-						@else
-							<span class="repository-text-italic">Unknown</span>
-						@endisset
-					</div>
 
-					@isset ($incident->patron_description)
-						<div class="col-xs-12">
-							<strong>Patron Description:</strong>
-							{{ $incident->patron_description }}
-						</div>
-					@endisset
+						<strong>Patrons Involved:</strong>
+
+						<ul class="list-group">
+
+							@if (count($patrons = $incident->patron))
+								
+								@foreach ($patrons as $patron)
+									
+									<li class="list-group-item">
+
+										<a href="{{ route('patron', ['patron' => $patron->id]) }}">
+											{{ $patron->get_name('list') }}
+										</a>
+									
+									</li>
+
+								@endforeach
+
+							@else
+								
+								<li class="list-group-item">
+									None
+								</li>
+								
+							@endif
+
+						</ul>
+					</div>
 
 					@isset ($incident->card_number)
 						<div class="col-xs-12">
@@ -116,7 +147,8 @@
 					</div>
 
 					<div class="col-xs-12">
-						<blockquote class="blockquote bg-faded text-muted repository-margin-top-1rem">
+						<strong>Description:</strong>
+						<blockquote class="blockquote bg-faded text-muted">
 							{{ $incident->description }}
 							<footer class="blockquote-footer text-right">
 								<span class="glyphicon glyphicon-user"></span> {{ $incident->user->name }}
@@ -132,9 +164,11 @@
 				@if (Auth::user()->hasRole($supervisor_role) && !empty($unviewed_by))
 					<div class="col-xs-12 bg-warning not-viewed">
 						<ul class="list-group">
-							<strong>Not yet viewed by:</strong>
+							<strong>Not yet viewed by</strong>
+							<span class="caret"></span>
 							@foreach ($unviewed_by as $user)
-								<li class="list-group-item">
+								{{-- inline style provided to assist w/ $(this).toggle(); --}}
+								<li class="list-group-item" style="display:none;">
 									{{ $user->name }}
 								</li>
 							@endforeach

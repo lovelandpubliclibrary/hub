@@ -20,4 +20,6 @@ Homestead.json
 # Project-specific
 .DS_Store
 alpine-repository.Dockerfile
-public/images/patrons/*
+storage/app/patrons/
+hub.sublime-workspace
+info.php

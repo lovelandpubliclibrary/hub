@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 use App\Role;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,8 +17,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // the Supervisor role needs to be shared with the entire application
-        // because it's used in the navigation menu to determine if certain links should be displayed.
-        View::share('supervisor_role', Role::where('role', 'Supervisor')->get()->first());
+        // because it's used in the navigation menu to determine if certain
+        // links should be displayed.
+        /* This needs to be commented out if there is no database when 'php artisan optimize' is run */
+        /* start comment here */
+        if (Schema::hasTable('roles')) {
+            View::share('supervisor_role', Role::where('role', 'Supervisor')->get()->first());
+        }
+
+        Schema::defaultStringLength(191);
+        /* end comment here */
     }
 
     /**

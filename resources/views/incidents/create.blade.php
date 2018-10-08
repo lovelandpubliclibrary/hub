@@ -51,46 +51,37 @@
 				  	<div class="form-group">
 					    {{ Form::label('usersInvolved', 'Other staff members involved:', ['class' => 'control-label']) }}
 					    {{ Form::select('usersInvolved[]', $staff, null, ['class' => 'selectpicker form-control',
-					    					    						'data-size' => '8',
+					    												'data-size' => '8',
 					    												'multiple' => 'multiple']) }}
 				  	</div>
 
-					<div class="form-group">
-						{{ Form::label('patron_name', 'Patron Name:') }}
-						{{ Form::text('patron_name', null, ['class' => 'form-control']) }}
-					</div>
+				  	<div class="form-group required">
+				  		{{ Form::label('description', 'Describe the incident:', ['class' => 'control-label']) }}
+				  		{{ Form::textarea('description', null,
+				  						  ['class' => 'form-control', 'rows' => '6', 'required' => 'required']) }}
+				  	</div>
 
-					<div class="form-group">
-						{{ Form::label('card_number', 'Patron Library Card Number:') }}
-						{{ Form::text('card_number', null, ['class' => 'form-control']) }}
-					</div>
-
-					<div class="form-group">
-						{{ Form::label('patron_description', 'Patron Description:') }}
-						{{ Form::text('patron_description', null, ['class' => 'form-control']) }}
-					</div>
-
-					<div class="form-group required">
-						{{ Form::label('description', 'Describe the incident:', ['class' => 'control-label']) }}
-						{{ Form::textarea('description', null,
-										  ['class' => 'form-control', 'rows' => '6', 'required' => 'required']) }}
-					</div>
-
-					<div class="form-group">
-						{{ Form::label('patron_photos', 'Patron Picture:') }}
-						{{ Form::file('patron_photos[]', ['class' => 'form-control-file', 'aria-describedby' => 'patron_photos', 'multiple' => 'multiple']) }}
-					</div>
+				  	@include('incidents.partials.select_add_patron')
+					
+					@include('photos.partials.show_add_photo')
 
 					{{ Form::hidden('user', Auth::id()) }}
 
-					<div class="panel-footer text-right repository-margin-top-1rem">
-						{{ Form::button('Save Incident',
-										['class' => 'btn btn-default btn-success', 'type' => 'submit', 'title' => 'Save']) }}
+					<div class="col-xs-12 panel-footer text-right repository-margin-top-1rem">
+						{{ Form::button('Save Incident', ['class' => 'btn btn-default btn-success',
+										'type' => 'submit', 'title' => 'Save']) }}
 					</div>
 
 				{{ Form::close() }}
 			</div><!-- .panel-body -->
 		</div> <!-- .panel -->
+
+		{{-- Modal Add Patron Form --}}
+		@include('patrons.partials.add_patron_modal')
+
+		{{-- Modal Add Photo Form --}}
+		@include('photos.partials.add_photo_modal')
+
 	</div> <!-- #incidents -->
   
 @endsection

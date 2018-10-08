@@ -6,9 +6,15 @@ $factory->define(App\Photo::class, function (Faker\Generator $faker) {
 	$width = rand(640, 1586);
 	$height = rand(480, 1024);
 
+	$photos_path = '/app/public/photos/';
+	$category = rand(0,4) ? 'people' : 'city';		// make 1/4 places
+
 	return [
-        'incident_id' => rand(1, App\Incident::all()->count()),
-        'filename'	  => $faker->unique()->image(public_path() . '/images/patrons/', $width, $height, 'people', false),
-        'caption'	  => $faker->realText(),
+        'filename'	=> $faker->unique()->image(storage_path() . $photos_path, 
+        							 		   $width, 
+        							 		   $height, 
+        							 		   $category, 
+        							 		   false),
+        'caption'	=> $faker->realText(),
     ];
 });

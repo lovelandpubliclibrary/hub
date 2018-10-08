@@ -9,6 +9,7 @@ use App\Comment;
 use App\Photo;
 use App\Location;
 use App\Division;
+use App\Patron;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DivisionsTableSeeder::class);
         $this->call(LocationsTableSeeder::class);
         $this->call(IncidentsTableSeeder::class);
+        $this->call(PatronsTableSeeder::class);
         $this->call(CommentsTableSeeder::class);
         $this->call(PhotosTableSeeder::class);
 
@@ -34,9 +36,17 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleUserRelationshipSeeder::class);
         $this->call(DivisionUserRelationshipSeeder::class);
         $this->call(UserSupervisorRelationshipSeeder::class);
+        $this->call(PatronPhotoRelationshipSeeder::class);
+        $this->call(IncidentPhotoRelationshipSeeder::class);
+        $this->call(IncidentPatronRelationshipSeeder::class);
+        $this->call(IncidentLocationRelationshipSeeder::class);
+        $this->call(UserPatronRelationshipSeeder::class);
     }
 }
 
+/**
+ * Seed the models
+ */
 class UsersTableSeeder extends Seeder {
 
 	public function run() {
@@ -245,7 +255,9 @@ class CommentsTableSeeder extends Seeder {
 
 		// count the number of incidents and set a limit on the number of comments to generate
 		$incident_count = Incident::all()->count();
-		$comment_count = rand($incident_count * 3, $incident_count * 6);
+		$patron_count = Patron::all()->count();
+		$sum = $incident_count + $patron_count;
+		$comment_count = rand($sum * 4, $sum * 6);
 
 		$this->command->info('--> Creating ' . $comment_count . ' Comments... ');		// output progress
 
@@ -253,6 +265,23 @@ class CommentsTableSeeder extends Seeder {
 	}
 }
 
+class PatronsTableSeeder extends Seeder {
+
+	public function run() {
+
+		$this->command->info('--> Deleting existing patrons... ');
+		DB::table('patrons')->delete();
+		
+
+		// count the number of incidents and set a limit on the number of patrons to generate
+		$incident_count = Incident::all()->count();
+		$patron_count = rand($incident_count, $incident_count * 2);
+
+		$this->command->info('--> Creating ' . $patron_count . ' Patrons... ');		// output progress
+
+		factory(Patron::class, $patron_count)->create();		// create the patrons
+	}
+}
 
 class PhotosTableSeeder extends Seeder {
 
@@ -261,18 +290,21 @@ class PhotosTableSeeder extends Seeder {
 		$this->command->info('--> Deleting existing photos... ');
 		DB::table('photos')->delete();
 		// remove all the existing photos within the filesystem
-		$photos = glob(public_path() . '/images/patrons/*');		// http://php.net/manual/en/function.glob.php
+		$photos = glob(storage_path() . '/app/public/photos/*');		// http://php.net/manual/en/function.glob.php
 		foreach ($photos as $photo) {
 			if (is_file($photo)) unlink($photo);
 		}
 		
-		$count = round(Incident::all()->count() / rand(2, 3));		// determine the number of photos to create
-
-		$this->command->info('--> Creating ' . $count . ' Photos... ');		// output progress
-
-		factory(Photo::class, $count)->create();		// create new photos
+		$patron_count = Patron::all()->count();
+		$photo_count = round(($patron_count * 2) / 3);		// get 2/3 of the patron_count
+		$this->command->info("--> Creating {$photo_count} photos...");		// output progress
+		factory(Photo::class, $photo_count)->create();		// create photos
 	}
 }
+
+/**
+ * Seed the relationships
+ */
 
 
 class IncidentUserViewedRelationshipSeeder extends Seeder {
@@ -314,7 +346,7 @@ class IncidentUserInvolvedRelationshipSeeder extends Seeder {
 
 		// attach a random number of incidents to each user
 		foreach ($users as $user) {
-				$incidents = Incident::where('id', '<=', rand(1, $incident_count / 5))->get();
+				$incidents = Incident::where('id', '<=', rand(1, $incident_count / 2))->get();
 				$user->incidentsInvolved()->saveMany($incidents);
 		}
 	}
@@ -372,8 +404,6 @@ class RoleUserRelationshipSeeder extends Seeder {
 			$user->load('role');	// reload the relationship on the model
 
 			// assign some users as supervisors
-			$this->command->info('---> Assigning the Supervisor role to ' . $user->name . '... ');		// output progress
-
 			// ensure the user isn't already a supervisor and that every user doesn't get assigned the supervisor Role
 			if (!$user->hasRole($supervisor_role) && $user->id % 4 === 0) {
 				$user->role()->save($supervisor_role);
@@ -381,7 +411,7 @@ class RoleUserRelationshipSeeder extends Seeder {
 
 		}
 
-		$this->command->info('---> Assigning the User role to all users... done.');		// output progress (formatted for consistency with other status messages)
+		$this->command->info('---> Assigning roles to all other users... ');		// output progress (formatted for consistency with other status messages)
 	}
 }
 
@@ -421,12 +451,11 @@ class DivisionUserRelationshipSeeder extends Seeder {
 	}
 }
 
-
 class UserSupervisorRelationshipSeeder extends Seeder {
 
 	public function run() {
 
-		$this->command->info('Assigning Supervisors direct reports... ');		// output progress
+		$this->command->info('--> Assigning Supervisors direct reports... ');		// output progress
 
 		$users = User::with('role')->get();
 		$supervisor_role = Role::where('role', 'Supervisor')->get()->first();
@@ -449,5 +478,105 @@ class UserSupervisorRelationshipSeeder extends Seeder {
 				}
 			}
 		}
+	}
+}
+
+
+class PatronPhotoRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		$this->command->info('--> Assigning Photos to Patrons... ');		// output progress
+
+		$patrons = Patron::all();
+
+		foreach ($patrons as $patron) {
+			$photos = Photo::all();
+			for ($i = rand(0,3); $i < 3; $i++) {	// each patron has a chance to be associated with 0-3 photos
+				$photos = $photos->shuffle();
+				$photo = $photos->pop();
+				$patron->photo()->attach($photo);
+			}
+		}
+	}
+}
+
+
+class IncidentPhotoRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		$this->command->info('--> Assigning Photos to Incidents... ');		// output progress
+
+		$incidents = Incident::all();
+
+		foreach ($incidents as $incident) {
+			$photos = Photo::all();
+			for ($i = rand(0,2); $i < 2; $i++) {	// each patron has a chance to be associated with 0-2 photos
+				$photos = $photos->shuffle();
+				$photo = $photos->pop();
+				$incident->photo()->attach($photo);
+			}
+		}
+	}
+}
+
+
+class IncidentPatronRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		$this->command->info('--> Involving Patrons in Incidents... ');		// output progress
+
+		$patrons = Patron::all();
+
+		foreach ($patrons as $patron) {
+			$incidents = Incident::all();
+
+			for ($i = rand(1,3); $i < 3; $i++) {		// each patron has a chance to be associated with 1 -3 incidents
+				$incidents = $incidents->shuffle();
+				$incident = $incidents->pop();
+				$patron->incident()->attach($incident);
+			}
+		}
+	}
+}
+
+
+class IncidentLocationRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		$this->command->info('--> Assigning Locations to Incidents... ');		// output progress
+
+		$incidents = Incident::all();
+
+		foreach ($incidents as $incident) {
+			$locations = Location::all();
+
+			for ($i = rand(1,3); $i <= 3; $i++) {		// each incident has a chance to be assigned 1-3 locations
+				$locations = $locations->shuffle();
+				$location = $locations->pop();
+				$incident->location()->attach($location);
+				if ($incident->id % 2 === 0) break;
+			}
+		}
+	}
+}
+
+
+class UserPatronRelationshipSeeder extends Seeder {
+
+	public function run() {
+
+		$this->command->info('--> Assigning Patrons to Staff Members... ');
+
+		$patrons = Patron::all();
+		$staff = User::all();
+
+		foreach ($patrons as $patron) {
+			$staff->shuffle()->first()->patrons()->save($patron);
+		}
+
 	}
 }

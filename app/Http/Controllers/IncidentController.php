@@ -8,6 +8,7 @@ use App\Incident;
 use App\Photo;
 use App\User;
 use App\Location;
+use App\Patron;
 use Mail;
 use App\Mail\IncidentCreated;
 use App\Mail\IncidentUpdated;
@@ -70,7 +71,8 @@ class IncidentController extends Controller
             }
         }
 
-    	return view('incidents.show', compact('incident', 'comments', 'photos', 'unviewed_by', 'breadcrumbs'));
+    	return view('incidents.show', compact('incident', 'comments', 'photos', 
+                                              'unviewed_by', 'breadcrumbs'));
     }
 
 
@@ -88,7 +90,19 @@ class IncidentController extends Controller
         // collect all the staff
         $staff = User::orderBy('name', 'ASC')->pluck('name', 'id');
 
-    	return view('incidents.create', compact('breadcrumbs', 'locations', 'staff'));
+        // collect all the patrons
+        $patrons = Patron::all();
+
+        // reform the patron collection to work with the view's select element
+        $patrons = $patrons->sortBy('last_name')->mapWithKeys(function ($patron) {
+            $patron->list_name = $patron->get_name('list');
+            return $patron->list_name ? [$patron['id'] => $patron['list_name']] : [];
+        });
+
+        // create a placeholder incident to pass to the view
+        $incident = new Incident;
+
+    	return view('incidents.create', compact('breadcrumbs', 'locations', 'staff', 'patrons', 'incident'));
     }
 
 
@@ -96,18 +110,15 @@ class IncidentController extends Controller
         // validate the request input
         $rules = [
             'date' => 'required',
+            'time' => 'required',
             'title' => 'required',
             'description' => 'required',
             'user' => 'required',
             'locations' => 'required',
         ];
 
-        $upload_count = count($request->file('patron_photos'));
-        foreach(range(0, $upload_count) as $index) {
-            $rules['patron_photos.' . $index] = 'image|mimes:jpeg,png,jpg,gif,bmp|max:2048';
-        }
-
         $this->validate($request, $rules);
+        // dd($request);
 
         // store it in a new instance of Incident
         $incident = new Incident;
@@ -116,9 +127,6 @@ class IncidentController extends Controller
         $incident->title = $request->title;
         $incident->description = $request->description;
         $incident->user_id = $request->user;
-        $incident->patron_name = ($request->patron_name ?: null);
-        $incident->card_number = ($request->card_number ?: null);
-        $incident->patron_description = ($request->patron_description ?: null);
 
 
         // save it to the database, which will give it an id,
@@ -130,32 +138,24 @@ class IncidentController extends Controller
                 $incident->location()->save(Location::find($location_id));
             }
 
-            // set the users involved in the incident
-            if (count($request->usersInvolved)) {
+            // set the users (employees) involved in the incident
+            if (isset($request->usersInvolved)) {
                 foreach ($request->usersInvolved as $user_id) {
                     $incident->usersInvolved()->save(User::find($user_id));
                 }
             }
 
-            // validate and upload the patron photo if necessary
-            if ($request->hasFile('patron_photos')) {
+            // set the patron(s) involved in the incident, if any
+            if (isset($request->patrons)) {
+                foreach ($request->patrons as $patron_id) {
+                    $incident->patron()->attach($patron_id);
+                }
+            }
 
-                // loop through the uploads and save them to the filesystem and database
-                foreach ($request->file('patron_photos') as $upload) {
-
-                    // create a unique name for the file
-                    $filename = uniqid('img_') . '.' . $upload->getClientOriginalExtension();
-
-                    // create a new instance of a photo
-                    $photo = Photo::create([
-                        'filename' => $filename,
-                        'incident_id' => $incident->id,
-                    ]);
-
-                    // create the Incident/Photo relationship and move the file
-                    if ($incident->photo()->save($photo)) {
-                        $upload->move(public_path('images/patrons/'), $filename);
-                    }
+            // set the photos associated with the incident, if any
+            if (isset($request->photos)) {
+                foreach ($request->photos as $photo_id) {
+                        $incident->photo()->attach($photo_id);
                 }
             }
 
@@ -191,14 +191,24 @@ class IncidentController extends Controller
             // collect all the staff member
             $staff = User::orderBy('name', 'ASC')->pluck('name', 'id');
 
-            return view('incidents.edit', compact('incident', 'photos', 'locations', 'staff', 'breadcrumbs'));
-        } else {
-            // return to the incident with an error message
-            $errors = ['Permission Denied' => 'Only ' .
-                                              Auth::user()->find($incident->user_id)->name .
-                                              ' or a supervisor can modify this incident. You may comment below.'];
-            return view('incidents.show', compact('incident', 'errors', 'breadcrumbs'));
+            // collect the patrons associated with this incident
+            $patrons = Patron::all();
+            foreach ($patrons as $patron) {
+                $patron->list_name = $patron->get_name('list');
+            }
+            $patrons = $patrons->pluck('list_name', 'id')->sort();
+
+            return view('incidents.edit', compact(
+                'incident', 'patrons', 'photos', 'locations', 'staff', 'breadcrumbs'
+            ));
         }
+
+        // return to the incident with an error message
+        $errors = ['Permission Denied' => 'Only ' .
+                                          Auth::user()->find($incident->user_id)->name .
+                                          ' or a supervisor can modify this incident. You may comment below.'];
+
+        return view('incidents.show', compact('incident', 'errors', 'breadcrumbs'));
     }
 
 
@@ -222,9 +232,8 @@ class IncidentController extends Controller
             'time',
             'locations',
             'staffInvolved',
-            'patron_name',
-            'card_number',
-            'patron_description',
+            'patrons',
+            'photos',
             'title',
             'description'
         );
@@ -233,10 +242,16 @@ class IncidentController extends Controller
         foreach ($updates as $key => $value) {
             switch ($key) {
                 case 'locations':
-                    $incident->location()->sync($updates['locations']);
+                    $incident->location()->sync($updates[$key]);
                     break;
                 case 'staffInvolved':
-                    $incident->usersInvolved()->sync($updates['staffInvolved']);
+                    $incident->usersInvolved()->sync($updates[$key]);
+                    break;
+                case 'patrons':
+                    $incident->patron()->sync($updates[$key]);
+                    break;
+                case 'photos':
+                    $incident->photo()->sync($updates[$key]);
                     break;
                 default:
                     $incident->$key = $value;
@@ -281,5 +296,20 @@ class IncidentController extends Controller
 
         // provide the index view with the search results and search string
         return view('incidents.index', compact('incidents', 'search', 'user_viewed'));
+    }
+
+    public function syncPatron(Request $request, $incident_id) {
+        // validate the form
+        $this->validate($request, ['patron' => 'required|numeric']);
+
+        $patron_id = $request->patron;
+
+        // check if existing or new patron
+        if ($patron_id) {
+            return Incident::find($incident_id)->patron()->attach(Patron::find($patron_id));
+        }
+
+        // pass the request on to the patron controller create() method
+        return redirect()->route('patron', ['incident' => $incident_id]);
     }
 }

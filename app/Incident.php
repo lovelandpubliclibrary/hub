@@ -8,20 +8,24 @@ use App\User;
 class Incident extends Model
 {
 	// model relationships
-	public function user() {		// this relationship tracks which user authored the incident
+	public function user() {		// author
 		return $this->belongsTo('App\User');
 	}
 
-	public function comment() {
+	public function comment() {		
 		return $this->hasMany('App\Comment');
 	}
 
 	public function photo() {
-		return $this->hasMany('App\Photo');
+		return $this->belongsToMany('App\Photo');
 	}
 	
 	public function location() {
 		return $this->belongsToMany('App\Location')->withTimestamps();
+	}
+
+	public function patron() {
+		return $this->belongsToMany('App\Patron')->withTimestamps();
 	}
 
 	// track which users have viewed the incident
@@ -34,13 +38,12 @@ class Incident extends Model
 		return $this->belongsToMany('App\User', 'incident_user_involved')->withTimestamps();
 	}
 
-
 	// truncate the description field of incidents for summary display
 	public function truncate_description($length) {
 		return substr($this->description, 0, strpos(wordwrap($this->description, $length, '\n'), '\n'));
 	}
 
-
+	// return all the users which haven't viewed the incident
 	public function unviewedBy() {
 		$users = User::all();
 		return $users->diff($this->usersViewed);

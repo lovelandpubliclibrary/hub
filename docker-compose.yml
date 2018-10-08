@@ -3,33 +3,36 @@ services:
  app:
   depends_on:
    - db
-  image: redisforlosers/repository
+  image: redisforlosers/hub
   volumes:
-   - ./:/repository
+   - ./:/hub
   ports:
    - 10000:10000
-  container_name: repository
+  container_name: hub
+  hostname: hub
 
  phpmyadmin:
   depends_on:
    - db
   image: phpmyadmin/phpmyadmin
   ports:
-   - 8888:80
-  container_name: phpmyadmin-repository
+   - 18888:80
+  container_name: hub-phpmyadmin
+  hostname: hub-phpmyadmin
 
  db:
   image: mysql:5.7
   volumes:
    - dbdata:/var/lib/mysql
   environment:
-   MYSQL_ROOT_PASSWORD: lpl_repository_root
-   MYSQL_DATABASE: dev_repository
-   MYSQL_USER: lpl_repository
-   MYSQL_PASSWORD: lpl_repository
+   MYSQL_ROOT_PASSWORD: lpl_hub_root
+   MYSQL_DATABASE: dev_hub
+   MYSQL_USER: lpl_hub
+   MYSQL_PASSWORD: lpl_hub
   ports:
-   - 3307:3306
-  container_name: mysql-repository
+   - 13306:3306
+  container_name: hub-mysql
+  hostname: hub-mysql
 
 volumes:
   dbdata:

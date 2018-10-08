@@ -44,6 +44,10 @@ class User extends Authenticatable
         return $this->hasMany('App\User', 'supervisor_id');
     }
 
+    public function patrons() {
+        return $this->hasMany('App\Patron');
+    }
+
     
     use Notifiable;
 

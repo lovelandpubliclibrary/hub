@@ -34,7 +34,7 @@ class DashboardController extends Controller
      */
     public function reports() {
         $supervises = Auth::user()->supervises;
-        $supervises_count = $supervises->count();
+        $supervises_count = $supervises->count() ?: 0;
         $caught_up_count = 0;
 
         foreach ($supervises as $user) {
@@ -43,8 +43,27 @@ class DashboardController extends Controller
             }
         }
 
-        $percentage = $caught_up_count / $supervises_count;
+        // get an integer percentage to use for progress bar
+        $caught_up_ratio = $caught_up_count / $supervises_count;
+        $percentage = round($caught_up_ratio * 100);
+        $bg_color_calculator = ( floor($caught_up_ratio * 4) / 4 ) * 100;
 
-        return view('reports.index', compact('caught_up_count', 'supervises_count', 'percentage'));
+        $bg_color = 'progress-bar-';
+        switch ($bg_color_calculator) {
+            case 25:
+                $bg_color .= 'warning';
+                break;
+            case 50:
+                $bg_color .= 'info';
+                break;
+            case 75:
+                $bg_color .= 'success';
+                break;
+            default:
+                $bg_color .= 'danger';
+                break;
+        }
+
+        return view('reports.index', compact('caught_up_count', 'supervises_count', 'percentage', 'bg_color'));
     }
 }

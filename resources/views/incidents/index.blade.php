@@ -16,7 +16,7 @@
 
 			<div class="panel-body">
 				<div class="col-xs-12">
-					<a href="/incidents/create" class="btn btn-default col-xs-12 col-sm-3 repository-margin-bottom-1rem">
+					<a href="{{ route('createIncident') }}" class="btn btn-danger col-xs-12 col-sm-3 repository-margin-bottom-1rem">
 						Report a New Incident
 					</a>
 
@@ -47,7 +47,7 @@
 								</th>
 
 								<th class="hidden-xs text-nowrap">
-									Patron Name
+									Patron Names
 								</th>
 
 								<th>
@@ -83,8 +83,14 @@
 									</td>
 
 									<td class="hidden-xs text-nowrap">
-										@if ($incident->patron_name)
-											{{ $incident->patron_name }}
+										@if ($incident->patron)
+											<ul>
+												@foreach ($incident->patron as $patron)
+													<li>
+														{{ $patron->get_name('list') }}
+													</li>
+												@endforeach
+											</ul>
 										@endif
 									</td>
 
@@ -96,26 +102,37 @@
 										{{-- display icons based on the properties of the incidents --}}
 										<div>
 											@if (count($incident->photo))
-												<span class="glyphicon glyphicon-picture" title="has photo of patron"></span>
-											@endif
-
-											@if ($incident->card_number)
-												<span class="glyphicon glyphicon-barcode" title="has library card of patron"></span>
+												<span class="glyphicon glyphicon-picture" title="has photo(s)"></span>
 											@endif
 
 											@if (count($incident->comment))
 												<span class="glyphicon glyphicon-comment" title="has comments by staff"></span>
 											@endif
+
+											@if ($incident->user_id == Auth::user()->id)
+												<span class="glyphicon glyphicon-pencil" title="can edit"></span>
+											@endif
 										</div>
 									</td>
 
 									<td class="hidden-xs">
+										@if ($incident->user_id == Auth::user()->id)
+											<div class="hub-float-right">
+												<a class="btn btn-default" href="/incidents/edit/{{ $incident->id }}" role="button">
+													Edit
+												</a>
+											</div>
+										@endif
+
 										@if (strlen($incident->description) > 75)
 											{{ $incident->truncate_description(75) }}...
 										@else
 											{{ $incident->description }}
 										@endif
 									</td>
+
+
+
 								</tr>
 							@endforeach
 						</tbody>
