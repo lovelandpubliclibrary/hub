@@ -24,6 +24,7 @@ $(document).ready(function() {
 		var form_data = new FormData();
 		var file = form.find('input[type="file"]')[0].files[0];
 		form_data.append('photo', file);
+		form_data.append('user', form.find('input[name="user"]').val());
 		if (form.find('textarea').val()) {
 			form_data.append('caption', form.find('textarea').val());
 		}
@@ -128,6 +129,7 @@ $(document).ready(function() {
 		new_patron.last_name = $('#last_name').val();
 		new_patron.description = $('#addPatronFormWrapper textarea').val();
 		new_patron.card_number = $('#card_number').val();
+		new_patron.user = $('#addPatronForm input[name="user"]').val();
 
 		// provide feedback that the patron is being saved
 		if (save_button.length) {
@@ -155,7 +157,10 @@ $(document).ready(function() {
 
 				// reset the new patron form
 				filled_inputs.each(function() {
-					$(this).val('');
+					console.log($(this));
+					if ($(this).attr('name') != 'user') {
+						$(this).val('');
+					}
 				});
 
 				// close the modal

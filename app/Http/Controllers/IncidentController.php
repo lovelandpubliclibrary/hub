@@ -89,6 +89,7 @@ class IncidentController extends Controller
 
         // collect all the staff
         $staff = User::orderBy('name', 'ASC')->pluck('name', 'id');
+        $staff->forget(Auth::user()->id);
 
         // collect all the patrons
         $patrons = Patron::all();

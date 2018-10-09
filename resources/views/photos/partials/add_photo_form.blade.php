@@ -44,7 +44,7 @@
 				</label>
 			
 				<select name="associatedIncident" id="associatedIncident" style="width:68%;">
-					<option>None</option>
+					<option></option>
 					@foreach ($incidents as $incident)
 						<option value="{{ $incident->id }}" title="{{ $incident->description }}">
 							{{ $incident->title }}

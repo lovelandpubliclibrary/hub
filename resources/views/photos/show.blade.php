@@ -23,9 +23,19 @@
 		<div class="panel-heading col-xs-12 text-center repository-margin-bottom-1rem">
 			<div class="center-block">
 				<h2 class="panel-title">
-					Photo of {{ $patron->get_name('full') }}
+					Photo #{{ $photo->id }}
 				</h2>
 			</div>
+
+			{{-- Display the button to edit the photo if the user authored it or is an admin --}}
+			@if (Auth::id() == $photo->user_id || Auth::user()->role->contains('role', 'Admin'))
+				<div class="text-center-xs text-right-sm repository-margin-top-1rem">
+					<a class="btn-sm btn-default link-default" href="/photos/edit/{{ $photo->id }}" title="Edit Photo">
+						<span class="glyphicon glyphicon-edit"></span> Edit Photo
+					</a>
+				</div>
+			@endif
+
 		</div><!-- .panel-heading -->
 
 		<div class="panel-body">

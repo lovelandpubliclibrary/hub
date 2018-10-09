@@ -27,6 +27,7 @@ class StorePatron extends FormRequest
      */
     public function rules()
     {
+        logger(request());
         return [
             'first_name' => 'string|nullable',
             'last_name' => 'string|nullable',
