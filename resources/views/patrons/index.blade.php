@@ -105,15 +105,15 @@
 					
 				@else
 					@if (!empty($search))
-						There are no incidents which match your search parameters.
+						There are no patrons which match your search parameters.
 						<div class="text-center">
 							<a href="{{ route('incidents') }}">Clear Search</a>
 						</div>
 					@else
-						There are no incidents to display.
+						There are no patrons to display.
 					@endif
 				@endif
 			</div> <!-- .panel-body -->
 		</div> <!-- .panel -->
-	</div> <!-- #incidents -->
+	</div> <!-- #patrons -->
 @endsection
