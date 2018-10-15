@@ -55,15 +55,18 @@ class PhotoController extends Controller
         $photo->save();     // required in order to save relationships
 
         // associate patrons and confirm
-        if (!empty($request->associatedPatrons)) {
-            foreach ($request->associatedPatrons as $patron_id) {
-                $photo->patron()->attach(Patron::find($patron_id))->save();
-            }            
-            
+        if (isset($request->associatedPatrons)
+            && $patron_ids = array_filter(json_decode($request->associatedPatrons))) {
+            foreach ( $patron_ids as $patron_id) {
+                $photo->patron()->attach(Patron::find($patron_id));
+                $photo->save();
+            }
+
             if (!$photo->patron) {
                 $errors[] = 'There was a problem associating patron(s) with this photo.';
             }
         }
+
 
         // associate incident and confirm
         if (isset($request->associatedIncident)) {
@@ -92,6 +95,11 @@ class PhotoController extends Controller
 
         // return response to ajax request
         if ($request->ajax()) {
+            // gather necessary resoures for the frontend
+            $photo->url = asset('storage/photos/' . $photo->filename);
+
+            unset($photo->user);    // don't need this
+
             return response()->json($photo, 200);
         }
 
