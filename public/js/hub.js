@@ -48,7 +48,6 @@ $(document).ready(function() {
 			processData: false,
 			contentType: false,
 			success:function(photo_json) {
-				console.log(photo_json)
 				// build the photo DOM/content and append to .photo-thumbnail-wrapper
 				var photo_column = $('<div class="col-xs-3">').append('<div class="photo">');
 				var photo_container = photo_column.find('.photo')	// build the photo container
@@ -164,7 +163,6 @@ $(document).ready(function() {
 
 				// reset the new patron form
 				filled_inputs.each(function() {
-					console.log($(this));
 					if ($(this).attr('name') != 'user') {
 						$(this).val('');
 					}
