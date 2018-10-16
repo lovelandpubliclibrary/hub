@@ -24,12 +24,13 @@ $(document).ready(function() {
 		var form_data = new FormData();
 		var file = form.find('input[type="file"]')[0].files[0];
 		form_data.append('photo', file);
+		form_data.append('user', form.find('input[name="user"]').val());
 		if (form.find('textarea').val()) {
 			form_data.append('caption', form.find('textarea').val());
 		}
 
 		if (form.find('#associatedPatrons').val()) {
-		 	form_data.append('associatedPatrons[]', form.find('#associatedPatrons').val());
+		 	form_data.append('associatedPatrons', JSON.stringify(form.find('#associatedPatrons').val()));
 		}
 
 		// provide feedback that the patron is being saved
@@ -47,15 +48,22 @@ $(document).ready(function() {
 			processData: false,
 			contentType: false,
 			success:function(photo_json) {
+				console.log(photo_json)
 				// build the photo DOM/content and append to .photo-thumbnail-wrapper
 				var photo_column = $('<div class="col-xs-3">').append('<div class="photo">');
 				var photo_container = photo_column.find('.photo')	// build the photo container
-				photo_container.append($('<div class="thumbnail">'));
+				photo_container.append($(`<div class="thumbnail" data-photo=${photo_json.id}>`));
 				var photo = photo_container.find('.thumbnail');
 				photo.append($(`<img src="${photo_json.url}" alt="${photo_json.filename}">`));
+
+				if (photo_json.patron) {
+					photo.append('<ul>');
+					$.each(photo_json.patron, function() {
+						photo.find('ul:last').append($(`<li>Patron #${this.id}</li>`));
+					});
+				}
 				photo.append($('<button class="btn btn-sm btn-danger remove-photo-btn">Remove</button>'));
 				photo.append($(`<input type="hidden" name="photos[]" value=${photo_json.id}>`));
-				console.log(photo_column);
 				$('.photo-thumbnail-wrapper').append(photo_column);
 
 				// add the event handler to the remove button, which will undo all of this
@@ -128,6 +136,7 @@ $(document).ready(function() {
 		new_patron.last_name = $('#last_name').val();
 		new_patron.description = $('#addPatronFormWrapper textarea').val();
 		new_patron.card_number = $('#card_number').val();
+		new_patron.user = $('#addPatronForm input[name="user"]').val();
 
 		// provide feedback that the patron is being saved
 		if (save_button.length) {
@@ -155,7 +164,10 @@ $(document).ready(function() {
 
 				// reset the new patron form
 				filled_inputs.each(function() {
-					$(this).val('');
+					console.log($(this));
+					if ($(this).attr('name') != 'user') {
+						$(this).val('');
+					}
 				});
 
 				// close the modal

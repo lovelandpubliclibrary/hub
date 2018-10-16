@@ -16,20 +16,12 @@
 	<div class="panel panel-default">
 		<div class="panel-heading text-center">
 			<h2 class="panel-title">
-				Edit a Picture
+				Edit Photo#{{ $photo->id }}
 			</h2>
 		</div> <!-- .panel-heading -->
 		<div class="panel-body">
-			<div class="well well-sm well-default">
-				Photo of {{ ($photo->incident->patron_name ?: 'Unknown Patron') }}
-				from 
-				<a href="{{ route('incident', ['incident' => $photo->incident->id]) }}">
-					{{ $photo->incident->title }}
-				</a>
-				on {{ $photo->incident->date }}
-			</div>
 			<div>
-				<img class="img-responsive center-block" src="{{ asset('images/patrons/' . $photo->filename) }}" alt="Patron Picture">
+				<img class="img-responsive center-block" src="{{ asset('storage/photos/' . $photo->filename) }}" alt="Patron Picture">
 			</div>
 		</div><!-- .panel-body -->
 

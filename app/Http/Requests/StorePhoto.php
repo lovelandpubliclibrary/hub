@@ -27,7 +27,7 @@ class StorePhoto extends FormRequest
         return [
             'photo' => 'file|required|mimes:jpeg,png,gif|max:10240',
             'caption' => 'string|nullable',
-            'associatedPatrons' => 'array|nullable',
+            'associatedPatrons' => 'string|nullable',
             'associatedIncident' => 'numeric|nullable'
         ];
     }

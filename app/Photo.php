@@ -15,6 +15,10 @@ class Photo extends Model
     	return $this->belongsToMany('App\Patron')->withTimestamps();
     }
 
+    public function user() {
+    	return $this->belongsTo('App\User');
+    }
+
     // mass assignable attributes
     protected $fillable = ['filename'];
 }

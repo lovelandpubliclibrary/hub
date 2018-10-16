@@ -13,6 +13,13 @@
 							<div class="thumbnail">
 								<img src="{{ asset('storage/photos/' . $photo->filename) }}" 
 									 alt="{{ $photo->filename }}">
+								@if ($photo->patron)
+									<ul>
+									@foreach ($photo->patron as $patron)
+										<li>$patron->id</li>
+									@endforeach
+									</ul>
+								@endif
 								<button class="btn btn-sm btn-danger remove-photo-btn">
 									Remove
 								</button>
@@ -24,7 +31,9 @@
 					</div>
 				@endforeach
 			@endisset
+
 			{{-- photo thumbnails injected here w/ jQuery when added to incident --}}
+			
 		</div> {{-- .photo-thumbnail-wrapper --}}
 	</div>	{{-- .row --}}
 	

@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
-use App\Photo;
-use App\Patron;
-use App\Incident;
-use Session;
 use App\Http\Requests\StorePhoto;
+use App\Incident;
+use App\Patron;
+use App\Photo;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Session;
 
 class PhotoController extends Controller
 {
@@ -34,6 +35,7 @@ class PhotoController extends Controller
 
 
     public function store(StorePhoto $request) {
+        logger($request);
         // collect resources
         $file = $request->file('photo');
         $photo = new Photo;
@@ -51,27 +53,34 @@ class PhotoController extends Controller
         $photo->filename = $file_name;
         $photo->caption = $request->caption ?: null;
         $photo->save();     // required in order to save relationships
-        $photo->url = asset("/storage/photos/{$file_name}");
 
-logger($request->associatedPatrons);
         // associate patrons and confirm
-        if (!empty(array_filter($request->associatedPatrons))) {
-            foreach ($request->associatedPatrons as $patron_id) {
+        if (isset($request->associatedPatrons)
+            && $patron_ids = array_filter(json_decode($request->associatedPatrons))) {
+            foreach ( $patron_ids as $patron_id) {
                 $photo->patron()->attach(Patron::find($patron_id));
-            }            
-            
-            if (!count($photo->patron)) {
+                $photo->save();
+            }
+
+            if (!$photo->patron) {
                 $errors[] = 'There was a problem associating patron(s) with this photo.';
             }
         }
 
+
         // associate incident and confirm
         if (isset($request->associatedIncident)) {
-            $photo->incident()->attach(Incident::find($request->associatedIncident));
+            $photo->incident()->attach(Incident::find($request->associatedIncident))->save();
 
             if (!count($photo->incident)) {
                 $errors[] = 'There was a problem associating the incident with this photo.';
             } 
+        }
+
+        // associate user and confirm
+        $photo->user()->associate(User::find($request->user))->save();
+        if (!$photo->user) {
+            $errors[] = 'There was a problem associating the user with this photo.';
         }
         
         // something went wrong, return the errors
@@ -86,6 +95,11 @@ logger($request->associatedPatrons);
 
         // return response to ajax request
         if ($request->ajax()) {
+            // gather necessary resoures for the frontend
+            $photo->url = asset('storage/photos/' . $photo->filename);
+
+            unset($photo->user);    // don't need this
+
             return response()->json($photo, 200);
         }
 
@@ -99,8 +113,7 @@ logger($request->associatedPatrons);
         // set up breadcrumbs for this action
         $breadcrumbs = [
             ['link' => route('home'), 'text' => 'Home'],
-            ['link' => route('incidents'), 'text' => 'Incidents'],
-            ['link' => route('incident', ['incident' => $photo->incident->id]), 'text' => $photo->incident->title],
+            ['link' => route('photos'), 'text' => 'Photos'],
             ['link' => route('photo', ['photo' => $photo->id]),
                 'text' => 'Photo of ' . ($photo->patron ?: 'Unknown Patron')],
         ];
@@ -125,10 +138,9 @@ logger($request->associatedPatrons);
 
 
 	public function delete(Photo $photo) {
-		$incident_id = $photo->incident->id;
 		$photo->delete();
         Session::flash('success_message', 'Photo deleted.');
-		return redirect()->route('incident', ['incident' => $incident_id]);
+		return redirect()->route('photos');
 	}
 
 
