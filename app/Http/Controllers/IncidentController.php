@@ -100,10 +100,17 @@ class IncidentController extends Controller
             return $patron->list_name ? [$patron['id'] => $patron['list_name']] : [];
         });
 
+        // collect the existing photos
+        $photos = Photo::orderBy('created_at', 'desc')->get()->chunk(3);
+
         // create a placeholder incident to pass to the view
         $incident = new Incident;
 
-    	return view('incidents.create', compact('breadcrumbs', 'locations', 'staff', 'patrons', 'incident'));
+    	return view(
+            'incidents.create',
+            compact(
+                'breadcrumbs', 'locations', 'staff', 'patrons', 'incident', 'photos')
+        );
     }
 
 
@@ -183,8 +190,11 @@ class IncidentController extends Controller
         // make sure the user has permission to edit the incident
         if (Auth::id() == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
         {
+            // collect the photos
+            $photos = Photo::orderBy('created_at', 'desc')->get()->chunk(3);
+
             // collect the photos associated with this incident
-            $photos = $incident->photo;
+            $associated_photos = $incident->photo;
 
             // collect the locations
             $locations = Location::orderBy('location', 'ASC')->pluck('location', 'id');
@@ -200,7 +210,7 @@ class IncidentController extends Controller
             $patrons = $patrons->pluck('list_name', 'id')->sort();
 
             return view('incidents.edit', compact(
-                'incident', 'patrons', 'photos', 'locations', 'staff', 'breadcrumbs'
+                'incident', 'patrons', 'associated_photos', 'locations', 'staff', 'photos', 'breadcrumbs'
             ));
         }
 

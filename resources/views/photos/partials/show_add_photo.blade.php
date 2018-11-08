@@ -6,8 +6,8 @@
 
 	<div class="row">
 		<div class="photo-thumbnail-wrapper">
-			@isset($photos)
-				@foreach ($photos as $photo)
+			@isset($associated_photos)
+				@foreach ($associated_photos as $photo)
 					<div class="col-xs-12 col-sm-5 col-md-4 text-center">
 						<div class="photo">
 							<div class="thumbnail">
@@ -16,7 +16,7 @@
 								@if ($photo->patron)
 									<ul>
 									@foreach ($photo->patron as $patron)
-										<li>$patron->id</li>
+										<li>Patron #{{ $patron->id }}</li>
 									@endforeach
 									</ul>
 								@endif

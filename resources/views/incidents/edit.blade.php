@@ -75,6 +75,7 @@
 		{{-- include hidden modal forms --}}
 		@include('patrons.partials.add_patron_modal')
 		@include('photos.partials.add_photo_modal')
+		@include('photos.partials.existing_photo_modal')
 
 	</div> <!-- #incidents -->
 @endsection
