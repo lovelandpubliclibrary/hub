@@ -82,6 +82,9 @@
 		{{-- Modal Add Photo Form --}}
 		@include('photos.partials.add_photo_modal')
 
+		{{-- Modal Add Existing Photo Form --}}
+		@include('photos.partials.existing_photo_modal')
+
 	</div> <!-- #incidents -->
   
 @endsection

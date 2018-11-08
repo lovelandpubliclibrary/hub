@@ -5,6 +5,48 @@ $(document).ready(function() {
 	/* Instantiate Select2 jQuery plugin for all select elements */
 	$('select').select2();
 
+	/* Attach an existing photo to an incident */
+	$('.selectExistingPhoto').click(function() {
+		// gather resources
+		var photo = {
+			'id': $(this).data('photo-id'),
+			'url': $(this).find('img').attr('src'),
+		}
+
+		// collect the photos already attached to the incident
+		var attachedPhotos = [];
+		$('div.photo-thumbnail-wrapper').find('.thumbnail').map(function() {
+			attachedPhotos.push($(this).data('photo'));
+		});
+
+		// check if the selected photo is already attached to the incident
+		if (!attachedPhotos.includes(photo.id)) {
+			// build the photo DOM/content and append to .photo-thumbnail-wrapper
+			var photo_column = $('<div class="col-xs-3">').append('<div class="photo">');
+			var photo_container = photo_column.find('.photo')	// build the photo container
+			photo_container.append($(`<div class="thumbnail" data-photo=${photo.id}>`));
+			var photoDOM = photo_container.find('.thumbnail');
+			photoDOM.append($(`<img src="${photo.url}">`));
+
+			photoDOM.append($('<button class="btn btn-sm btn-danger remove-photo-btn">Remove</button>'));
+			photoDOM.append($(`<input type="hidden" name="photos[]" value=${photo.id}>`));
+			$('.photo-thumbnail-wrapper').append(photo_column);
+
+			// add the event handler to the remove button, which will undo all of this
+			photoDOM.find('button.remove-photo-btn').click(function(event) {
+				// remove the thumbnail wrapper and it's contents
+				photo_column.remove();
+
+				return false;	// prevent default behavior
+			});
+		}
+
+		// close the modal
+		$('#existingPhotoModal button[data-dismiss="modal"]:first').click();
+
+		return false;	// prevent default behavior
+	});
+
 	/* Submit the AddPhoto form via AJAX when displayed as a modal */
 	$('#addPhotoModal button[type="submit"]').click(function(event) {
 
@@ -48,7 +90,6 @@ $(document).ready(function() {
 			processData: false,
 			contentType: false,
 			success:function(photo_json) {
-				console.log(photo_json)
 				// build the photo DOM/content and append to .photo-thumbnail-wrapper
 				var photo_column = $('<div class="col-xs-3">').append('<div class="photo">');
 				var photo_container = photo_column.find('.photo')	// build the photo container
@@ -164,7 +205,6 @@ $(document).ready(function() {
 
 				// reset the new patron form
 				filled_inputs.each(function() {
-					console.log($(this));
 					if ($(this).attr('name') != 'user') {
 						$(this).val('');
 					}
