@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-	<div id="#incidents">
+	<div id="incidents">
 		@include('layouts.breadcrumbs')
 
 		@if (count($errors) > 0)

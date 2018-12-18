@@ -23,7 +23,7 @@ class StorePhoto extends FormRequest
      */
     public function rules()
     {
-        // logger(request());
+        logger(request());
         return [
             'photo' => 'file|required|mimes:jpeg,png,gif|max:10240',
             'caption' => 'string|nullable',

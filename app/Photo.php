@@ -21,4 +21,11 @@ class Photo extends Model
 
     // mass assignable attributes
     protected $fillable = ['filename'];
+
+    // return all photos in the specified number of collections (columns)
+    static function getColumns(int $numColumns) {
+        $numPhotos = Photo::count();
+        $photosPerColumn = $numPhotos / $numColumns;
+        return Photo::all()->reverse()->chunk($photosPerColumn);
+    }
 }

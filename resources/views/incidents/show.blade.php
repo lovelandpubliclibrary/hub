@@ -31,11 +31,9 @@
 
 				{{-- Display the button to edit the incident if the user authored it or is an admin --}}
 				@if (Auth::id() == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
-					<div class="text-center-xs text-right-sm repository-margin-top-1rem">
-						<a class="btn-sm btn-default link-default" href="/incidents/edit/{{ $incident->id }}" title="Edit Incident">
-							<span class="glyphicon glyphicon-edit"></span> Edit Incident
-						</a>
-					</div>
+					<a class="btn-sm btn-default link-default" href="/incidents/edit/{{ $incident->id }}" title="Edit Incident">
+						<span class="glyphicon glyphicon-edit"></span> Edit Incident
+					</a>
 				@endif
 			</div><!-- .panel-heading -->
 
