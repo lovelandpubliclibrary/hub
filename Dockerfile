@@ -1,4 +1,4 @@
-FROM php:7
+FROM php:7.2
 
 MAINTAINER "Kevin Briggs, redisforlosers@gmail.com"
 
@@ -20,6 +20,7 @@ zip \
 unzip \
 && docker-php-ext-install pdo_mysql \
 && pecl install mcrypt-1.0.1 \
+&& pecl install xdebug-2.6.1 \
 && docker-php-ext-enable mcrypt \
 && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 && rm -rf /var/lib/apt/lists/*

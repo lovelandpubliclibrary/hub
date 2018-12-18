@@ -4,5 +4,14 @@
 		{
 			"path": "."
 		}
+	],
+	"xdebug":
+	[
+		{
+			"ide_key": "xdebug-sublime",
+			"port": 5000,
+			"debug": true,
+			"super_globals": false
+		}
 	]
 }
