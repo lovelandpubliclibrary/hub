@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
-class StorePatron extends FormRequest
+class StoreComment extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,11 +28,9 @@ class StorePatron extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'string|nullable',
-            'last_name' => 'string|nullable',
-            'description' => 'string|required',
-            'card_number' => 'digits:9|nullable',
+            'comment' => 'string|required',
             'user' => 'numeric|required',
+            'commentable' => 'array|required|size:2',
         ];
     }
 }

@@ -12,8 +12,8 @@ class Incident extends Model
 		return $this->belongsTo('App\User');
 	}
 
-	public function comment() {		
-		return $this->hasMany('App\Comment');
+	public function comments() {		
+		return $this->morphMany('App\Comment', 'commentable');
 	}
 
 	public function photo() {

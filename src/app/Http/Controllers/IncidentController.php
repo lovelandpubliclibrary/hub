@@ -48,7 +48,11 @@ class IncidentController extends Controller
         ];
 
         // load the comments for the incident
-        $comments = $incident->comment;
+        $comments = $incident->comments;
+        $commentable = [
+            'type' => 'incident',
+            'id' => $incident->id,
+        ];
 
         // load the photos for the incident
         $photos = $incident->photo;
@@ -71,8 +75,16 @@ class IncidentController extends Controller
             }
         }
 
-    	return view('incidents.show', compact('incident', 'comments', 'photos', 
-                                              'unviewed_by', 'breadcrumbs'));
+        // render the view
+        $view_vars = compact(
+            'incident',
+            'comments',
+            'photos', 
+            'unviewed_by',
+            'breadcrumbs', 
+            'commentable'
+        );
+    	return view('incidents.show', $view_vars);
     }
 
 

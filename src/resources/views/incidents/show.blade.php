@@ -155,10 +155,6 @@
 					</div>
 				</div><!-- .row -->
 
-				@if (isset($comments) && count($comments) > 0)
-					@include ('comments.index')
-				@endif
-
 				@if (Auth::user()->hasRole($supervisor_role) && !empty($unviewed_by))
 					<div class="col-xs-12 bg-warning not-viewed">
 						<ul class="list-group">
@@ -173,10 +169,12 @@
 						</ul>
 					</div>
 				@endif
-
 			</div><!-- .panel-body -->
 
 			<div class="panel-footer">
+				@if (isset($comments) && count($comments) > 0)
+					@include ('comments.index')
+				@endif
 				<div>
 					<h3 id="comment">Comment on this Incident:</h3>
 					@include ('comments.create')

@@ -6,16 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
+    // make all fields mass assignable
+    protected $guarded = [];
+
+
     // model relationships
-    public function incident() {
-    	return $this->belongsTo('App\Incident');
+    /**
+     * Get all of the owning commentable models.
+     */
+    public function commentable()
+    {
+        return $this->morphTo();
     }
 
-    public function user() {
-    	return $this->belongsTo('App\User');
-    }
-
-    public function patron() {
-    	return $this->belongsTo('App\Patron');
+    public function user()
+    {
+        return $this->belongsTo('App\User');
     }
 }

@@ -20,17 +20,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run() {
     	// seed the models
+    	// order is important
         $this->call(UsersTableSeeder::class);
     	$this->call(RolesTableSeeder::class);
         $this->call(DivisionsTableSeeder::class);
         $this->call(LocationsTableSeeder::class);
         $this->call(IncidentsTableSeeder::class);
         $this->call(PatronsTableSeeder::class);
-        $this->call(CommentsTableSeeder::class);
         $this->call(PhotosTableSeeder::class);
+        $this->call(CommentsTableSeeder::class);
 
 
-        // seed the model relationships
+        // seed the relationships
         $this->call(IncidentUserViewedRelationshipSeeder::class);
         $this->call(IncidentUserInvolvedRelationshipSeeder::class);
         $this->call(RoleUserRelationshipSeeder::class);
@@ -245,26 +246,6 @@ class IncidentsTableSeeder extends Seeder {
 	}
 }
 
-class CommentsTableSeeder extends Seeder {
-
-	public function run() {
-
-		$this->command->info('--> Deleting existing comments... ');
-		DB::table('comments')->delete();
-		
-
-		// count the number of incidents and set a limit on the number of comments to generate
-		$incident_count = Incident::all()->count();
-		$patron_count = Patron::all()->count();
-		$sum = $incident_count + $patron_count;
-		$comment_count = rand($sum * 4, $sum * 6);
-
-		$this->command->info('--> Creating ' . $comment_count . ' Comments... ');		// output progress
-
-		factory(Comment::class, $comment_count)->create();		// create the comments
-	}
-}
-
 class PatronsTableSeeder extends Seeder {
 
 	public function run() {
@@ -296,9 +277,38 @@ class PhotosTableSeeder extends Seeder {
 		}
 		
 		$patron_count = Patron::all()->count();
-		$photo_count = round(($patron_count * 2) / 3);		// get 2/3 of the patron_count
-		$this->command->info("--> Creating {$photo_count} photos...");		// output progress
+		$incident_count = Incident::all()->count();
+		$average_count = ($patron_count + $incident_count) / 2;
+		$photo_count = round($average_count / 3);		// determine the number of photos to create
+		$this->command->info("--> Downloading and creating {$photo_count} photos...");		// output progress
 		factory(Photo::class, $photo_count)->create();		// create photos
+	}
+}
+
+
+class CommentsTableSeeder extends Seeder {
+
+	public function run() {
+
+		$this->command->info('--> Deleting existing comments... ');
+		DB::table('comments')->delete();
+		
+
+		// count the number of commentable entities
+		$incident_count = Incident::all()->count();
+		$patron_count = Patron::all()->count();
+		$photo_count = Photo::all()->count();
+		$sum = $incident_count + $patron_count + $photo_count;
+
+		// set a limit on the number of comments that will be generated
+		$comment_count = rand($sum * 5, $sum * 8);
+
+		// output progress
+		$message = '--> Creating ' . $comment_count . ' Comments... ';
+		$this->command->info($message);
+
+		// create the comments
+		factory(Comment::class, $comment_count)->create();
 	}
 }
 

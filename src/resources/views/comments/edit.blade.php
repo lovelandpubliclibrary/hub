@@ -31,6 +31,8 @@
 
 					{{ Form::hidden('user', Auth::id()) }}
 					{{ Form::hidden('comment_id', $comment->id) }}
+					{{ Form::hidden('commentable[type]', $comment->commentable_type) }}
+					{{ Form::hidden('commentable[id]', $comment->commentable_id) }}
 
 					<div class="panel-footer text-right repository-margin-top-1rem">
 						<a class="text-danger repository-margin-right-1rem" href="{{ route('deleteComment', ['comment' => $comment->id]) }}">

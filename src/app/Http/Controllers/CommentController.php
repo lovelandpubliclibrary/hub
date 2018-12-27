@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreComment;
 use App\Comment;
 use Session;
 use Auth;
@@ -16,44 +17,22 @@ class CommentController extends Controller
         $this->middleware('auth');
     }
 
-    public function store(Request $request) {
-    	// validate the request input
-        $rules = [
-            'comment' => 'required',
-            'user' => 'required',
-            'incident' => 'integer|nullable',
-            'patron' => 'integer|nullable',
-            'source' => 'string|required',
-            'source_id' => 'integer|required',
-        ];
-        $this->validate($request, $rules);
+    public function store(StoreComment $request) {
+        // gather the comment info
+        $comment = new Comment([
+            'comment' => $request->comment,
+            'user_id' => $request->user,
+            'commentable_type' => $request->commentable['type'],
+            'commentable_id' => $request->commentable['id']
+        ]);
 
+        $comment->save();
 
-        // store it in a new instance of Incident
-        $comment = new Comment;
-        $comment->comment = $request->comment;
-        $comment->user_id = $request->user;
-
-        // save so that we can attach relationships to the comment
-        if ($comment->save()) {
-
-            $source = $request->source;
-            $source_id = $request->source_id;
-
-            switch ($source) {
-                case 'patron':
-                    $patron = Patron::find($source_id);
-                    $comment->patron()->associate($patron)->save();
-                    break;
-                case 'incident':
-                    $incident = Incident::find($source_id);
-                    $comment->incident()->associate($incident)->save();
-                    break;
-            }
-
-            Session::flash('success_message', "Comment Saved.");
-            return redirect()->route($source, [$source => $source_id]);
-        }
+        Session::flash('success_message', "Comment Saved.");
+        return redirect()->route(
+            $comment->commentable_type,
+            ['id' => $comment->commentable_id]
+        );
     }
 
 
@@ -82,15 +61,8 @@ class CommentController extends Controller
     }
 
 
-    public function update(Request $request)
+    public function update(StoreComment $request)
     {
-        // validate the form
-        $rules = [
-            'comment' => 'required',
-            'user' => 'required'
-        ];
-        $this->validate($request, $rules);
-
         // retrieve the comment from the database
         $comment = Comment::find($request->comment_id);
         
@@ -100,18 +72,8 @@ class CommentController extends Controller
         // save the updates to the database
         $comment->save();
 
-        // determine the where the comment appears
-        $source = [];
-        if ($incident = $comment->incident) {
-            $source['source'] = 'incident';
-            $source['id'] = $incident->id;
-        } else if ($patron = $comment->patron) {
-            $source['source'] = 'patron';
-            $source['id'] = $patron->id;
-        }
-
         Session::flash('success_message', "Comment Updated.");
-        return redirect()->route($source['source'], [$source['source'] => $source['id']]);
+        return redirect()->route($comment->commentable_type, ['id' => $comment->commentable_id]);
     }
 
 

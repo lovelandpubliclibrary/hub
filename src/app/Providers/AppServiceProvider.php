@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use App\Role;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,6 +28,14 @@ class AppServiceProvider extends ServiceProvider
 
         Schema::defaultStringLength(191);
         /* end comment here */
+
+
+        // store polymorphic relationships without using fully qualified classname
+        Relation::morphMap([
+            'incident' => 'App\Incident',
+            'patron' => 'App\Patron',
+            'photo' => 'App\Photo',
+        ]);
     }
 
     /**

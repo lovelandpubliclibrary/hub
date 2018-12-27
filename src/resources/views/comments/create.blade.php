@@ -9,8 +9,8 @@
 
 	{{ Form::hidden('user', Auth::id()) }}
 
-	{{-- {{ Form::hidden('source', $source['source']) }} --}}
-	{{-- {{ Form::hidden('source_id', $source['id']) }} --}}
+	{{ Form::hidden('commentable[type]', $commentable['type']) }}
+	{{ Form::hidden('commentable[id]', $commentable['id']) }}
 
 	<div class="text-right">
 		{{ Form::button('Save Comment', [
