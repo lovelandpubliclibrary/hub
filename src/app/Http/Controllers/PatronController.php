@@ -100,16 +100,13 @@ class PatronController extends Controller
         ];
 
         $comments = $patron->comments;
-
-        // define the source so the view can redirect to the proper location
-        // define the source so the view can redirect to the proper location
-        $source = [
-            'source' => 'patron',
+        $commentable = [
+            'type' => 'patron',
             'id' => $patron->id,
         ];
 
         return view('patrons.show', compact('breadcrumbs', 'patron', 
-                                            'comments', 'source'));
+                                            'comments', 'commentable'));
     }
 
 

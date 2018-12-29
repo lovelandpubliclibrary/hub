@@ -106,14 +106,13 @@
 					</div>
 
 				</div><!-- .row -->
-
-				@if (isset($comments) && count($comments))
-					@include ('comments.index')
-				@endif
-
 			</div><!-- .panel-body -->
 
 			<div class="panel-footer">
+				@if (isset($comments) && count($comments))
+					@include ('comments.index')
+				@endif
+				
 				<div>
 					<h3 id="comment">Comment about this Patron:</h3>
 					@include ('comments.create')

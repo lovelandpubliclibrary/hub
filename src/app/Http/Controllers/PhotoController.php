@@ -123,6 +123,7 @@ class PhotoController extends Controller
 
 
 	public function show(Photo $photo) {
+        // collect the patron associated with this photo, if any
         $patron = $photo->patron->first() ?: new Patron;
 
         // set up breadcrumbs for this action
@@ -133,7 +134,13 @@ class PhotoController extends Controller
                 'text' => 'Photo of ' . $patron->get_name('full')],
         ];
 
-		return view('photos.show', compact('photo', 'patron', 'breadcrumbs'));
+        $comments = $photo->comments;
+        $commentable = [
+            'type' => 'photo',
+            'id' => $photo->id,
+        ];
+
+		return view('photos.show', compact('photo', 'patron', 'breadcrumbs', 'comments', 'commentable'));
 	}
 
 

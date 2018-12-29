@@ -48,5 +48,15 @@
 			@endif
 		</div><!-- .panel-body -->
 
+		<div class="panel-footer">
+			@if (isset($comments) && count($comments))
+				@include ('comments.index')
+			@endif
+			<div>
+				<h3 id="comment">Comment about this Photo	:</h3>
+				@include ('comments.create')
+			</div>
+		</div>
+
 	</div><!-- .panel -->
 @endsection
