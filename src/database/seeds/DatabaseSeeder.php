@@ -301,7 +301,7 @@ class CommentsTableSeeder extends Seeder {
 		$sum = $incident_count + $patron_count + $photo_count;
 
 		// set a limit on the number of comments that will be generated
-		$comment_count = rand($sum * 5, $sum * 8);
+		$comment_count = rand($sum * 3, $sum * 5);
 
 		// output progress
 		$message = '--> Creating ' . $comment_count . ' Comments... ';
