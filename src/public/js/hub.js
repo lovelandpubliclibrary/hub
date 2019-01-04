@@ -188,11 +188,13 @@ $(document).ready(function() {
 
 		// submit the request to PatronApiController@store
 		$.ajax({
-			headers:{'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-			type:'POST',
-			data:new_patron,
-			url:'/patrons/create',
-			success:function(patron_json) {
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			type: 'POST',
+			data: new_patron,
+			url: '/patrons/create',
+			success: function(patron_json) {
 				// add the patron to the selected patrons dropdown
 				// https://select2.org/programmatic-control/add-select-clear-items
 				var select2_data = {
@@ -210,33 +212,40 @@ $(document).ready(function() {
 					}
 				});
 
+				save_button.html(save_button_original_text);
+				save_button.prop('disabled', false);
+
 				// close the modal
 				$('#addPatronModal button[data-dismiss="modal"]:first').click();
 			},
-			error:function(response) {
+			error: function(response) {
 				switch (response.status) {
 					case 422:    // validation errors
 						$.each(response.responseJSON, function() {
-							errors.push($.parseHTML(`<div class="alert alert-danger">${this[0]}</div>`));
+							var messages = this;
+							messages.forEach(function(message) {
+								var html = `<div class="alert alert-danger">${message}</div>`;
+								errors.push($.parseHTML(html));
+							});
+							
 						});
 						break;
 					default:
 						errors.push('An unspecified error occurred.')
 						break;
 				}
+
+				$.each(errors, function() {
+					
+					var error = $.parseHTML(`<div class="alert alert-danger">${$(this).html()}</div>`);
+					$('#addPatronFormWrapper').prepend(error);
+				});
+
+				// reset the save button
+				save_button.html(save_button_original_text);
+				save_button.prop('disabled', false);
 			},
 		});
-
-		if (errors.length) {
-			$.each(errors, function() {
-				var error = $.parseHTML(`<div class="alert alert-danger">${this}</div>`);
-				$('#addPatronFormWrapper').prepend(error);
-			});
-		}
-
-		// reset the save button
-		save_button.html(save_button_original_text);
-		save_button.prop('disabled', false);
 	});
 
 
