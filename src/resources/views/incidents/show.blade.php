@@ -155,7 +155,7 @@
 					</div>
 				</div><!-- .row -->
 
-				@if (Auth::user()->hasRole($supervisor_role) && !empty($unviewed_by))
+				@if (Auth::user()->isSupervisor() && !empty($unviewed_by))
 					<div class="col-xs-12 bg-warning not-viewed">
 						<ul class="list-group">
 							<strong>Not yet viewed by</strong>

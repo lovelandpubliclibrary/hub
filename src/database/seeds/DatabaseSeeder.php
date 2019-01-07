@@ -415,7 +415,7 @@ class RoleUserRelationshipSeeder extends Seeder {
 
 			// assign some users as supervisors
 			// ensure the user isn't already a supervisor and that every user doesn't get assigned the supervisor Role
-			if (!$user->hasRole($supervisor_role) && $user->id % 4 === 0) {
+			if (!$user->isSupervisor()) && $user->id % 4 === 0) {
 				$user->role()->save($supervisor_role);
 			}
 
@@ -439,7 +439,6 @@ class DivisionUserRelationshipSeeder extends Seeder {
 		// retrieve the required models
 		$users = User::all();
 		$divisions = Division::all();
-		$supervisor_role = Role::where('role', 'Supervisor')->get()->first();
 
 		// attach some divisions to each user
 		foreach ($users as $user) {
@@ -452,7 +451,7 @@ class DivisionUserRelationshipSeeder extends Seeder {
 				if ($user->divisions->contains($division)) {	// ensure the user isn't already a member of the division
 					continue;
 				} else {
-					$user->hasRole($supervisor_role) ?
+					$user->isSupervisor() ?
 					$user->divisions()->save($division, ['supervisor' => true]) :
 					$user->divisions()->save($division);
 				}
@@ -468,7 +467,6 @@ class UserSupervisorRelationshipSeeder extends Seeder {
 		$this->command->info('--> Assigning Supervisors direct reports... ');		// output progress
 
 		$users = User::with('role')->get();
-		$supervisor_role = Role::where('role', 'Supervisor')->get()->first();
 		$supervisors = User::whereHas('role', function ($query) {
 			$query->where('role', 'Supervisor');
 		})->get();

@@ -105,7 +105,7 @@
 												<span class="glyphicon glyphicon-picture" title="has photo(s)"></span>
 											@endif
 
-											@if (count($incident->comment))
+											@if (count($incident->comments))
 												<span class="glyphicon glyphicon-comment" title="has comments by staff"></span>
 											@endif
 

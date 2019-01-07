@@ -57,8 +57,8 @@
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
-
-                            @if (Auth::user()->hasRole($supervisor_role))
+        
+                            @if (Auth::user()->isSupervisor())
                                 <li>
                                     <a href="{{ route('reports') }}">
                                         Reports
@@ -68,7 +68,6 @@
                                 <li role="separator" class="divider"></li>
                             @endif
 
-                            
                             <li>
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();

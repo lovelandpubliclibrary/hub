@@ -18,9 +18,7 @@ class SupervisorsOnly
      */
     public function handle($request, Closure $next)
     {
-        $supervisor_role = Role::where('role', 'Supervisor')->first();
-
-        if (!Auth::user()->hasRole($supervisor_role)) {
+        if (!Auth::user()->isSupervisor()) {
             Session::flash('message', 'You do not have the proper permissions to view ' . $request->url() . '.');
             return back();
         }

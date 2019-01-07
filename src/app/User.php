@@ -95,12 +95,42 @@ class User extends Authenticatable
 
 
     /**
-     * Determine if a user contains a given role
+     * Determine if a user has a given role
      * 
      * @return boolean
      */
-    public function hasRole(Role $role) {
-        return $this->role->contains($role) ? true : false;
+    private function hasRole(Role $role) {
+        return $this->role->contains($role) ?: false;
+    }
+
+
+    /**
+     * Determine if the user is an admin
+     * @return boolean
+     */
+    public function isAdministrator() {
+        $admin_role = Role::where('role', 'Administrator')->get()->first();
+        return $this->hasRole($admin_role);
+    }
+
+
+    /**
+     * Determine if the user is a supervisor
+     * @return boolean
+     */
+    public function isSupervisor() {
+        $supervior_role = Role::where('role', 'Supervisor')->get()->first();
+        return $this->hasRole($supervior_role);
+    }
+
+
+    /**
+     * Determine if the user is the director
+     * @return boolean
+     */
+    public function isDirector() {
+        $director_role = Role::where('role', 'Director')->get()->first();
+        return $this->hasRole($director_role);
     }
 
 
