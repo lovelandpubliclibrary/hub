@@ -3,9 +3,11 @@ services:
  app:
   depends_on:
    - db
+  build:
+    context: ./docker
   image: redisforlosers/hub
   volumes:
-   - ./:/hub
+   - ./src/:/hub
   ports:
    - 10000:10000
   container_name: hub

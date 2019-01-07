@@ -1,25 +1,24 @@
 ## gitignore file from https://github.com/github/gitignore/blob/master/Laravel.gitignore ##
 
-vendor/
-node_modules/
-npm-debug.log
+src/vendor/
+src/node_modules/
+src/npm-debug.log
 
 # Laravel 5 & Lumen specific
-public/storage
-public/hot
-storage/*.key
-.env.*.php
-.env.php
-.env
-Homestead.yaml
-Homestead.json
+src/public/storage
+src/public/hot
+src/storage/*.key
+src/.env.*.php
+src/.env.php
+src/.env
+src/Homestead.yaml
+src/Homestead.json
 
 # Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
-.rocketeer/
+src/.rocketeer/
+
+# OS metadata files
+.DS_Store
 
 # Project-specific
-.DS_Store
-alpine-repository.Dockerfile
-storage/app/patrons/
-hub.sublime-workspace
-info.php
+src/storage/app/patrons/
