@@ -6,7 +6,6 @@ src/npm-debug.log
 
 # Laravel 5 & Lumen specific
 src/public/storage
-src/public/hot
 src/storage/*.key
 src/.env.*.php
 src/.env.php
@@ -21,4 +20,4 @@ src/.rocketeer/
 .DS_Store
 
 # Project-specific
-src/storage/app/patrons/
+src/storage/app/public/photos/
