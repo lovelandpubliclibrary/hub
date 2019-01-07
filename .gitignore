@@ -21,3 +21,5 @@ src/.rocketeer/
 
 # Project-specific
 src/storage/app/public/photos/
+
+export/
