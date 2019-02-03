@@ -20,6 +20,7 @@ nodejs \
 libmcrypt-dev \
 zip \
 unzip \
+git \
 && docker-php-ext-install pdo_mysql \
 && pecl install mcrypt-1.0.1 \
 && pecl install xdebug-2.6.1 \
@@ -28,7 +29,7 @@ unzip \
 && rm -rf /var/lib/apt/lists/*
 
 # start the web server
-CMD composer install && php artisan serve --host=0.0.0.0 --port=10000
+CMD composer update && php artisan serve --host=0.0.0.0 --port=10000
 
 # make container accessible on port 10000
 EXPOSE 10000
