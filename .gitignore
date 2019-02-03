@@ -13,13 +13,12 @@ src/.env
 src/Homestead.yaml
 src/Homestead.json
 
-# Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
-src/.rocketeer/
-
 # OS metadata files
 .DS_Store
+.Thumbs
 
 # Project-specific
-src/storage/app/public/photos/
+src/storage/app/public/photos/*
 
-export/
+# keep empty directories
+!.gitkeep

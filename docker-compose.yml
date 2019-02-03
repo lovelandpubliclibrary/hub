@@ -13,6 +13,15 @@ services:
   container_name: hub
   hostname: hub
 
+ composer:
+  image: composer
+  volumes:
+    - ./src/:/hub/
+  working_dir: /hub/
+  command: ["composer", "install"]
+  container_name: hub-composer
+  hostname: hub-composer
+
  phpmyadmin:
   depends_on:
    - db
