@@ -415,7 +415,7 @@ class RoleUserRelationshipSeeder extends Seeder {
 
 			// assign some users as supervisors
 			// ensure the user isn't already a supervisor and that every user doesn't get assigned the supervisor Role
-			if (!$user->isSupervisor()) && $user->id % 4 === 0) {
+			if (!$user->isSupervisor() && $user->id % 4 === 0) {
 				$user->role()->save($supervisor_role);
 			}
 

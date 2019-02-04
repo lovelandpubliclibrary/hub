@@ -1,40 +1,55 @@
-version: '2'
+version: "3.2"
+
 services:
- app:
-  depends_on:
-   - db
-  build:
-    context: ./docker
-  image: redisforlosers/hub
-  volumes:
-   - ./src/:/hub
-  ports:
-   - 10000:10000
-  container_name: hub
-  hostname: hub
+  php:
+    build: ./docker/php/
+    image: redisforlosers/hub-php:7.2
+    volumes:
+      - ./src/:/hub/
+    depends_on:
+      - mysql
+    container_name: hub-php
+    hostname: hub-php
+    working_dir: /hub/
 
- phpmyadmin:
-  depends_on:
-   - db
-  image: phpmyadmin/phpmyadmin
-  ports:
-   - 18888:80
-  container_name: hub-phpmyadmin
-  hostname: hub-phpmyadmin
+  apache:
+    # build: ./docker/apache/
+    # image: redisforlosers/hub-apache:2.4
+    image: httpd:2.4.33-alpine
+    depends_on:
+      - php
+      - mysql
+    ports:
+      - "80:80"
+    volumes:
+      - ./src/:/hub/
+      - ./docker/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    container_name: hub-apache
+    hostname: hub-apache
+    working_dir: /hub
 
- db:
-  image: mysql:5.7
-  volumes:
-   - dbdata:/var/lib/mysql
-  environment:
-   MYSQL_ROOT_PASSWORD: lpl_hub_root
-   MYSQL_DATABASE: dev_hub
-   MYSQL_USER: lpl_hub
-   MYSQL_PASSWORD: lpl_hub
-  ports:
-   - 13306:3306
-  container_name: hub-mysql
-  hostname: hub-mysql
+  mysql:
+    image: mysql:5.6
+    volumes:
+      - dbdata:/var/lib/mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: lpl_hub_root
+      MYSQL_DATABASE: dev_hub
+      MYSQL_USER: lpl_hub
+      MYSQL_PASSWORD: lpl_hub
+    container_name: hub-mysql
+    hostname: hub-mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8888:80
+    depends_on:
+      - mysql
+    links:
+      - mysql:db
+    container_name: hub-phpmyadmin
+    hostname: hub-phpmyadmin
 
 volumes:
   dbdata:
