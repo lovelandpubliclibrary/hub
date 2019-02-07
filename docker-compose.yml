@@ -13,8 +13,6 @@ services:
     working_dir: /hub/
 
   apache:
-    # build: ./docker/apache/
-    # image: redisforlosers/hub-apache:2.4
     image: httpd:2.4.33-alpine
     depends_on:
       - php
@@ -39,6 +37,15 @@ services:
       MYSQL_PASSWORD: lpl_hub
     container_name: hub-mysql
     hostname: hub-mysql
+
+  composer:
+    image: composer
+    volumes:
+      - ./src/:/hub/
+    working_dir: /hub/
+    command: ["composer", "install"]
+    container_name: hub-composer
+    hostname: hub-composer
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
