@@ -1,10 +1,7 @@
 FROM php:7.2-fpm-alpine
 
+# install necessary packages
 RUN set -xe && \
-	apk update && \
-	apk upgrade --no-cache && \
-    \
-    # install necessary packages
     docker-php-ext-install pdo_mysql
 
 WORKDIR /hub/
