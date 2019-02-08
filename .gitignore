@@ -6,19 +6,15 @@ src/npm-debug.log
 
 # Laravel 5 & Lumen specific
 src/public/storage
-src/public/hot
 src/storage/*.key
-src/.env.*.php
-src/.env.php
 src/.env
-src/Homestead.yaml
-src/Homestead.json
-
-# Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
-src/.rocketeer/
 
 # OS metadata files
 .DS_Store
+.Thumbs
 
 # Project-specific
-src/storage/app/patrons/
+src/storage/app/public/photos/*
+
+# keep empty directories
+!.gitkeep

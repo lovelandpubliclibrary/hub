@@ -123,15 +123,19 @@ class PhotoController extends Controller
 
 
 	public function show(Photo $photo) {
-        // collect the patron associated with this photo, if any
-        $patron = $photo->patron->first() ?: new Patron;
-
+        // collect the patron or incident associated with the photo
+        $patron = $photo->patron->first() ?: null;
+        $incident = $photo->incident->first() ?: null;
+        
         // set up breadcrumbs for this action
+        $breadcrumb_text = $patron ? $patron->get_name('full') : 
+            "Incident # {$incident->id}";
+
         $breadcrumbs = [
             ['link' => route('home'), 'text' => 'Home'],
             ['link' => route('photos'), 'text' => 'Photos'],
             ['link' => route('photo', ['photo' => $photo->id]),
-                'text' => 'Photo of ' . $patron->get_name('full')],
+                'text' => "Photo of {$breadcrumb_text}"],
         ];
 
         $comments = $photo->comments;
