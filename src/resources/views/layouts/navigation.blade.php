@@ -65,6 +65,12 @@
                                     </a>
                                 </li>
 
+                                <li>
+                                    <a href="{{ route('addStaff') }}">
+                                        Add User
+                                    </a>
+                                </li>
+
                                 <li role="separator" class="divider"></li>
                             @endif
 

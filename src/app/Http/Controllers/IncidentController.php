@@ -138,7 +138,6 @@ class IncidentController extends Controller
         ];
 
         $this->validate($request, $rules);
-        // dd($request);
 
         // store it in a new instance of Incident
         $incident = new Incident;

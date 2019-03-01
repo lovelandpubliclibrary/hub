@@ -33,6 +33,9 @@ Route::get('/cityemail', function() {
 	return Redirect::to('https://fw.ci.loveland.co.us/owa');
 })->name('cityemail');
 
+// User routes
+Route::get('/staff/add', 'StaffController@showForm')->name('addStaff');
+Route::post('/staff/add', 'StaffController@store');
 
 // Report routes
 Route::get('/reports', 'DashboardController@reports')->name('reports')->middleware('supervisors');
@@ -41,6 +44,7 @@ Route::get('/reports/incidents', 'ReportController@incidents')->name('reportInci
 
 // Incidents
 Route::get('/incidents', 'IncidentController@index')->name('incidents');
+/* UPDATE 'CREATE' ROUTES TO 'ADD' */
 Route::get('/incidents/create', 'IncidentController@create')->name('createIncident');
 Route::get('/incidents/{incident}', 'IncidentController@show')->name('incident');
 Route::post('/incidents/create', 'IncidentController@store');
