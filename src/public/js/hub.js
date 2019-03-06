@@ -5,6 +5,23 @@ $(document).ready(function() {
 	/* Instantiate Select2 jQuery plugin for all select elements */
 	$('select').select2();
 
+	/* enable the copy to clipboard functionality on the create new user form */
+	$('#copyPassword').click(function() {
+		// create temporary DOM element
+		var $temp = $("<input>");
+		$("body").append($temp);
+
+		// copy the contents of the element to the clipboard
+		$temp.val($('#password').val()).select();
+		document.execCommand("copy");
+
+		// remove temporary element
+		$temp.remove();
+
+		// update 'copy' button
+		$(this).html('Copied!');
+	});
+
 	/* Attach an existing photo to an incident */
 	$('.selectExistingPhoto').click(function() {
 		// gather resources
@@ -235,8 +252,7 @@ $(document).ready(function() {
 						break;
 				}
 
-				$.each(errors, function() {
-					
+				$.each(errors, function() {	
 					var error = $.parseHTML(`<div class="alert alert-danger">${$(this).html()}</div>`);
 					$('#addPatronFormWrapper').prepend(error);
 				});

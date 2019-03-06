@@ -12,7 +12,12 @@
 
 	<div class="form-group">
 		{{ Form::label('password', 'Password:', ['class' => 'control-label']) }}
-		{{ Form::text('password', $password, ['class' => 'form-control', 'disabled' => 'disabled']) }}
+		<div class="input-group">
+			{{ Form::text('password', $password, ['class' => 'form-control', 'readonly' => 'readonly']) }}
+			<span class="input-group-addon btn btn-info" id="copyPassword">
+				<img src="https://img.icons8.com/ios/15/000000/copy.png">
+			</span>
+		</div>
 	</div>
 
   	<div class="form-group required">

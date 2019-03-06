@@ -15,6 +15,12 @@
 			</div>
 		@endif
 
+		@if(Session::has('success_message'))
+			<div class="alert alert-success">
+				{{ Session::get('success_message') }}
+			</div>
+		@endif
+
 		<div class="panel panel-default" id="patron">
 			<div class="panel-heading col-xs-12 text-center repository-margin-bottom-1rem">
 				<div class="col-xs-10 col-xs-offset-1">

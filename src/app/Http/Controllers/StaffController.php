@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Division;
-use App\Staff;
+use App\Http\Requests\StoreStaff;
 use App\User;
 use Illuminate\Http\Request;
 use RandomLib\Factory as RandomLib;
+use Session;
 
 class StaffController extends Controller
 {
@@ -28,7 +29,7 @@ class StaffController extends Controller
     public function showForm()
     {
         $divisions = Division::all();
-        
+
         $supervisors = User::all()->filter(function ($user) {
             return $user->isSupervisor();
         });
@@ -49,12 +50,20 @@ class StaffController extends Controller
      */
     public function store(StoreStaff $request)
     {
-        $staff = new Staff;
+        $staff = new User;
         $staff->name = $request->name;
-        $staff->supervisor = $request->supervisor;
+        $staff->email = $request->email;
+        $staff->password = bcrypt($request->password);
+        $staff->save();
+
+        $staff->reportsTo()->associate($request->supervisor);
         foreach ($request->divisions as $division) {
-            $staff->division = $division;
+            $staff->divisions()->attach($division);
         }
+
+        // redirect back the new staff form with a success message
+        Session::flash('success_message', "Staff member saved.");
+        return redirect()->route('addStaff');
     }
 
     /**
