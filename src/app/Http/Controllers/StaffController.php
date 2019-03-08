@@ -11,6 +11,11 @@ use Session;
 
 class StaffController extends Controller
 {
+    // ensure user is authenticated in order to use this controller
+    public function __construct() {
+        $this->middleware('auth');
+    }
+    
     /**
      * Display a listing of the resource.
      *
