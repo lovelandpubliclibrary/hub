@@ -303,12 +303,23 @@ class IncidentController extends Controller
         $this->validate($request, ['search' => 'required']);
 
         // search the database
-        $incidents = Incident::where('description',   'LIKE', '%' . $request->search . '%')->
-                               orWhere('patron_name', 'LIKE', '%' . $request->search . '%')->
-                               orWhere('title',       'LIKE', '%' . $request->search . '%')->
-                               orWhereHas('comment', function ($query) use ($request) {
-                                   $query->where('comment', 'LIKE', '%' . $request->search . '%');
+        $queryTerm = "%{$request->search}%";
+        $strippedPatronId = preg_replace('/^[Pp]atron\s?#?\s?/', '', $request->search);
+        $incidents = Incident::where('description',   'LIKE', $queryTerm)->
+                               orWhere('title',       'LIKE', $queryTerm)->
+                               orWhereHas('comments', function ($query) use ($queryTerm) {
+                                  $query->where('comment', 'LIKE', $queryTerm);
+                               })->
+                               orWhereHas('patron', function ($query) use ($strippedPatronId) {
+                                  $query->where('id', 'LIKE', $strippedPatronId);
+                               })->
+                               orWhereHas('patron', function ($query) use ($queryTerm) {
+                                  $query->where('first_name', 'LIKE', $queryTerm);
+                               })->
+                               orWhereHas('patron', function ($query) use ($queryTerm) {
+                                  $query->where('last_name', 'LIKE', $queryTerm);
                                })->get();
+                                
 
         // store the search string to pass back to the view
         $search = $request->search;
