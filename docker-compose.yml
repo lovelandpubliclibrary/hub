@@ -49,6 +49,7 @@ services:
     command: ["composer", "install"]
     container_name: "hub-composer"
     hostname: "hub-composer"
+    user: "1000"
 
   phpmyadmin:
     image: "phpmyadmin/phpmyadmin"
