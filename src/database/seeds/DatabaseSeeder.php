@@ -281,7 +281,7 @@ class PhotosTableSeeder extends Seeder {
 		$incident_count = Incident::all()->count();
 		$average_count = ($patron_count + $incident_count) / 2;
 		$photo_count = round($average_count / 5);		// determine the number of photos to create
-		$this->command->info("--> Downloading and creating {$photo_count} photos...");		// output progress
+		$this->command->info("--> Downloading and saving {$photo_count} photos...");		// output progress
 		factory(Photo::class, $photo_count)->create();		// create photos
 	}
 }
@@ -391,13 +391,13 @@ class RoleUserRelationshipSeeder extends Seeder {
 			// assign the appropriate role to each of the test users
 			switch ($user->name) {
 				case 'Test Admin':
-					$this->command->info('---> Assigning the Test Admin to the Administrator role... ');		// output progress
+					$this->command->info('--> Assigning the Test Admin to the Administrator role... ');		// output progress
 					$role = Role::where('role', 'Administrator')->get()->first();
 					$user->role()->attach($role);
 	
 					break;
 				case 'Test Director':
-					$this->command->info('---> Assigning the Test Director to the Director and Supervisor roles... ');		// output progress
+					$this->command->info('--> Assigning the Test Director to the Director and Supervisor roles... ');		// output progress
 					$roles = Role::where('role', 'Director')->orWhere('role', 'Supervisor')->get();
 					foreach ($roles as $role) {
 						$user->role()->attach($role);
@@ -405,7 +405,7 @@ class RoleUserRelationshipSeeder extends Seeder {
 	
 					break;
 				case 'Test Supervisor':
-					$this->command->info('---> Assigning the Test Director to the Director role... ');		// output progress
+					$this->command->info('--> Assigning the Test Director to the Director role... ');		// output progress
 					$role = Role::where('role', 'Supervisor')->get()->first();
 					$user->role()->attach($role);
 	
@@ -422,7 +422,7 @@ class RoleUserRelationshipSeeder extends Seeder {
 
 		}
 
-		$this->command->info('---> Assigning roles to all other users... ');		// output progress (formatted for consistency with other status messages)
+		$this->command->info('--> Assigning roles to all other users... ');		// output progress (formatted for consistency with other status messages)
 	}
 }
 
