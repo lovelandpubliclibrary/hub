@@ -13,7 +13,6 @@ services:
     container_name: "hub-php"
     hostname: "hub-php"
     working_dir: "/hub/"
-    user: "1000"
 
   apache:
     image: "httpd:2.4.33-alpine"
