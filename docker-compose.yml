@@ -2,63 +2,64 @@ version: "3.2"
 
 services:
   php:
-    build: ./docker/php/
-    image: redisforlosers/hub-php:7.2
+    build: "./docker/php/"
+    image: "lplhub/php:7.2-fpm-alpine"
     volumes:
-      - ./src/:/hub/
-      - ./docker/php/config/:/user/local/php/conf.d/
-      - ./docker/php/.env:/hub/.env
+      - "./src/:/hub/"
+      - "./docker/php/config/:/user/local/php/conf.d/"
+      - "./docker/php/.env:/hub/.env"
     depends_on:
-      - mysql
-    container_name: hub-php
-    hostname: hub-php
-    working_dir: /hub/
+      - "mysql"
+    container_name: "hub-php"
+    hostname: "hub-php"
+    working_dir: "/hub/"
 
   apache:
-    image: httpd:2.4.33-alpine
+    image: "httpd:2.4.33-alpine"
     depends_on:
-      - php
-      - mysql
+      - "php"
+      - "mysql"
     ports:
       - "80:80"
     volumes:
-      - ./src/:/hub/
-      - ./docker/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
-    container_name: hub-apache
-    hostname: hub-apache
-    working_dir: /hub
+      - "./src/:/hub/"
+      - "./docker/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf"
+    container_name: "hub-apache"
+    hostname: "hub-apache"
+    working_dir: "/hub/"
 
   mysql:
-    image: mysql:5.6
+    image: "mysql:5.6"
     volumes:
-      - dbdata:/var/lib/mysql/
+      - "dbdata:/var/lib/mysql/"
     environment:
-      MYSQL_ROOT_PASSWORD: lpl_hub_root
-      MYSQL_DATABASE: dev_hub
-      MYSQL_USER: lpl_hub
-      MYSQL_PASSWORD: lpl_hub
-    container_name: hub-mysql
-    hostname: hub-mysql
+      MYSQL_ROOT_PASSWORD: "lpl_hub_root"
+      MYSQL_DATABASE: "dev_hub"
+      MYSQL_USER: "lpl_hub"
+      MYSQL_PASSWORD: "lpl_hub"
+    container_name: "hub-mysql"
+    hostname: "hub-mysql"
 
   composer:
-    image: composer
+    image: "composer"
     volumes:
-      - ./src/:/hub/
-    working_dir: /hub/
+      - "./src/:/hub/"
+    working_dir: "/hub/"
     command: ["composer", "install"]
-    container_name: hub-composer
-    hostname: hub-composer
+    container_name: "hub-composer"
+    hostname: "hub-composer"
+    user: "1000"
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: "phpmyadmin/phpmyadmin"
     ports:
-      - 8888:80
+      - "8888:80"
     depends_on:
-      - mysql
+      - "mysql"
     links:
-      - mysql:db
-    container_name: hub-phpmyadmin
-    hostname: hub-phpmyadmin
+      - "mysql:db"
+    container_name: "hub-phpmyadmin"
+    hostname: "hub-phpmyadmin"
 
 volumes:
   dbdata:

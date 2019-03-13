@@ -125,7 +125,7 @@ class User extends Authenticatable
 
 
     /**
-     * Determine if the user is the director
+     * Determine if the user is the Director
      * @return boolean
      */
     public function isDirector() {
