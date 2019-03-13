@@ -70,7 +70,7 @@ class PhotoController extends Controller
 
         // associate incident and confirm
         if (isset($request->associatedIncident)) {
-            $photo->incident()->attach(Incident::find($request->associatedIncident))->save();
+            $photo->incident()->attach(Incident::find($request->associatedIncident));
 
             if (!count($photo->incident)) {
                 $errors[] = 'There was a problem associating the incident with this photo.';
