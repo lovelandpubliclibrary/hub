@@ -6,8 +6,7 @@ services:
     image: "lplhub/php:7.2-fpm-alpine"
     volumes:
       - "./src/:/hub/"
-      - "./docker/php/config/:/user/local/php/conf.d/"
-      - "./docker/php/.env:/hub/.env"
+      - "./docker/php/config/:/usr/local/php/conf.d/"
     depends_on:
       - "mysql"
     container_name: "hub-php"
