@@ -2,7 +2,9 @@ version: "3.2"
 
 services:
   php:
-    build: "./docker/php/"
+    build:
+      context: "./"
+      dockerfile: "./docker/php/Dockerfile"
     image: "lplhub/php:7.2-fpm-alpine"
     volumes:
       - "./src/:/hub/"
@@ -12,6 +14,7 @@ services:
     container_name: "hub-php"
     hostname: "hub-php"
     working_dir: "/hub/"
+    user: "www-data"
 
   apache:
     image: "httpd:2.4.33-alpine"
