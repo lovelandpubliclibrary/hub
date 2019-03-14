@@ -58,7 +58,7 @@
 
                         <ul class="dropdown-menu" role="menu">
         
-                            @if (Auth::user()->isSupervisor())
+                            @if (Auth::user()->isSupervisor() || Auth::user()->isAdministrator())
                                 <li>
                                     <a href="{{ route('reports') }}">
                                         Reports
