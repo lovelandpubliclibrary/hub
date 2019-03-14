@@ -41,6 +41,17 @@
   			@endforeach
   		</select>
   	</div>
+
+  	<div class="form-group">
+  		{{ Form::label('supervises', 'Supervises:', ['class' => 'control-label']) }}
+  		<select name="supervises[]" id="supervises" multiple="multiple" class="form-control">
+  			@foreach ($staff as $staff_member)
+  				<option value="{{ $staff_member->id }}">
+  					{{ $staff_member->name }}
+  				</option>
+  			@endforeach
+  		</select>
+  	</div>
 	
 	{{ Form::hidden('created_by', Auth::id()) }}
 
