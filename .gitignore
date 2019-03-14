@@ -17,4 +17,7 @@ src/.env
 src/storage/app/public/photos/*
 
 # keep empty directories
-!.gitkeep
+!.gitignore
+
+# Local development files
+*.sublime-workspace

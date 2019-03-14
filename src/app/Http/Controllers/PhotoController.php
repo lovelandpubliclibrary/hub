@@ -35,7 +35,6 @@ class PhotoController extends Controller
 
 
     public function store(StorePhoto $request) {
-        logger($request);
         // collect resources
         $file = $request->file('photo');
         $photo = new Photo;
@@ -110,12 +109,25 @@ class PhotoController extends Controller
     
 
 	public function edit(Photo $photo) {
+        // collect the patron or incident associated with the photo
+        $patron = $photo->patron->first() ?: null;
+        $incident = $photo->incident->first() ?: null;
+        $breadcrumb_text = 'Photo of ';
+        
         // set up breadcrumbs for this action
+        if ($patron || $incident) {
+            $breadcrumb_text .= $patron ? $patron->get_name('full') : 
+            "Incident # {$incident->id}";
+        } else {
+            $breadcrumb_text = "Photo #{$photo->id}";
+        }
+        
+        // create the breadcrumbs
         $breadcrumbs = [
             ['link' => route('home'), 'text' => 'Home'],
             ['link' => route('photos'), 'text' => 'Photos'],
             ['link' => route('photo', ['photo' => $photo->id]),
-                'text' => 'Photo of ' . ($photo->patron ?: 'Unknown Patron')],
+                'text' => $breadcrumb_text],
         ];
 
 		return view('photos.edit', compact('photo', 'breadcrumbs'));
@@ -126,16 +138,22 @@ class PhotoController extends Controller
         // collect the patron or incident associated with the photo
         $patron = $photo->patron->first() ?: null;
         $incident = $photo->incident->first() ?: null;
+        $breadcrumb_text = 'Photo of ';
         
         // set up breadcrumbs for this action
-        $breadcrumb_text = $patron ? $patron->get_name('full') : 
+        if ($patron || $incident) {
+            $breadcrumb_text .= $patron ? $patron->get_name('full') : 
             "Incident # {$incident->id}";
-
+        } else {
+            $breadcrumb_text = "Photo #{$photo->id}";
+        }
+        
+        // create the breadcrumbs
         $breadcrumbs = [
             ['link' => route('home'), 'text' => 'Home'],
             ['link' => route('photos'), 'text' => 'Photos'],
             ['link' => route('photo', ['photo' => $photo->id]),
-                'text' => "Photo of {$breadcrumb_text}"],
+                'text' => $breadcrumb_text],
         ];
 
         $comments = $photo->comments;

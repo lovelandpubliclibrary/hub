@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Division;
 use App\Http\Requests\StoreStaff;
+use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 use RandomLib\Factory as RandomLib;
@@ -39,12 +40,14 @@ class StaffController extends Controller
             return $user->isSupervisor();
         });
 
+        $staff = User::all();
+
         // generate a random string for the default password
         $factory = new RandomLib;
         $generator = $factory->getMediumStrengthGenerator();
         $charset = '23456789abcdefghijklmnopqrstuvwxyz';
         $password = $generator->generateString(12, $charset);
-        return view('staff.add', compact('divisions', 'supervisors', 'password'));
+        return view('staff.add', compact('divisions', 'supervisors', 'staff', 'password'));
     }
 
     /**
@@ -55,16 +58,34 @@ class StaffController extends Controller
      */
     public function store(StoreStaff $request)
     {
-        $staff = new User;
-        $staff->name = $request->name;
-        $staff->email = $request->email;
-        $staff->password = bcrypt($request->password);
-        $staff->save();
+        $new_user = new User;
+        $new_user->name = $request->name;
+        $new_user->email = $request->email;
+        $new_user->password = bcrypt($request->password);
+        $new_user->save();
 
-        $staff->reportsTo()->associate($request->supervisor);
-        foreach ($request->divisions as $division) {
-            $staff->divisions()->attach($division);
+        if (!empty($request->supervises)) {
+            $role_id = Role::where('role', 'Supervisor')->pluck('id')->first();
+            $new_user->role()->attach($role_id);
+
+            foreach ($request->supervises as $supervised) {
+                $subordinate = User::find($supervised);
+                $subordinate->reportsTo()->associate($new_user);
+                $subordinate->save();
+            }
         }
+        $new_user->save();
+
+        foreach ($request->divisions as $division) {
+            $new_user->isSupervisor() ?
+            $new_user->divisions()->attach($division, ['supervisor' => true]) :
+            $new_user->divisions()->attach($division);
+        }
+
+        $supervisor = User::find($request->supervisor);
+        $new_user->reportsTo()->associate($supervisor);
+
+        $new_user->save();
 
         // redirect back the new staff form with a success message
         Session::flash('success_message', "Staff member saved.");
