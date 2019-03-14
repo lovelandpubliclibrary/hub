@@ -58,34 +58,51 @@ class StaffController extends Controller
      */
     public function store(StoreStaff $request)
     {
-        $new_user = new User;
-        $new_user->name = $request->name;
-        $new_user->email = $request->email;
-        $new_user->password = bcrypt($request->password);
-        $new_user->save();
+        // create a new staff member
+        $new_staff_member = new User;
+        $new_staff_member->name = $request->name;
+        $new_staff_member->email = $request->email;
+        $new_staff_member->password = bcrypt($request->password);
+        $new_staff_member->save();  // save required to create an ID in the database in order to create relationships
 
+        // set relationships for a supervisor
         if (!empty($request->supervises)) {
             $role_id = Role::where('role', 'Supervisor')->pluck('id')->first();
-            $new_user->role()->attach($role_id);
+            $new_staff_member->role()->attach($role_id);
 
             foreach ($request->supervises as $supervised) {
                 $subordinate = User::find($supervised);
-                $subordinate->reportsTo()->associate($new_user);
+                $subordinate->reportsTo()->associate($new_staff_member);
                 $subordinate->save();
             }
+        } else {
+            // the new user isn't a supervisor
+            $new_staff_member->role()->attach(Role::where('role', 'User')->pluck('id')->first());
         }
-        $new_user->save();
+        $new_staff_member->save();  // save again to make roles available on the model
 
+        // assign divisions
         foreach ($request->divisions as $division) {
-            $new_user->isSupervisor() ?
-            $new_user->divisions()->attach($division, ['supervisor' => true]) :
-            $new_user->divisions()->attach($division);
+            $new_staff_member->isSupervisor() ?
+            $new_staff_member->divisions()->attach($division, ['supervisor' => true]) :
+            $new_staff_member->divisions()->attach($division);
         }
 
-        $supervisor = User::find($request->supervisor);
-        $new_user->reportsTo()->associate($supervisor);
+        // set supervisor
+        if ($request->supervisor) {
+            $supervisor = User::find($request->supervisor);
+            $new_staff_member->reportsTo()->associate($supervisor);
+        }
 
-        $new_user->save();
+        // set Admin role
+        if ($request->administrator) {
+            $role_id = Role::where('role', 'Administrator')->pluck('id')->first();
+            $new_staff_member->role()->attach($role_id);
+        }
+
+
+        // final save to ensure all relationships are recorded in the database
+        $new_staff_member->save();
 
         // redirect back the new staff form with a success message
         Session::flash('success_message', "Staff member saved.");

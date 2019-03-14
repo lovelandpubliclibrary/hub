@@ -30,7 +30,8 @@ class StoreStaff extends FormRequest
             'password' => 'string|required',
             'divisions' => 'array|required',
             'supervisor' => 'integer|required',
-            'supervises' => 'array|nullable'
+            'supervises' => 'array|nullable',
+            'administrator' => 'integer|nullable'
         ];
     }
 }

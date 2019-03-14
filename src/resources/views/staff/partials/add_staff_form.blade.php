@@ -56,6 +56,14 @@
 	{{ Form::hidden('created_by', Auth::id()) }}
 
 	<div class="text-right repository-margin-top-1rem">
+
+		<div class="repository-margin-right-1rem">
+			@if (Auth::user()->isAdministrator())
+				{{ Form::label('administrator', 'Administrator?') }}
+				{{ Form::checkbox('administrator', '1') }}
+			@endif
+		</div>
+
 		{{ Form::button('Save', ['class' => 'btn btn-default btn-success',
 						'type' => 'submit', 'title' => 'Save']) }}
 	</div>
