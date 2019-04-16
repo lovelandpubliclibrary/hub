@@ -281,8 +281,11 @@ class PhotosTableSeeder extends Seeder {
 		$incident_count = Incident::all()->count();
 		$average_count = ($patron_count + $incident_count) / 2;
 		$photo_count = round($average_count / 5);		// determine the number of photos to create
-		$this->command->info("--> Downloading and saving {$photo_count} photos...");		// output progress
-		factory(Photo::class, $photo_count)->create();		// create photos
+		$this->command->info("--> Downloading and saving photos...");		// output progress
+		for ($i = 1; $i <= $photo_count; $i++) {
+			factory(Photo::class)->create();
+			$this->command->info("--> Saving photo {$i}/{$photo_count}");
+		}
 	}
 }
 

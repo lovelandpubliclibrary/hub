@@ -51,6 +51,7 @@ Route::post('/incidents/create', 'IncidentController@store');
 Route::post('/incidents', 'IncidentController@search');
 Route::get('/incidents/edit/{incident}', 'IncidentController@edit')->name('editIncident');
 Route::post('/incidents/edit/{incident}', 'IncidentController@update')->name('updateIncident');
+Route::get('/incidents/delete/{incident}', 'IncidentController@delete')->name('deleteIncident');
 
 // Comments
 Route::post('/comments/create', 'CommentController@store');
