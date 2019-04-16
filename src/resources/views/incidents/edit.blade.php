@@ -65,6 +65,11 @@
 					<div class="panel-footer col-xs-12 text-right repository-margin-top-1rem">
 						{{ Form::hidden('user', Auth::id()) }}
 						{{ Form::hidden('incident', $incident->id) }}
+						
+						<a class="text-danger repository-margin-right-1rem" href="{{ route('deleteIncident', ['incident' => $incident->id]) }}">
+							<span class="glyphicon glyphicon-trash"></span> Delete
+						</a>
+						
 						{{ Form::button('Save Changes',
 										['class' => 'btn btn-default btn-success', 'type' => 'submit', 'title' => 'Save']) }}
 					</div>

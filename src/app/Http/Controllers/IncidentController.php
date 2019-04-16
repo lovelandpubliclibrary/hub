@@ -345,4 +345,11 @@ class IncidentController extends Controller
         // pass the request on to the patron controller create() method
         return redirect()->route('patron', ['incident' => $incident_id]);
     }
+    
+    
+    public function delete(Incident $incident) {
+        $incident->delete();
+        Session::flash('success_message', 'Incident deleted.');
+        return redirect()->route('incidents');
+    }
 }
