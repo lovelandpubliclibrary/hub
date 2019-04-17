@@ -30,7 +30,7 @@
 				</div>
 
 				{{-- Display the button to edit the patron if the user authored it or is an admin --}}
-				@if (Auth::id() == $patron->user_id || Auth::user()->role->contains('role', 'Admin'))
+				@if (Auth::id() == $patron->user_id || Auth::user()->isAdministrator())
 					<div class="text-center-xs text-right-sm repository-margin-top-1rem">
 						<a class="btn-sm btn-default link-default" href="/patrons/edit/{{ $patron->id }}" title="Edit Patron">
 							<span class="glyphicon glyphicon-edit"></span> Edit Patron

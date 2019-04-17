@@ -29,7 +29,11 @@ class Photo extends Model
     // return all photos in the specified number of collections (columns)
     static function getColumns(int $numColumns) {
         $numPhotos = Photo::count();
-        $photosPerColumn = $numPhotos / $numColumns;
-        return Photo::all()->reverse()->chunk($photosPerColumn);
+        if ($numPhotos >= 2) {
+            $photosPerColumn = intval($numPhotos / $numColumns);
+            return Photo::all()->reverse()->chunk($photosPerColumn);
+        }
+        
+        return Photo::all();
     }
 }

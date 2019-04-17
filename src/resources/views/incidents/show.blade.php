@@ -4,12 +4,6 @@
 	<div id="incidents">
 		@include('layouts.breadcrumbs')
 
-		@if(Session::has('success_message'))
-			<div class="alert alert-success">
-				{{ Session::get('success_message') }}
-			</div>
-		@endif
-
 		@if (count($errors) > 0)
 			<div class="alert alert-danger">
 				The following errors occurred:
@@ -30,7 +24,7 @@
 				</div>
 
 				{{-- Display the button to edit the incident if the user authored it or is an admin --}}
-				@if (Auth::id() == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
+				@if (Auth::id() == $incident->user_id || Auth::user()->isAdministrator())
 					<a class="btn-sm btn-default link-default" href="/incidents/edit/{{ $incident->id }}" title="Edit Incident">
 						<span class="glyphicon glyphicon-edit"></span> Edit Incident
 					</a>
@@ -155,7 +149,7 @@
 					</div>
 				</div><!-- .row -->
 
-				@if (Auth::user()->isSupervisor() && !empty($unviewed_by))
+				@if (Auth::user()->isSupervisor() && $unviewed_by->isNotEmpty())
 					<div class="col-xs-12 bg-warning not-viewed">
 						<ul class="list-group">
 							<strong>Not yet viewed by</strong>
