@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use App\Incident;
-use App\Photo;
-use App\User;
-use App\Location;
-use App\Patron;
-use Mail;
-use App\Mail\IncidentCreated;
-use App\Mail\IncidentUpdated;
 use Auth;
+use Mail;
 use Session;
+use App\User;
+use App\Photo;
+use App\Patron;
+use App\Incident;
+use App\Location;
+use Illuminate\Http\Request;
+use App\Jobs\SendNewIncidentEmail;
+use Illuminate\Support\Facades\Hash;
+use App\Jobs\SendUpdatedIncidentEmail;
 
 class IncidentController extends Controller
 {
@@ -179,8 +179,8 @@ class IncidentController extends Controller
             }
 
             // email a notification to all staff
-            foreach (User::pluck('email') as $email) {
-                \Mail::to($email)->send(new IncidentCreated($incident));
+            foreach (User::all() as $user) {
+                dispatch(new SendNewIncidentEmail($incident, $user));
             }
 
             // redirect back the new incident with a success message
@@ -289,8 +289,7 @@ class IncidentController extends Controller
 
         // email a notification to the incident creator if someone else modified the incident
         if ($request->user != $incident->user_id) {
-            Mail::to($incident->user->email)
-                  ->send(new IncidentUpdated($incident));
+            dispatch(new SendUpdatedIncidentEmail($incident, $incident->user));
         }
 
         Session::flash('success_message', "Incident Updated - \"$incident->title\"");
