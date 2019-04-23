@@ -25,7 +25,7 @@
 
 				{{-- Display the button to edit the incident if the user authored it or is an admin --}}
 				@if (Auth::id() == $incident->user_id || Auth::user()->isAdministrator())
-					<a class="btn-sm btn-default link-default" href="/incidents/edit/{{ $incident->id }}" title="Edit Incident">
+					<a class="btn-sm btn-default link-default" href="{{ route('editIncident', ['incident' => $incident]) }}" title="Edit Incident">
 						<span class="glyphicon glyphicon-edit"></span> Edit Incident
 					</a>
 				@endif
