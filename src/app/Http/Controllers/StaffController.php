@@ -16,16 +16,7 @@ class StaffController extends Controller
     public function __construct() {
         $this->middleware('auth');
     }
-    
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+
 
     /**
      * Show the form for adding a new staff member.
@@ -49,6 +40,7 @@ class StaffController extends Controller
         $password = $generator->generateString(12, $charset);
         return view('staff.add', compact('divisions', 'supervisors', 'staff', 'password'));
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -100,57 +92,11 @@ class StaffController extends Controller
             $new_staff_member->role()->attach($role_id);
         }
 
-
         // final save to ensure all relationships are recorded in the database
         $new_staff_member->save();
 
         // redirect back the new staff form with a success message
         Session::flash('success_message', "Staff member saved.");
         return redirect()->route('addStaff');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\rv  $rv
-     * @return \Illuminate\Http\Response
-     */
-    public function show(rv $rv)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\rv  $rv
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(rv $rv)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\rv  $rv
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, rv $rv)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\rv  $rv
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(rv $rv)
-    {
-        //
     }
 }
