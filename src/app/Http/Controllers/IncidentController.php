@@ -199,7 +199,7 @@ class IncidentController extends Controller
         ];
 
         // make sure the user has permission to edit the incident
-        if (Auth::id() == $incident->user_id || Auth::user()->role->contains('role', 'Admin'))
+        if (Auth::id() == $incident->user_id || Auth::user()->isAdministrator())
         {
             // collect the photos for the add existing photo modal
             $photoColumns = Photo::getColumns(2);
