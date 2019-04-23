@@ -21,17 +21,9 @@ Auth::routes();
 
 
 // Navigation routes
-Route::get('/schedule', function() {
-	return Redirect::to('https://lpl-repository.com/scheduler');
-})->name('schedule');
-
-Route::get('/helpdesk', function() {
-	return Redirect::to('http://192.168.1.34/portal');
-})->name('helpdesk');
-
-Route::get('/cityemail', function() {
-	return Redirect::to('https://fw.ci.loveland.co.us/owa');
-})->name('cityemail');
+Route::get('/schedule', 'RedirectController@scheduler')->name('schedule');
+Route::get('/helpdesk', 'RedirectController@helpdesk')->name('helpdesk');
+Route::get('/cityemail', 'RedirectController@cityemail')->name('cityemail');
 
 // User routes
 Route::get('/staff/add', 'StaffController@showForm')->name('addStaff');
@@ -40,7 +32,6 @@ Route::post('/staff/add', 'StaffController@store');
 // Report routes
 Route::get('/reports', 'DashboardController@reports')->name('reports')->middleware('supervisors');
 Route::get('/reports/incidents', 'ReportController@incidents')->name('reportIncidents')->middleware('supervisors');
-
 
 // Incidents
 Route::get('/incidents', 'IncidentController@index')->name('incidents');
