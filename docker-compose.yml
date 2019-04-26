@@ -51,11 +51,11 @@ services:
     hostname: "hub-composer"
     user: "1000"
     
-  supervisord:
+  queue-worker:
     image: "lplhub/php:7.2-fpm-alpine"
-    container_name: "hub-supervisord"
-    hostname: "hub-supervisord"
-    working_dir: "/laravel"
+    container_name: "hub-queue-worker"
+    hostname: "hub-queue-worker"
+    working_dir: "/laravel/"
     volumes:
       - "./src/:/laravel/"
     command: "php artisan queue:work --tries=3"
