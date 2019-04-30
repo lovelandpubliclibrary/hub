@@ -249,7 +249,7 @@ class IncidentController extends Controller
         $incident = Incident::find($request->incident);
 
         // retrive the parts of the request we need for the incident
-        $updates = $request->only(
+        $updates = $request->all(
             'date',
             'time',
             'locations',
