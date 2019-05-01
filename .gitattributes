@@ -4,6 +4,7 @@
 *.js linguist-vendored
 CHANGELOG.md export-ignore
 
+# don't export development files
 docker/ export-ignore
 export/ export-ignore
 .gitattributes export-ignore
@@ -12,3 +13,8 @@ docker-compose.yml export-ignore
 *.sublime-project export-ignore
 *.sublime-workspace export-ignore
 README.md export-ignore
+src/public/storage
+src/storage/app/public/photos/*
+src/storage/logs/*
+src/vendor/*
+src/.env
