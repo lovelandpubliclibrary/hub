@@ -46,7 +46,7 @@ services:
     volumes:
       - "./src/:/hub/"
     working_dir: "/hub/"
-    command: ["install"]
+    command: ["update"]
     container_name: "hub-composer"
     hostname: "hub-composer"
     user: "1000"
