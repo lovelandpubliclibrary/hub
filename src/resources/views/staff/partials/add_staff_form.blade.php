@@ -21,7 +21,7 @@
 	</div>
 
   	<div class="form-group required">
-  		{{ Form::label('divisions', 'Divisions:', ['class' => 'control-label']) }}
+  		{{ Form::label('divisions', 'Division(s):', ['class' => 'control-label']) }}
   		<select name="divisions[]" id="divisions" multiple="multiple" class="form-control">
   			@foreach ($divisions as $division)
   				<option value="{{ $division->id }}">
@@ -32,7 +32,7 @@
   	</div>
 
   	<div class="form-group required">
-  		{{ Form::label('supervisor', 'Supervisor:', ['class' => 'control-label']) }}
+  		{{ Form::label('supervisor', 'Direct Supervisor:', ['class' => 'control-label']) }}
   		<select name="supervisor" id="supervisor" class="form-control">
   			@foreach ($supervisors as $supervisor)
   				<option value="{{ $supervisor->id }}">
